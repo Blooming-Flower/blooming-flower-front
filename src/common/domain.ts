@@ -21,7 +21,6 @@ export const enum PATH {
 	QUESTION4 = '/question/examView',
 	QUESTION5 = '/question/examMng',
 
-
 	// MENU1SUB0 = '/',
 	// MENU1SUB1 = '/',
 	//
