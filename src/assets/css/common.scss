@@ -1,0 +1,77 @@
+// 화면 관련
+///////////////////////////////////////////////////////////////////
+$mobile: 960px; //sm (small) : 600px ~ 960px
+$tablet: 1279px; //md (medium): 960px ~ 1280px
+$desktop: 1280px; //lg (large) : 1280px ~ 1920px
+
+$txtPointerColor: #5778ff;
+
+/*브라우저 크기가 959px 이하일때*/
+@mixin mobile {
+	@media (max-width: $mobile) {
+		@content;
+	}
+}
+
+/*브라우저 크기가 960이상, 1279px 이하일때*/
+@mixin tablet {
+	@media (min-width: $mobile) and (max-width: $tablet) {
+		@content;
+	}
+}
+
+/*브라우저 1279px 이하일때*/
+@mixin maxTablet {
+	@media (max-width: $tablet) {
+		@content;
+	}
+}
+
+/*브라우저 크기가 1280px 이상일때*/
+@mixin desktop {
+	@media (min-width: $desktop) {
+		@content;
+	}
+}
+
+// 게시판테이블
+///////////////////////////////////////////////////////////////////
+#tbFooterRowGlobalListPage {
+	.MuiTablePagination-toolbar {
+		width: 100%;
+		text-align: center;
+	}
+	.MuiBox-root {
+		margin-left: 0;
+		padding-top: 15px;
+		width: 100%;
+		button {
+			svg {
+				width: 2.2rem;
+				height: 2.2rem;
+			}
+		}
+	}
+}
+
+//공통스타일
+///////////////////////////////////////////////////////////////////
+.pt-45 {
+	padding-top: 45px;
+}
+.pt-55 {
+	padding-top: 55px;
+}
+.pt-65 {
+	padding-top: 65px;
+}
+.pt-75 {
+	padding-top: 75px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+.fwb {
+	font-weight: bold;
+}

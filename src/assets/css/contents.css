@@ -1,0 +1,248 @@
+@charset "utf-8";
+/*>>>>>>>>>> 공통 <<<<<<<<<<*/
+/* 타이틀 */
+.subTit {
+	margin: 30px 0 11px;
+}
+.subTit .right {
+	display: flex;
+	justify-content: right;
+}
+.subTit p {
+	display: inline-block;
+	position: relative;
+	padding-top: 2px;
+	line-height: 33px;
+	letter-spacing: -0.06em;
+	font-size: 15px;
+	font-weight: 700;
+	color: #000;
+}
+.subTit p:before {
+	display: block;
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 9px;
+	height: 2px;
+	background: #000;
+}
+.subTit .info {
+	display: flex;
+	justify-content: right;
+}
+.subTit .info ul li {
+	letter-spacing: -0.025em;
+	line-height: 20px;
+	font-size: 13px;
+	color: #000;
+}
+
+/* 버튼 */
+.btn {
+	display: inline-block;
+	padding: 0 8px;
+	border: 1px solid #666;
+	border-radius: 5px;
+	min-width: 84px;
+	vertical-align: top;
+	text-align: center;
+	letter-spacing: -0.05em;
+	line-height: 28px;
+	font-size: 15px;
+	font-weight: 700;
+	color: #fff;
+	background: #666;
+	cursor: pointer;
+}
+.btnSquare {
+	padding: 0;
+	border-radius: 0;
+	width: 126px;
+	font-weight: 500;
+}
+/* 버튼 색상 */
+.btnGray {
+	border-color: #999;
+	background: #999;
+}
+.btnGray02 {
+	border-color: #ddd;
+	color: #666;
+	background: #ddd;
+}
+.btnGray03 {
+	border-color: #666;
+	color: #fff;
+	background: #666;
+}
+.btnGray04 {
+	border-color: #666;
+	color: #000;
+	background: #eee;
+}
+.btnBlue {
+	border-color: #5094e9;
+	background: #5094e9;
+}
+.btnNavy {
+	border-color: #002a52;
+	background: #002a52;
+}
+.btnLink {
+	line-height: 25px;
+	font-size: 15px;
+	color: #5094e9;
+}
+.btnLine {
+	border-color: #666;
+	background: #fff;
+	color: #666;
+}
+.btnLineBlue {
+	border-color: #5094e9;
+	background: #fff;
+	color: #5094e9;
+}
+
+/* 버튼 정렬 */
+.btnArea {
+	margin-top: 50px;
+	text-align: center;
+}
+.btnArea .btn {
+	margin: 0 4px;
+}
+.btn + .btn {
+	margin-left: 10px;
+}
+
+/*>>>>>>>>>> 페이지 <<<<<<<<<<*/
+/*** 로그인 ***/
+.mainWrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 50px 0 100px;
+	height: 100vh;
+	background: url('../images/common/bg-main.png') no-repeat center/cover;
+}
+.mainWrap .inner {
+	text-align: center;
+}
+.mainWrap .inner h1 {
+	margin-bottom: 25px;
+}
+.mainWrap .inner h1 img {
+	display: block;
+	margin: 0 auto;
+}
+.mainWrap .inner p {
+	margin-bottom: 75px;
+	line-height: 35px;
+	font-size: 20px;
+	color: #000;
+}
+.mainWrap .inner .innerBox {
+	display: flex;
+	overflow: hidden;
+	border-radius: 30px;
+	width: 920px;
+	background: #fff;
+}
+.mainWrap .inner .innerBox > * {
+	flex: 1;
+	min-height: 406px;
+}
+.mainWrap .inner .innerBox .left {
+	padding: 30px;
+	text-align: left;
+	background: #214b7e url('../images/common/bg-main02.png') no-repeat right bottom;
+}
+.mainWrap .inner .innerBox .left .btn {
+	margin-top: 15px;
+	padding: 0 40px;
+	border-radius: 21px;
+	border-color: #fff;
+	line-height: 42px;
+	font-size: 15px;
+	font-weight: 700;
+	color: #214b7e;
+	background: #fff;
+}
+.mainWrap .inner .innerBox .left .btn span {
+	display: inline-block;
+	padding-right: 27px;
+	background: url('../images/common/bg-arrow.png') no-repeat right center;
+}
+.mainWrap .inner .innerBox .right {
+	padding: 20px 40px;
+}
+.mainWrap .inner .innerBox .right .tabArea > ul {
+	display: flex;
+	margin-bottom: 30px;
+}
+.mainWrap .inner .innerBox .right .tabArea > ul li {
+	flex: 1;
+	display: block;
+	line-height: 38px;
+	font-size: 18px;
+	color: #ccc;
+	cursor: pointer;
+}
+
+.mainWrap .inner .innerBox .right .tabArea > ul li.curr {
+	color: #002a52;
+	font-weight: 700;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox p {
+	margin-bottom: 36px;
+	line-height: 24px;
+	font-size: 15px;
+	color: #666;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul {
+	margin-bottom: 20px;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li + li {
+	margin-top: 10px;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input {
+	padding: 0 50px;
+	border-radius: 30px;
+	border: 1px solid #ccc;
+	height: 60px;
+	text-align: center;
+	font-size: 15px;
+	color: #ccc;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input:focus,
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input:valid {
+	border-color: #002a52;
+	color: #002a52;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input[type='text'] {
+	background: url('../images/common/ico-login01.png') no-repeat left 23px center;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input[type='text']:focus,
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input[type='text']:valid {
+	background-image: url('../images/common/ico-login01-on.png');
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input[type='password'] {
+	background: url('../images/common/ico-login02.png') no-repeat left 23px center;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input[type='password']:focus,
+.mainWrap .inner .innerBox .right .tabArea .tabBox ul li input[type='password']:valid {
+	background-image: url('../images/common/ico-login02-on.png');
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox .btn {
+	border-radius: 30px;
+	width: 100%;
+	line-height: 58px;
+	font-size: 15px;
+	font-weight: 700;
+}
+.mainWrap .inner .innerBox .right .tabArea .tabBox .btn + .btn {
+	margin-top: 30px;
+}

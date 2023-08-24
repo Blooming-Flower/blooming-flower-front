@@ -1,0 +1,41 @@
+{
+	"compilerOptions": {
+		"target": "ESNext", //사용할 특정 ECMAScript 버전 설정: 'ES3' (기본), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', 혹은 'ESNEXT'.
+		"module": "ESNext", //모듈을 위한 코드 생성 설정: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'.
+		"useDefineForClassFields": true,
+		"lib": ["DOM", "DOM.Iterable", "ESNext"], //["es2015", "es2016", "es2017", "es2018", "es2019", "ESNext", "DOM"]
+		"allowJs": true, // js 파일 사용 허용여부
+		"declaration": true, // .d.ts 파일 생성여부
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true, //모든 엄격한 타입-체킹 옵션 활성화 여부
+		"forceConsistentCasingInFileNames": true,
+		"moduleResolution": "Node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		// "sourceMap": true,
+		"removeComments": true, //주석 모두 제거
+		// "allowUmdGlobalAccess": true,
+		// "typeRoots": ["./node_modules/@types", "./src/types"]
+		// "outDir": "./dist/", /* 해당 디렉토리로 결과 구조를 보냅니다. */
+		"jsx": "react-jsx", //JSX 코드 생성 설정: 'preserve', 'react-native', 혹은 'react'.
+		"baseUrl": "./",
+		"paths": {
+			"@pages/*": ["src/pages/*"],
+			"@class/*": ["src/class/*"],
+			"@utils/*": ["src/utils/*"],
+			"@common/*": ["src/common/*"],
+			"@css/*": ["src/assets/css/*"],
+			"@images/*": ["src/assets/images/*"],
+			"@data/*": ["src/assets/data/*"],
+			"@modules/*": ["src/modules/*"],
+			"@components/*": ["src/components/*"]
+		}
+	},
+	"include": ["src"],
+	// "include": ["./src/**/*"],
+	// "exclude": ["./node_modules"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}

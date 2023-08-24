@@ -1,0 +1,1011 @@
+@import './common.scss';
+
+/* 메뉴별 제목 */
+.menu_title_p_warp {
+	padding-top: 45px;
+	text-align: center;
+	@include mobile {
+		width: 100%;
+	}
+	@include tablet {
+		width: 80%;
+		margin: 0 auto;
+	}
+}
+.menu_title_p_fixed_warp {
+	padding-top: 45px;
+}
+.menu_title_p1 {
+	// font-size: 45px;
+	font-size: 3.2rem;
+	font-weight: bold;
+	color: $txtPointerColor;
+	span {
+		color: #000;
+	}
+	@include mobile {
+		font-size: 2.5rem;
+	}
+}
+.menu_title_p2 {
+	padding-top: 5px;
+	font-size: 1.5rem;
+}
+
+// 메뉴토글리스트
+#menuListBar {
+	display: flex;
+	justify-content: center;
+	background-color: rgba(50, 64, 90, 0.9);
+	@include desktop {
+		top: -4px;
+		position: relative;
+	}
+
+	button {
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: #fff;
+		padding: 15px;
+		border-radius: 0;
+		border: 0;
+		font-family: 'Noto Sans KR', Dotum, Arial, sans-serif;
+		height: 100%;
+	}
+	.MuiButtonBase-root.Mui-selected {
+		background-color: #ffffff;
+		color: #000;
+		font-weight: bold;
+		:active {
+			background-color: rgba(50, 64, 90, 0.9);
+		}
+	}
+	.MuiTabs-root {
+		min-height: 56.95px;
+		.MuiTabs-flexContainer {
+			height: 100%;
+		}
+		.Mui-selected {
+			height: 100%;
+		}
+		svg {
+			color: white;
+			font-size: 20px;
+		}
+	}
+	.MuiTabs-indicator {
+		display: none;
+	}
+}
+
+// 회사소개메뉴 관련
+#companyLayout {
+	.menu_title_contain {
+		text-align: center;
+		margin-bottom: 50px;
+	}
+	.pointer {
+		color: $txtPointerColor;
+	}
+
+	.contain {
+		padding: 100px 150px;
+		// background-color: #fff;
+		background: url('../images/main/pofo_bg.jpg') no-repeat center;
+		background-size: cover;
+		display: flex;
+		margin-top: 50px;
+
+		@include mobile {
+			width: 100%;
+			padding: 20px;
+			margin: 0 auto;
+		}
+		@include tablet {
+			width: 100%;
+			padding: 50px;
+			margin: 0 auto;
+		}
+
+		.ceo_img {
+			text-align: right;
+
+			img {
+				max-width: 100%;
+				height: auto;
+			}
+		}
+		.ceo_area {
+			text-align: justify;
+			padding-left: 50px;
+
+			@include mobile {
+				padding-left: 0px;
+				padding-top: 50px;
+			}
+			@include tablet {
+				padding-left: 0px;
+				padding-top: 50px;
+			}
+
+			.ceo_tit {
+				position: relative;
+				float: left;
+				width: 100%;
+				font-size: 2.3em;
+				line-height: 1.5em;
+				letter-spacing: -0.05em;
+				font-weight: bold;
+			}
+
+			.ceo_txt {
+				float: right;
+				width: 100%;
+				padding-top: 10px;
+
+				p {
+					margin-top: 20px;
+					font-size: 1.3em;
+					line-height: 1.25em;
+					color: #444;
+					word-break: keep-all;
+					@include mobile {
+						word-break: unset;
+					}
+				}
+
+				span.ceo_sign {
+					display: block;
+					font-size: 2.1em;
+					color: #000;
+					font-weight: bold;
+					margin-top: 65px;
+					text-align: center;
+				}
+			}
+		}
+	}
+
+	.company_info {
+		.MuiGrid-container {
+			@include mobile {
+				width: 100%;
+			}
+			.MuiGrid-item {
+				@include mobile {
+					width: 90%;
+					margin: 0 auto;
+				}
+			}
+		}
+	}
+	.company_desc_p {
+		border: 1px solid #c3c3c3;
+		font-size: 1.3em;
+		margin: 10px 5px;
+		//background-color: rgba(180, 204, 251, 0.14);
+		justify-content: center;
+		display: flex;
+		border-radius: 10px;
+		@include mobile {
+			font-size: 0.86em;
+		}
+
+		.title {
+			width: 130px;
+			display: inline-block;
+			font-weight: 400;
+			padding: 15px;
+			background-color: rgba(50, 64, 90, 0.9);
+			color: white;
+			border-radius: 10px;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+		.lh {
+			line-height: 185px;
+		}
+		.desc {
+			width: 100%;
+			padding: 15px;
+			min-width: 620px;
+			display: inline-block;
+			text-align: left;
+			font-weight: 300;
+			@include mobile {
+				min-width: 0;
+			}
+			span {
+				display: block;
+				line-height: 1.8em;
+			}
+		}
+	}
+}
+
+#fadeImg {
+	@include maxTablet {
+		position: relative;
+		width: 100%;
+		height: auto;
+		padding-top: 300px;
+		overflow: hidden;
+		img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+	}
+}
+
+// 조직도
+#organizationLayout {
+	.menu_title_contain {
+		text-align: center;
+	}
+
+	.contain {
+		padding: 70px 0px;
+		// background: url('../images/main/pofo_bg.jpg') no-repeat;
+		background-color: #ffffff;
+		display: flex;
+		margin-top: 50px;
+		justify-content: center;
+		@include mobile {
+			padding: 20px;
+		}
+		@include tablet {
+			padding: 30px;
+		}
+
+		.organization_img {
+			text-align: right;
+
+			img {
+				max-width: 100%;
+				height: auto;
+			}
+		}
+	}
+}
+
+//면허등록현황
+#certificateLayout {
+	.menu_title_contain {
+		text-align: center;
+	}
+
+	.contain {
+		padding: 70px 0px;
+		// background: url('../images/main/pofo_bg.jpg') no-repeat;
+		background-color: #ffffff;
+		display: flex;
+		margin-top: 50px;
+		justify-content: center;
+
+		.imagelist_warp {
+			display: flex;
+			justify-content: center;
+
+			.MuiImageList-root {
+				overflow: hidden;
+				@include tablet {
+					grid-template-columns: repeat(2, 1fr) !important;
+				}
+				@include mobile {
+					grid-template-columns: repeat(1, 1fr) !important;
+				}
+			}
+			.MuiImageListItemBar-title {
+				font-size: 1.2rem;
+				font-weight: bold;
+			}
+			#certificateFadeImgList {
+				width: 350px;
+				height: auto;
+			}
+			#certificateFadeImgList:hover {
+				transform: scale(1.1);
+				transition: transform 0.5s;
+			}
+		}
+	}
+
+	.MuiImageListItem-root {
+		border: 2px solid #ccc;
+		padding: 20px 20px 0px 20px;
+		background-color: #fff;
+	}
+}
+
+//특허및 수상실정
+#patentLayout {
+	.menu_title_contain {
+		text-align: center;
+	}
+
+	.contain {
+		padding: 70px 0px;
+		background-color: #ffffff;
+		display: flex;
+		margin-top: 50px;
+		justify-content: center;
+
+		.imagelist_warp {
+			display: flex;
+			justify-content: center;
+			overflow: hidden;
+
+			.MuiImageList-root {
+				overflow: hidden;
+				@include mobile {
+					grid-template-columns: repeat(1, 1fr) !important;
+				}
+			}
+			.MuiImageListItemBar-title {
+				font-size: 1.2rem;
+				font-weight: bold;
+			}
+			#patentImgList {
+				width: 350px;
+				height: auto;
+			}
+			#patentImgList:hover {
+				transform: scale(1.1);
+				transition: transform 0.5s;
+			}
+		}
+	}
+
+	.MuiImageListItem-root {
+		border: 2px solid #ccc;
+		padding: 20px 20px 50px 20px;
+		background-color: #fff;
+	}
+}
+
+// 오시는길
+#locationLayout {
+	background-color: white;
+	.menu_title_contain {
+		text-align: center;
+	}
+}
+.location {
+	width: 100%;
+	text-align: center;
+	overflow: hidden;
+	background-color: #ffffff;
+	padding: 100px 0;
+	@include mobile {
+		padding-top: 0;
+	}
+	svg {
+		float: left;
+		font-size: 40px !important;
+		margin: 10px 0;
+	}
+	.menu_title_p_fixed_warp {
+		text-align: center;
+		padding-top: 50px;
+
+		.menu_title_p1 {
+			color: #002a52;
+			font-size: 40px;
+			font-weight: bold;
+			@include mobile {
+				font-size: 35px;
+				font-weight: bold;
+			}
+		}
+	}
+	.location-container {
+		width: 60%;
+		margin: 0 auto;
+		@include maxTablet {
+			width: 80%;
+			margin: 0 auto;
+		}
+		#location-contact {
+			display: flex;
+			margin: 30px 0;
+			align-items: center;
+			//justify-content: center;
+			@include mobile {
+				display: list-item;
+			}
+			div:first-child p {
+				padding: 0 150px;
+				font-size: 2rem;
+				width: 400px;
+				color: #006bcc;
+				@include mobile {
+					padding: 0;
+					margin: 30px auto;
+					width: 100%;
+				}
+			}
+			#location-text-title {
+				text-align: left;
+				font-size: 1.3rem;
+				line-height: 1.5;
+				width: 100%;
+				@include mobile {
+					li span {
+						display: inline-block;
+					}
+				}
+				li span:first-child {
+					width: 80px;
+					display: inline-block;
+					font-weight: 500;
+					@include mobile {
+						font-weight: bold;
+						margin-left: 30px;
+					}
+				}
+				li span:last-child {
+					width: 400px;
+					margin-left: 50px;
+					color: #6f6f6f;
+					@include mobile {
+						margin-left: 30px;
+						width: 300px;
+					}
+				}
+			}
+			#location-text-content {
+				text-align: left;
+				font-size: 1.3rem;
+				line-height: 1.5;
+				color: #898989;
+			}
+			li {
+				margin: 20px 0;
+			}
+		}
+
+		.MuiCardMedia-root {
+			display: flex;
+			align-items: center;
+			span {
+				margin: 0 auto 0 10px;
+			}
+			img {
+				margin: 0 10px 0 auto;
+			}
+		}
+
+		.MuiCardContent-root {
+			@include mobile {
+				height: 100%;
+			}
+			height: 200px;
+			li {
+				margin: 10px 0;
+			}
+		}
+
+		.location-text {
+			padding: 50px 0;
+			@include maxTablet {
+				padding: 40px 0;
+			}
+
+			p {
+				font-size: 20px;
+				margin-top: 50px;
+				@include maxTablet {
+					font-size: 15px;
+					margin-top: 30px;
+					font-weight: bold;
+				}
+			}
+
+			span {
+				font-size: 40px;
+				font-weight: 500;
+
+				@include maxTablet {
+					font-size: 30px;
+					font-weight: bold;
+				}
+			}
+		}
+
+		.MuiCardMedia-root {
+			border-bottom: 1px solid rgba(139, 139, 139, 0.78);
+			//border-bottom: 1px solid #b9e4ff;
+		}
+		.MuiGrid-container {
+			margin-bottom: 50px;
+			@include maxTablet {
+				margin-bottom: 20px;
+			}
+		}
+	}
+
+	.MuiPaper-root {
+		transition: all 0.25s linear;
+		//border: 1px solid #b9e4ff;
+	}
+
+	.MuiPaper-root:hover {
+		box-shadow: 5px 5px 20px rgba(102, 102, 102, 0.3);
+		//border: 1px solid #b9e4ff;
+	}
+}
+
+#businessLayout {
+	.menu_title_contain {
+		text-align: center;
+	}
+	.intro-detail {
+		width: 100%;
+		padding: 70px 0;
+		margin-top: 50px;
+		strong {
+			color: rgb(82, 102, 141);
+		}
+		img {
+			width: 100%;
+			object-fit: cover;
+			transform: scale(1);
+			transition: transform 0.5s;
+		}
+		img:hover {
+			transform: scale(1.05);
+			transition: transform 0.5s;
+		}
+		.intro-detail-app {
+			width: 100%;
+			padding: 5%;
+		}
+		.intro-text-left {
+			text-align: right;
+			padding: 30px;
+			font-size: 40px;
+			li {
+				text-align: right;
+			}
+			span {
+				font-size: 20px;
+			}
+			hr {
+				float: right;
+				border: 1px solid rgb(82, 102, 141);
+				width: 200px;
+				margin: 30px 0;
+			}
+		}
+		.intro-text-right {
+			text-align: left;
+			padding: 30px;
+			font-size: 40px;
+			li {
+				text-align: left;
+			}
+			span {
+				font-size: 20px;
+			}
+			hr {
+				border: 1px solid rgb(82, 102, 141);
+				width: 200px;
+				margin: 30px 0;
+			}
+		}
+		.intro-detail-left {
+			width: 85%;
+			height: 450px;
+			overflow: hidden;
+			margin: 0 auto 0 0;
+		}
+		.intro-detail-right {
+			width: 85%;
+			height: 450px;
+			overflow: hidden;
+			margin: 0 0 0 auto;
+		}
+		@include tablet {
+			img {
+				width: 100%;
+				height: 400px;
+				object-fit: cover;
+				margin-top: 50px;
+			}
+			font-size: 30px;
+			padding: 30px;
+			hr {
+				border: 2px solid rgb(82, 102, 141);
+				width: 150px;
+				margin: 10px auto;
+			}
+			span {
+				font-size: 20px !important;
+				line-height: 20px;
+			}
+			.intro-detail-left,
+			.intro-detail-right {
+				width: 100%;
+			}
+		}
+		@include mobile {
+			img {
+				width: 100%;
+				object-fit: cover;
+				height: 400px;
+				margin-top: 50px;
+			}
+			font-size: 25px;
+			margin-bottom: 40px !important;
+			padding: 30px;
+			hr {
+				border: 1px solid rgb(82, 102, 141);
+				width: 100px;
+				margin: 10px auto;
+			}
+			span {
+				font-size: 15px !important;
+				line-height: 20px;
+				margin: 0 auto;
+			}
+			.intro-detail-left,
+			.intro-detail-right {
+				width: 100%;
+			}
+			.MuiGrid-item {
+				width: 100%;
+			}
+		}
+	}
+}
+
+// 사업실적
+#historyLayout {
+	.menu_title_contain {
+		text-align: center;
+
+		.contain {
+			padding: 35px 0px;
+			background-color: #ffffff;
+			display: flex;
+			margin-top: 50px;
+			justify-content: center;
+
+			.timeline_year {
+				font-size: 2.5rem;
+				font-weight: bold;
+				color: $txtPointerColor;
+				padding-bottom: 15px;
+				span {
+					color: #000;
+				}
+			}
+			.MuiTimelineItem-root::before {
+				@include mobile {
+					content: unset;
+				}
+			}
+			.MuiTimelineItem-root {
+				@include mobile {
+					margin: 0 auto;
+					width: 90%;
+				}
+			}
+			.MuiTimelineSeparator-root {
+				@include mobile {
+					padding-left: 5%;
+				}
+			}
+			.MuiTimelineContent-root {
+				padding: 4px 16px;
+				font-weight: 500;
+				font-size: 1.3rem;
+				line-height: 1.5;
+				color: #111;
+				:nth-child(1) {
+					padding-top: 7px;
+				}
+				:nth-last-child(1) {
+					padding-bottom: 15px;
+				}
+			}
+			.MuiTimelineContent-root > p {
+				font-weight: 400;
+				font-size: 1.2rem;
+				line-height: 2.1;
+				color: #666;
+			}
+		}
+	}
+}
+
+#researchLayout,
+#history2Layout,
+#listLayout {
+	background-color: white;
+	.MuiTableContainer-root {
+		box-shadow: none;
+		border-radius: 0;
+		@include mobile {
+			width: 90% !important;
+			th:last-child {
+				width: 23%;
+			}
+			.recruit-title-date {
+				width: 30% !important;
+			}
+		}
+		@include tablet {
+			width: 85% !important;
+			th:last-child {
+				width: 15%;
+			}
+			.recruit-title-date {
+				width: 30% !important;
+				padding: 0 !important;
+			}
+		}
+		.Mui-selected {
+			background-color: #1976d2 !important;
+		}
+		td {
+			line-height: 2.4;
+			@include mobile {
+				line-height: 1.43;
+			}
+			@include tablet {
+				line-height: 1.6;
+			}
+		}
+	}
+	.MuiButtonBase-root.Mui-selected {
+		background-color: white;
+	}
+	.contain {
+		padding: 35px 0;
+		display: flex;
+		margin-top: 50px;
+		justify-content: center;
+	}
+	.MuiBox-root {
+		margin-left: 18px;
+	}
+	.MuiTablePagination-selectLabel,
+	.MuiInputBase-root,
+	.MuiTablePagination-displayedRows {
+		display: none !important;
+	}
+	.recruit-img {
+		@include mobile {
+			width: 90%;
+			margin: 0 auto;
+		}
+		@include tablet {
+			width: 90%;
+			margin: 0 auto;
+		}
+	}
+}
+.detailLayout {
+	background-color: white;
+	.contain {
+		padding: 35px 0;
+		margin-top: 50px;
+		justify-content: center;
+	}
+	.MuiTableContainer-root {
+		@include mobile {
+			width: 80%;
+			.img-container {
+				width: 100% !important;
+			}
+		}
+		@include tablet {
+			.img-container {
+				width: 90% !important;
+			}
+		}
+	}
+	.MuiTableRow-head:first-child,
+	.MuiTableCell-body {
+		font-size: 20px;
+		border-bottom: none !important;
+		@include mobile {
+			padding: 30px !important;
+		}
+		@include tablet {
+			padding: 40px !important;
+		}
+	}
+	.detail-header {
+		font-size: 1.5rem;
+		font-weight: bold;
+		border-bottom: none;
+		padding: 30px;
+	}
+	.detail-button {
+		width: 70%;
+		height: 50px;
+		margin: 0 auto;
+		justify-content: center;
+		display: flex;
+		.MuiButtonBase-root {
+			float: left;
+			margin: 20px 0;
+		}
+	}
+	.detail-content {
+		padding: 0px 20px 20px;
+		line-height: 3rem;
+	}
+	.detail-footer {
+		font-size: 1rem;
+		margin-left: 30px;
+		line-height: 30px;
+	}
+	//.MuiButtonBase-root{
+	//	float: left;
+	//	margin: 20px 0;
+	//}
+}
+
+#prcenterLayout {
+	.contain {
+		padding: 35px 0;
+		display: flex;
+		margin-top: 50px;
+		justify-content: center;
+		.MuiCard-root {
+			border-radius: 15px;
+			transition: all 0.25s linear !important;
+			button {
+				color: #fff;
+				background-color: rgba(50, 64, 90, 0.7);
+			}
+		}
+		.MuiCard-root:hover {
+			transform: translateY(-5px);
+			box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.8);
+		}
+	}
+}
+
+.MuiPagination-ul {
+	margin: 10px auto !important;
+}
+
+#welfare {
+	.welfare-img {
+		float: left;
+		width: 200px;
+		height: 100%;
+		padding: 50px 0;
+		@include mobile {
+			width: 150px;
+		}
+	}
+	.MuiCard-root:hover {
+		box-shadow: 0 10px 20px 0 rgba(213, 213, 213, 0.8);
+	}
+	@include tablet {
+		width: 90% !important;
+	}
+	@include mobile {
+		width: 90% !important;
+	}
+	.MuiGrid-item {
+		@include tablet {
+			padding: 10px !important;
+		}
+		@include mobile {
+			width: 100% !important;
+			padding: 10px !important;
+		}
+		.welfare-title {
+			padding-top: 30px;
+			@include mobile {
+				font-size: 15px !important;
+			}
+		}
+		.welfare-content {
+			color: #6d6d6d;
+			padding-top: 10px;
+			padding-right: 10px;
+			@include mobile {
+				font-size: 15px !important;
+				padding-top: 0;
+			}
+			@include tablet {
+				padding-top: 0;
+			}
+		}
+	}
+}
+.accodion {
+	width: 70%;
+	height: 100%;
+	@include mobile {
+		width: 90%;
+	}
+	@include tablet {
+		width: 80%;
+	}
+	.MuiAccordionSummary-root {
+		background-color: rgba(255, 255, 255, 0);
+		font-weight: 500;
+		span {
+			font-size: 30px;
+			font-weight: bold;
+			margin-right: 30px;
+		}
+		p {
+			font-size: 20px;
+		}
+	}
+	.MuiAccordionSummary-root .Mui-expanded {
+		color: #5778ff;
+		margin: 12px 0;
+		span {
+			color: #5778ff !important;
+		}
+	}
+}
+#accodionTable {
+	td {
+		line-height: 1.43 !important;
+	}
+}
+
+.recruit-detail-container {
+	padding: 40px 30px;
+	width: 90%;
+	margin: 0 auto;
+	@include mobile {
+		padding: 0px;
+	}
+	@include tablet {
+		padding: 30px;
+	}
+	.recruit-detail-title {
+		color: rgb(18, 31, 102);
+		@include mobile {
+			font-size: 1rem;
+		}
+		hr {
+			border-width: 3px;
+			border-color: rgb(18, 31, 102);
+			margin: 20px 0;
+		}
+	}
+	.recruit-detail-subTitle {
+		margin-bottom: 20px;
+		h3 {
+			font-size: 30px;
+			color: rgb(18, 31, 102);
+			@include mobile {
+				font-size: 25px;
+			}
+		}
+		p {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 2;
+			@include mobile {
+				font-size: 17px;
+			}
+		}
+		.recruit-detail-img {
+			width: 70%;
+			margin: 30px auto 0 auto;
+			@include mobile {
+				width: 100%;
+			}
+		}
+		img {
+			width: 100%;
+		}
+	}
+}

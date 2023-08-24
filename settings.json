@@ -1,0 +1,23 @@
+{
+	"eslint.autoFixOnSave": true,
+	// 위 설정 값은 deprecate 되었다, 대신 editor.codeActionsOnSave를 사용하자.
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		{ "language": "typescript", "autoFix": true },
+		{ "language": "typescriptreact", "autoFix": true },
+		// 역자 주: autoFix 설정을 true로 세팅한다면 다음과 같이 일반적인 문자열로 작성해도 된다.
+		"typescript",
+		"typescriptreact"
+	],
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"[javascript]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"editor.formatOnSave": true,
+	"editor.formatOnType": true
+}
