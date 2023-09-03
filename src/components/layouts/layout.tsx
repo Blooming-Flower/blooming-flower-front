@@ -18,6 +18,7 @@ import { Button, Fab, Fade, Slide } from '@mui/material'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
+import NestedList from "@components/layouts/header/nav";
 
 const Layout = (props: { children: React.ReactNode; main?: boolean }) => {
 	const navigate = useNavigate()
@@ -64,6 +65,7 @@ const Layout = (props: { children: React.ReactNode; main?: boolean }) => {
 					</div>
 				</div>
 				<main style={props.main ? {} : { marginTop: '0px' }}>
+					<NestedList/>
 					<div className="contents">
 						<div>{props.children}</div>
 					</div>

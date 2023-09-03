@@ -114,9 +114,23 @@ body {
 		position: relative;
 		display: flex;
 		height: 100vh;
+
 	}
 }
-
+.sideNav{
+	@include tablet{
+		display: none !important;
+	}
+	@include mobile{
+		display: none !important;
+	}
+	.active{
+		background-color: #ffdca6;
+	}
+	.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root:hover{
+		background-color: rgba(255, 237, 216, 0.82);
+	}
+}
 #headerTopWrap .MuiBox-root {
 	padding-right: 20px;
 	position: absolute;
@@ -211,9 +225,10 @@ body {
 }
 
 .contents {
+	position: relative;
 	height: 100%;
 	width: 80%;
-	margin: 100px 10% 100px 10%;
+	margin-top: 100px;
 	border: 1px solid #ecc58d;
 	> .cont {
 		padding: 50px 30px;
@@ -222,6 +237,12 @@ body {
 	}
 	> .cont:first-child {
 		border-radius: 20px 20px 0 0;
+	}
+	@include tablet{
+		margin: 100px 10%;
+	}
+	@include mobile{
+		margin: 100px 10%;
 	}
 }
 
