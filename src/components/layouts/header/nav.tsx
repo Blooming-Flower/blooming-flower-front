@@ -38,13 +38,17 @@ const NestedList = () => {
             case PATH.QUESTION4:
                 const check5 = document.querySelector('.nav5')
                 check5!.classList.add('active');
+                break
+            case PATH.QUESTION5:
+                const check6 = document.querySelector('.nav6')
+                check6!.classList.add('active');
         }
     },[])
 
     return (
         <List
             className='sideNav'
-            sx={{ width: '100%', maxWidth: 260, bgcolor: 'background.paper', paddingTop:'100px' }}
+            sx={{ width: '100%', maxWidth: 260, bgcolor: 'background.paper', paddingTop:'100px', position:'absolute'}}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={
@@ -83,7 +87,7 @@ const NestedList = () => {
                 </ListItemIcon>
                 <ListItemText primary="시험지보기" />
             </ListItemButton>
-            <ListItemButton onClick={()=>handleClick(PATH.QUESTION5)}>
+            <ListItemButton onClick={()=>handleClick(PATH.QUESTION5)} className='nav6'>
                 <ListItemIcon>
                     <InboxIcon />
                 </ListItemIcon>
