@@ -1,6 +1,5 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 
-import "@css/contents.css";
 import "@css/common.css";
 import "@css/common.scss";
 import "@css/main.scss";

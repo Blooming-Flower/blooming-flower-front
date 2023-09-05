@@ -10,6 +10,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
 import { useEffect, useState } from "react";
+import {Divider} from "@mui/material";
 
 const NestedList = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const NestedList = () => {
         width: "100%",
         maxWidth: 260,
         bgcolor: "background.paper",
-        paddingTop: "100px",
+        paddingTop: "20px",
         position: "absolute",
       }}
       component="nav"
@@ -72,6 +73,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="지문관리" />
       </ListItemButton>
+      <Divider/>
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION1)}
         className="nav2"
@@ -81,6 +83,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="지문저장" />
       </ListItemButton>
+      <Divider/>
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION2)}
         className="nav3"
@@ -90,6 +93,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="문제출제" />
       </ListItemButton>
+      <Divider/>
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION3)}
         className="nav4"
@@ -99,6 +103,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="시험지제작" />
       </ListItemButton>
+      <Divider/>
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION4)}
         className="nav5"
@@ -108,6 +113,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="시험지보기" />
       </ListItemButton>
+      <Divider/>
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION5)}
         className="nav6"
@@ -117,6 +123,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="시험지관리" />
       </ListItemButton>
+      <Divider/>
     </List>
   );
 };
