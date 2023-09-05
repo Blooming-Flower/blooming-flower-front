@@ -126,7 +126,7 @@ const PassageMng = () => {
     { id: 7, year: "2023", name: "Jon", chapter: 1, count: 35, num: 11 },
   ];
   return (
-    <Layout main={true}>
+    <Layout>
       <div className="mainCont">
         <Typography
           variant="h2"

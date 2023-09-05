@@ -43,15 +43,9 @@ const Footer = () => {
 const SubFooter = (props: { size: string }) => {
   return (
     <div className={props.size}>
-      <img src={logo} />
-      <hr className="footLine" />
       <ul>
-        <li>경기도 화성시 동탄대로시범길, 1119호</li>
-        <li>
-          Tel : 00-0000-0000 | Fax : 00-0000-0000 | E-mail :
-          jsh9512201@gmail.com
-        </li>
-        <li>Copyright (c) 승훈 ALL RIGHTS RESERVED.</li>
+        <li>상호:YRF lab 주소:세종특별시 다정중앙로 45(다정프라자), 4층 대표자: 권나윤 사업자등록번호: 136-03-78185 대표전화: <span style={{color:'#ff6c0f'}}>044) 862-6262</span></li>
+        <li>Copyright <span style={{color:'#ff6c0f'}}>YRF lab</span>. All Right Reserved.</li>
       </ul>
     </div>
   );
