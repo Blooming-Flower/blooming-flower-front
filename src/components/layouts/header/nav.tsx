@@ -61,13 +61,13 @@ const NestedList = () => {
                 <ListItemIcon>
                     <SendIcon />
                 </ListItemIcon>
-                <ListItemText primary="지문저장" />
+                <ListItemText primary="지문관리" />
             </ListItemButton>
             <ListItemButton onClick={()=>handleClick(PATH.QUESTION1)} className='nav2'>
                 <ListItemIcon>
                     <DraftsIcon />
                 </ListItemIcon>
-                <ListItemText primary="지문관리" />
+                <ListItemText primary="지문저장" />
             </ListItemButton>
             <ListItemButton onClick={()=>handleClick(PATH.QUESTION2)} className='nav3'>
                 <ListItemIcon>

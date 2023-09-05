@@ -12,6 +12,7 @@ export default defineConfig({
 	build: {
 		cssCodeSplit: false,
 		chunkSizeWarningLimit: 1500,
+		minify:'terser',
 		terserOptions: {
 			compress: {
 				drop_debugger: true,

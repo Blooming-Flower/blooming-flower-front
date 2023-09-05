@@ -14,8 +14,8 @@ export const enum PATH {
 	ERROR = '/*',
 
 	//메뉴
-	QUESTION0 = '/question/passageCrt',
-	QUESTION1 = '/question/passageMng',
+	QUESTION0 = '/question/passageMng',
+	QUESTION1 = '/question/passageCrt',
 	QUESTION2 = '/question/questionCrt',
 	QUESTION3 = '/question/examCrt',
 	QUESTION4 = '/question/examView',

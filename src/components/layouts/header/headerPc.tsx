@@ -86,7 +86,7 @@ const HeaderPc = () => {
 				<Box sx={classes.activeTab}>
 					<ul className="menu">
 						<li>
-							<Link to={menuPath[0]}>지문저장</Link>
+							<Link to={menuPath[0]}>지문관리</Link>
 							<ul className="submenu submenu1">
 								<div></div>
 							{/*	<Menu title="지문저장" menu={PATH.QUESTION0} />*/}
@@ -98,7 +98,7 @@ const HeaderPc = () => {
 							</ul>
 						</li>
 						<li>
-							<Link to={menuPath[1]}>지문관리</Link>
+							<Link to={menuPath[1]}>지문저장</Link>
 							<ul className="submenu submenu2">
 								<div></div>
 							{/*	<Menu title="서브메뉴1" menu={PATH.MENU1SUB0} />*/}
