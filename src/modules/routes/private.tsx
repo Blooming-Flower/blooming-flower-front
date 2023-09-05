@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from "react-router-dom";
 
 /**
  * <PRE>
@@ -8,18 +8,18 @@ import { Navigate, Outlet } from 'react-router-dom'
  * <PRE>
  */
 const PrivateRoute = ({ authentication }: IPrivateRouteProps) => {
-	// const isAuthenticated: boolean = true //Boolean(sessionStorage.getItem('isAuthenticated'))
+  // const isAuthenticated: boolean = true //Boolean(sessionStorage.getItem('isAuthenticated'))
 
-	if (authentication) {
-		//로그인이 필요한페이지
-		//로그인을 안했을경우 로그인페이지, 했을경우 해당 페이지
-		// return !isAuthenticated ? <Navigate to={'/login'} /> : <Outlet />
-		// return <Outlet />
-	} else {
-		//로그인이 필요 없는페이지
-		// return <Outlet />
-	}
-	return <Outlet />
-}
+  if (authentication) {
+    //로그인이 필요한페이지
+    //로그인을 안했을경우 로그인페이지, 했을경우 해당 페이지
+    // return !isAuthenticated ? <Navigate to={'/login'} /> : <Outlet />
+    // return <Outlet />
+  } else {
+    //로그인이 필요 없는페이지
+    // return <Outlet />
+  }
+  return <Outlet />;
+};
 
-export default PrivateRoute
+export default PrivateRoute;

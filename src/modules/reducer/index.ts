@@ -1,10 +1,10 @@
-import { combineReducers } from 'redux'
-import layOutReducer from './layout'
+import { combineReducers } from "redux";
+import layOutReducer from "./layout";
 
 const rootReducer = combineReducers({
-	layOutReducer
-})
+  layOutReducer,
+});
 
-export default rootReducer
+export default rootReducer;
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;
