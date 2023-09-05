@@ -34,6 +34,7 @@
 		"prettier": "^2.8.1",
 		"proj4": "^2.8.0",
 		"react-image-and-background-image-fade": "^1.0.8",
+		"react-paypal-express-checkout": "^1.0.5",
 		"react-slick": "^0.29.0",
 		"redux": "^4.2.0",
 		"redux-thunk": "^2.4.1",
