@@ -1,12 +1,15 @@
 import * as React from "react";
-import ListSubheader from "@mui/material/ListSubheader";
+import SettingsIcon from '@mui/icons-material/Settings';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import ArticleIcon from '@mui/icons-material/Article';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import FileOpenIcon from '@mui/icons-material/FileOpen';
+import PlagiarismIcon from '@mui/icons-material/Plagiarism';
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
-import SendIcon from "@mui/icons-material/Send";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
 import { useEffect, useState } from "react";
@@ -53,23 +56,18 @@ const NestedList = () => {
         width: "100%",
         maxWidth: 260,
         bgcolor: "background.paper",
-        paddingTop: "20px",
+        paddingTop: "0px",
         position: "absolute",
       }}
       component="nav"
       aria-labelledby="nested-list-subheader"
-      subheader={
-        <ListSubheader component="div" id="nested-list-subheader">
-          시험지제작
-        </ListSubheader>
-      }
     >
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION0)}
         className="nav1"
       >
         <ListItemIcon>
-          <SendIcon />
+          <SettingsIcon />
         </ListItemIcon>
         <ListItemText primary="지문관리" />
       </ListItemButton>
@@ -79,7 +77,7 @@ const NestedList = () => {
         className="nav2"
       >
         <ListItemIcon>
-          <DraftsIcon />
+          <SaveAltIcon />
         </ListItemIcon>
         <ListItemText primary="지문저장" />
       </ListItemButton>
@@ -89,7 +87,7 @@ const NestedList = () => {
         className="nav3"
       >
         <ListItemIcon>
-          <InboxIcon />
+          <ArticleIcon />
         </ListItemIcon>
         <ListItemText primary="문제출제" />
       </ListItemButton>
@@ -99,7 +97,7 @@ const NestedList = () => {
         className="nav4"
       >
         <ListItemIcon>
-          <InboxIcon />
+          <NoteAddIcon />
         </ListItemIcon>
         <ListItemText primary="시험지제작" />
       </ListItemButton>
@@ -109,7 +107,7 @@ const NestedList = () => {
         className="nav5"
       >
         <ListItemIcon>
-          <InboxIcon />
+          <FileOpenIcon />
         </ListItemIcon>
         <ListItemText primary="시험지보기" />
       </ListItemButton>
@@ -119,7 +117,7 @@ const NestedList = () => {
         className="nav6"
       >
         <ListItemIcon>
-          <InboxIcon />
+          <PlagiarismIcon />
         </ListItemIcon>
         <ListItemText primary="시험지관리" />
       </ListItemButton>

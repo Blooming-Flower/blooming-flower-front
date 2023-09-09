@@ -24,22 +24,12 @@ import {
   useTheme,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Popup from "@components/ui/popup";
 import Dialog, {DialogProps} from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
-const options = [
-  "2023",
-  "2024",
-  "2025",
-  "2026",
-  "2027",
-  "2028",
-  "2029",
-  "2030",
-];
+import {YEAR} from "@common/const"
+
 
 const PassageMng = () => {
   const outerTheme = useTheme();
@@ -156,7 +146,7 @@ const PassageMng = () => {
                 label="Year"
                 onChange={handleBook}
               >
-                {options.map((text, id) => (
+                {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
                   </MenuItem>

@@ -1,24 +1,11 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { PATH } from "@common/domain";
-import useClasses from "@utils/useClasses";
-import logoWhite from "@images/common/urflowerMini.png";
-import { Box } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
+import headerImg from "@images/common/IMG_5333.jpeg";
 let currentPath = "";
 
 const HeaderPc = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const menuPath: string[] = [
-    PATH.QUESTION0,
-    PATH.QUESTION1,
-    PATH.QUESTION2,
-    PATH.QUESTION3,
-    PATH.QUESTION4,
-    PATH.QUESTION5,
-  ];
 
   useEffect(() => {
     if (currentPath === location.pathname) {
@@ -37,8 +24,18 @@ const HeaderPc = () => {
       <div
         id="headerTopWrap"
         className="top header2"
-        style={{ backgroundColor: "rgba(255,247,226,0.9)", height: "150px" }}
-      ></div>
+        style={{
+          backgroundColor: "rgba(255,247,226,0.9)",
+          height: "250px",
+          width: "100%",
+        }}
+      >
+        <img
+          src={headerImg}
+          alt="header"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      </div>
     </header>
   );
 };

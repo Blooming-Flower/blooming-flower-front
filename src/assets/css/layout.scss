@@ -110,6 +110,14 @@ body {
 	.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root:hover{
 		background-color: rgba(255, 237, 216, 0.82);
 	}
+	.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root{
+		height: 70px;
+		span{
+			font-size: 20px;
+			color: #6d6d6d;
+			font-weight: lighter;
+		}
+	}
 }
 
 
