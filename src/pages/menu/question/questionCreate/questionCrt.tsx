@@ -1,9 +1,13 @@
 import Layout from "@components/layouts/layout";
-import React from "react";
+import React, { useState } from "react";
+
 import {
   Box,
   Button,
   FormControl,
+  List,
+  ListItem,
+  ListItemText,
   MenuItem,
   Pagination,
   Select,
@@ -29,6 +33,9 @@ const yearSelect = [
 const textbookSelect = ["영어1", "영어2", "영어3", "영어4", "영어5"];
 const lectureSelect = ["1강", "2강", "3강", "4강", "5강", "6강"];
 
+//지문 체크 박스
+const checkBoxList = [{}];
+
 const QuestionCrt = () => {
   const [searchYear, setSearchYear] = React.useState("");
   const [searchTextBook, setSearchTextBook] = React.useState("");
@@ -39,6 +46,9 @@ const QuestionCrt = () => {
     setSearchTextBook(event.target.value as string);
     setSearchlecture(event.target.value as string);
   };
+
+  //데이터 그리드 체크박스 선택시 데이터 저장할 빈배열
+
   const columns: GridColDef[] = [
     {
       field: "chapter",
@@ -93,15 +103,15 @@ const QuestionCrt = () => {
     { id: 7, year: "2023", name: "Jon", chapter: 1, count: 35, num: 11 },
   ];
   return (
-    <Layout>
-      <div className="mainCont">
-        <Typography
-          variant="h3"
-          sx={{ fontWeight: "500", color: "#ff8b2c", paddingBottom: "20px" }}
-        >
-          문제 출제
-        </Typography>
-        <Box sx={{ width: "100%" }}>
+    <>
+      <Layout>
+        <div className="mainCont mainCont2">
+          <Typography
+            variant="h3"
+            sx={{ fontWeight: "500", color: "#ff8b2c", paddingBottom: "20px" }}
+          >
+            문제 출제
+          </Typography>
           <Box
             sx={{
               maxWidth: "700px",
@@ -185,8 +195,8 @@ const QuestionCrt = () => {
               </Select>
             </FormControl>
           </Box>
-
           {/* 지문선택 */}
+
           <DataGrid
             rows={rows}
             columns={columns}
@@ -201,6 +211,7 @@ const QuestionCrt = () => {
             disableRowSelectionOnClick
             hideFooterPagination={true}
           />
+
           <Pagination
             count={parseInt((rows.length / 5).toString()) + 1}
             onChange={(event, value) => setPage(value - 1)}
@@ -210,9 +221,16 @@ const QuestionCrt = () => {
             shape="rounded"
             sx={{ display: "flex" }}
           />
+        </div>
+        <Box sx={{ float: "right" }}>
+          <List>
+            <ListItem>
+              <ListItemText primary="수능특강" />
+            </ListItem>
+          </List>
         </Box>
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 };
 
