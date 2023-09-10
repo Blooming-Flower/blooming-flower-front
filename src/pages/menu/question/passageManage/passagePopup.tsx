@@ -18,6 +18,7 @@ import { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 import Typography from "@mui/material/Typography";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import List from "@mui/material/List";
+import VerticalTabs from "@pages/menu/question/passageManage/passageTabs";
 
 const PassagePopup = forwardRef((props: {}, ref: ForwardedRef<any>) => {
   const [open, setOpen] = React.useState(false);
@@ -63,46 +64,7 @@ const PassagePopup = forwardRef((props: {}, ref: ForwardedRef<any>) => {
         <CloseIcon />
       </IconButton>
       <DialogContent>
-        <Box style={{ float: "left", width:'250px' }}>
-          <List
-            sx={{ width: "100%",  bgcolor: "background.paper" }}
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-            subheader={
-              <ListSubheader component="div" id="nested-list-subheader">
-                지문
-              </ListSubheader>
-            }
-          >
-            <ListItemButton>
-              <ListItemText primary="Sent mail" />
-              <ListItemIcon>
-                <HighlightOffIcon/>
-              </ListItemIcon>
-            </ListItemButton>
-            <ListItemButton>
-              <ListItemText primary="Drafts" />
-              <ListItemIcon>
-                <HighlightOffIcon/>
-              </ListItemIcon>
-            </ListItemButton>
-            <ListItemButton onClick={handleClick}>
-              <ListItemText primary="Inbox" />
-              {openList ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openList} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemText primary="Starred" />
-                  <ListItemIcon>
-                    <HighlightOffIcon/>
-                  </ListItemIcon>
-                </ListItemButton>
-              </List>
-            </Collapse>
-          </List>
-        </Box>
-        <Box style={{ float: "right" }}>지문+에디터</Box>
+        <VerticalTabs/>
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleClose}>

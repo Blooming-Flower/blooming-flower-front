@@ -203,7 +203,7 @@ const customTheme = (outerTheme: Theme) =>
       MuiTextField: {
         styleOverrides: {
           root: {
-            "--TextField-brandBorderColor": "#E0E3E7",
+            "--TextField-brandBorderColor": "rgba(0,0,0,0.23)",
             "--TextField-brandBorderHoverColor": "#040404",
             "--TextField-brandBorderFocusedColor": "#ffc23b",
             "& label.Mui-focused": {
