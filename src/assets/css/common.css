@@ -18,7 +18,12 @@
 	font-weight: 500;
 	src: url('../fonts/OPTITimes-Roman.otf') format('opentype');
 }
-
+@font-face {
+	font-family: 'BlackHanSans';
+	font-style: normal;
+	font-weight: bold;
+	src: url('../fonts/BlackHanSans.otf') format('opentype');
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -60,4 +65,6 @@ caption {
 .MuiTypography-root {
 	font-family: 'KoPubDotum', sans-serif !important;
 }
-
+.MuiButton-root {
+	font-family: 'KoPubDotum', sans-serif !important;
+}

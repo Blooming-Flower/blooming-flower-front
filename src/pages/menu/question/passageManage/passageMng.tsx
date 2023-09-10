@@ -1,53 +1,42 @@
 import Layout from "@components/layouts/layout";
 import * as React from "react";
 import Box from "@mui/material/Box";
-import CloseIcon from '@mui/icons-material/Close';
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import {
   Button,
   createTheme,
-  FormControl, IconButton,
+  FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   outlinedInputClasses,
   Pagination,
   Select,
-  SelectChangeEvent, styled,
+  SelectChangeEvent,
+  styled,
   TextField,
   Theme,
   ThemeProvider,
   useTheme,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Dialog, {DialogProps} from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import {YEAR} from "@common/const"
-
+import { YEAR } from "@common/const";
+import PassagePopup from "@pages/menu/question/passageManage/passagePopup";
+import { useRef } from "react";
 
 const PassageMng = () => {
   const outerTheme = useTheme();
   const [book, setBook] = React.useState("");
   const [page, setPage] = React.useState(0);
-
-
+  const popupRef: any = useRef();
   const handleBook = (event: SelectChangeEvent) => {
     setBook(event.target.value as string);
   };
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    popupRef.current.handleOpen();
   };
-  const handleClose = () => {
-    setOpen(false);
-  };
+
   const columns: GridColDef[] = [
     { field: "year", headerName: "연도", width: 90 },
     {
@@ -82,9 +71,14 @@ const PassageMng = () => {
       headerName: "수정",
       width: 160,
       getActions: (params) => [
-            <Button variant="outlined" color="warning" size="medium" onClick={handleClickOpen}>
-              수정
-            </Button>
+        <Button
+          variant="outlined"
+          color="warning"
+          size="medium"
+          onClick={handleClickOpen}
+        >
+          수정
+        </Button>,
       ],
     },
   ];
@@ -131,7 +125,8 @@ const PassageMng = () => {
       <div className="mainCont">
         <Typography
           variant="h2"
-          sx={{ fontWeight: "500", color: "#ff8b2c", paddingBottom: "20px" }}
+          className="menu-title"
+          sx={{ color: "#ff8b2c", paddingBottom: "20px" }}
         >
           지문관리
         </Typography>
@@ -192,48 +187,7 @@ const PassageMng = () => {
           />
         </Box>
       </div>
-      <BootstrapDialog
-          onClose={handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={open}
-      >
-        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Modal title
-        </DialogTitle>
-        <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-            consectetur ac, vestibulum at eros.
-          </Typography>
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus
-            magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec
-            ullamcorper nulla non metus auctor fringilla.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button>
-        </DialogActions>
-      </BootstrapDialog>
+      <PassagePopup ref={popupRef} />
     </Layout>
   );
 };
@@ -307,11 +261,3 @@ const customTheme = (outerTheme: Theme) =>
       },
     },
   });
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
-}));

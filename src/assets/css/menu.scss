@@ -165,65 +165,15 @@
 	}
 }
 
-.recruit-detail-container {
-	padding: 40px 30px;
-	width: 90%;
-	margin: 0 auto;
-	@include mobile {
-		padding: 0px;
-	}
-	@include tablet {
-		padding: 30px;
-	}
-	.recruit-detail-title {
-		color: rgb(18, 31, 102);
-		@include mobile {
-			font-size: 1rem;
-		}
-		hr {
-			border-width: 3px;
-			border-color: rgb(18, 31, 102);
-			margin: 20px 0;
-		}
-	}
-	.recruit-detail-subTitle {
-		margin-bottom: 20px;
-		h3 {
-			font-size: 30px;
-			color: rgb(18, 31, 102);
-			@include mobile {
-				font-size: 25px;
-			}
-		}
-		p {
-			font-size: 20px;
-			font-weight: 500;
-			line-height: 2;
-			@include mobile {
-				font-size: 17px;
-			}
-		}
-		.recruit-detail-img {
-			width: 70%;
-			margin: 30px auto 0 auto;
-			@include mobile {
-				width: 100%;
-			}
-		}
-		img {
-			width: 100%;
-		}
-	}
-}
-.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused .MuiOutlinedInput-notchedOutline{
+.Mui-focused .MuiOutlinedInput-notchedOutline{
 	border-color: #ffc23b !important;
 	//background-color: rgba(128, 128, 128, 0.32);
 }
-.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused{
+.MuiFormLabel-root.MuiInputLabel-root.Mui-focused{
 	color: #ffc23b !important;
 }
 
-.css-eyt2ms-MuiButtonBase-root-MuiButton-root{
+.MuiButtonBase-root.MuiButton-root{
 	width: 100px;
 	height: 40px;
 	float: right;
@@ -274,8 +224,19 @@
 	width: 95%;
 	display: flex !important;
 	margin: 10px auto !important;
-	.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+	.MuiInputBase-input{
 		padding-bottom: 10px !important;
 		padding-top: 10px !important
 	}
+}
+
+.MuiPaper-root.MuiDialog-paper{
+	max-width: 1000px !important;
+	width: 800px !important;
+}
+#nested-list-subheader{
+	font-size: 20px;
+	font-weight: bold;
+	border-top: 2px solid #b3b3b3;
+	border-bottom: 2px solid #b3b3b3;
 }

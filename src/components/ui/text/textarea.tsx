@@ -30,7 +30,7 @@ const TextareaIntroduction = () => {
     ({ theme }) => `
     min-width:100%;
     max-width:100%;
-    max-height:500px;
+    max-height:450px;
     margin-top: 10px;
     font-family: IBM Plex Sans, sans-serif;
     font-size: 1rem;

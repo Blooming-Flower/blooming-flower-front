@@ -107,10 +107,10 @@ body {
 	.active{
 		background-color: #ffdca6;
 	}
-	.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root:hover{
+	.MuiListItemButton-root:hover{
 		background-color: rgba(255, 237, 216, 0.82);
 	}
-	.css-16ac5r2-MuiButtonBase-root-MuiListItemButton-root{
+	.MuiListItemButton-root{
 		height: 70px;
 		span{
 			font-size: 20px;
@@ -139,6 +139,9 @@ body {
 	}
 	@include mobile{
 		margin: 100px auto;
+	}
+	.menu-title{
+		font-family: 'BlackHanSans', sans-serif !important;
 	}
 }
 

@@ -33,7 +33,8 @@ const PassageCrt = () => {
       <div className="mainCont">
         <Typography
           variant="h2"
-          sx={{ fontWeight: "500", color: "#ff8b2c", paddingBottom: "20px" }}
+          className="menu-title"
+          sx={{ color: "#ff8b2c", paddingBottom: "20px" }}
         >
           지문저장
         </Typography>
