@@ -22,3 +22,21 @@ export const enum ALERT {
 	CONFIRM,
 	CONFIRM_3B
 }
+export const YEAR:string[] = [
+	"2023",
+	"2024",
+	"2025",
+	"2026",
+	"2027",
+	"2028",
+	"2029",
+	"2030"
+]
+
+export const PASSAGETYPE:string[] = [
+	'교과서',
+	'모의고사',
+	'EBS',
+	'부교재',
+	'외부지문'
+]
