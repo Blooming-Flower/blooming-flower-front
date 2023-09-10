@@ -61,6 +61,37 @@ caption {
 .fl_r {
 	float: right;
 }
+/* 
+input {
+	box-sizing: border-box;
+}
+textarea {
+	resize: none;
+}
+
+::-webkit-input-placeholder {
+	color: #666;
+}
+::-moz-placeholder {
+	color: #666;
+}
+:-ms-input-placeholder {
+	color: #666;
+}
+:-moz-placeholder {
+	color: #666;
+}
+
+input:read-only {
+	background: #ececec;
+}
+input:-moz-read-only {
+	background: #ececec;
+}
+
+.hide {
+	display: none !important;
+} */
 
 .MuiTypography-root {
 	font-family: 'KoPubDotum', sans-serif !important;
