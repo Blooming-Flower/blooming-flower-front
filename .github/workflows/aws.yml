@@ -41,7 +41,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         source: "dist/*"  # React 앱 빌드 디렉토리
         target: ${{ env.SERVICE_HOME }}
-        strip_components: 1
+        # strip_components: 1
     - name: Execute Script
       uses: appleboy/ssh-action@master
       with:
