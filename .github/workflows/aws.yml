@@ -41,7 +41,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         source: "build/*"
         target: ${{ env.SERVICE_HOME }}
-        strip_components: 2
+        strip_components: 1
     - name: Execute Script
       uses: appleboy/ssh-action@master
       with:
