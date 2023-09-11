@@ -22,12 +22,15 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: "npm"
+    - uses: actions/checkout@v2
+
+    - name: Install NPM Packages
+      run: npm ci
+    - name: Build App
+      run: |
+          REACT_APP_BUILD_SHA=${{ github.sha }} \
+          REACT_APP_BUILD_DATE=$(date +'%F %T %Z') \
+          npm run build-for-java
     - name: Install modules
       run: npm install
     - name: Run test codes
