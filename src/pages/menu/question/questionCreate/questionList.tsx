@@ -10,11 +10,12 @@ import {
   ListSubheader,
 } from "@mui/material";
 import React, { useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 //css
 import "@css/questionCreate/questionList.scss";
 import { ExpandMore, ExpandLess, StarBorder } from "@mui/icons-material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 const QuestionList = () => {
   const [open, setOpen] = React.useState(true);
@@ -44,7 +45,7 @@ const QuestionList = () => {
                   key={`item-${sectionId}-${item}`}
                   secondaryAction={
                     <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
+                      <HighlightOffIcon />
                     </IconButton>
                   }
                 >
@@ -54,7 +55,7 @@ const QuestionList = () => {
                   </ListItemButton>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                      <ListItemButton sx={{ pl: 2 }}>
+                      <ListItemButton sx={{ pl: 4 }}>
                         <ListItemText primary="Starred" />
                       </ListItemButton>
                     </List>
