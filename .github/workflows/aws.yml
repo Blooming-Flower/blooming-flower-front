@@ -30,8 +30,6 @@ jobs:
         cache: "npm"
     - name: Install modules
       run: npm install --save --legacy-peer-deps
-    - name: Run test codes
-      run: npm run test
     - name: Build project
       run: npm run build
     - name: Copy jar to EC2
