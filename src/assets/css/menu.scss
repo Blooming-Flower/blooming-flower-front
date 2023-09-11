@@ -1,37 +1,5 @@
 @import './common.scss';
 
-/* 메뉴별 제목 */
-.menu_title_p_warp {
-	padding-top: 45px;
-	text-align: center;
-	@include mobile {
-		width: 100%;
-	}
-	@include tablet {
-		width: 80%;
-		margin: 0 auto;
-	}
-}
-.menu_title_p_fixed_warp {
-	padding-top: 45px;
-}
-.menu_title_p1 {
-	// font-size: 45px;
-	font-size: 3.2rem;
-	font-weight: bold;
-	color: $txtPointerColor;
-	span {
-		color: #000;
-	}
-	@include mobile {
-		font-size: 2.5rem;
-	}
-}
-.menu_title_p2 {
-	padding-top: 5px;
-	font-size: 1.5rem;
-}
-
 // 메뉴토글리스트
 #menuListBar {
 	display: flex;
@@ -130,107 +98,22 @@
 		}
 	}
 }
-.accodion {
-	width: 70%;
-	height: 100%;
-	@include mobile {
-		width: 90%;
-	}
-	@include tablet {
-		width: 80%;
-	}
-	.MuiAccordionSummary-root {
-		background-color: rgba(255, 255, 255, 0);
-		font-weight: 500;
-		span {
-			font-size: 30px;
-			font-weight: bold;
-			margin-right: 30px;
-		}
-		p {
-			font-size: 20px;
-		}
-	}
-	.MuiAccordionSummary-root .Mui-expanded {
-		color: #5778ff;
-		margin: 12px 0;
-		span {
-			color: #5778ff !important;
-		}
-	}
-}
-#accodionTable {
-	td {
-		line-height: 1.43 !important;
-	}
-}
 
-.recruit-detail-container {
-	padding: 40px 30px;
-	width: 90%;
-	margin: 0 auto;
-	@include mobile {
-		padding: 0px;
-	}
-	@include tablet {
-		padding: 30px;
-	}
-	.recruit-detail-title {
-		color: rgb(18, 31, 102);
-		@include mobile {
-			font-size: 1rem;
-		}
-		hr {
-			border-width: 3px;
-			border-color: rgb(18, 31, 102);
-			margin: 20px 0;
-		}
-	}
-	.recruit-detail-subTitle {
-		margin-bottom: 20px;
-		h3 {
-			font-size: 30px;
-			color: rgb(18, 31, 102);
-			@include mobile {
-				font-size: 25px;
-			}
-		}
-		p {
-			font-size: 20px;
-			font-weight: 500;
-			line-height: 2;
-			@include mobile {
-				font-size: 17px;
-			}
-		}
-		.recruit-detail-img {
-			width: 70%;
-			margin: 30px auto 0 auto;
-			@include mobile {
-				width: 100%;
-			}
-		}
-		img {
-			width: 100%;
-		}
-	}
-}
-.css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused .MuiOutlinedInput-notchedOutline{
+.Mui-focused .MuiOutlinedInput-notchedOutline{
 	border-color: #ffc23b !important;
-	//background-color: rgba(128, 128, 128, 0.32);
 }
-.css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused{
+.MuiFormLabel-root.MuiInputLabel-root.Mui-focused{
 	color: #ffc23b !important;
 }
 
-.css-eyt2ms-MuiButtonBase-root-MuiButton-root{
+.MuiButtonBase-root.MuiButton-root{
 	width: 100px;
 	height: 40px;
 	float: right;
 }
 
 .button-label{
-	height:40px;
+	height:40px !important;
 	margin-left: 10px;
 	float: left;
 	cursor: pointer;
@@ -274,8 +157,19 @@
 	width: 95%;
 	display: flex !important;
 	margin: 10px auto !important;
-	.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+	.MuiInputBase-input{
 		padding-bottom: 10px !important;
 		padding-top: 10px !important
 	}
+}
+
+.MuiPaper-root.MuiDialog-paper{
+	max-width: 1000px !important;
+	width: 800px !important;
+}
+#nested-list-subheader{
+	font-size: 20px;
+	font-weight: bold;
+	border-top: 2px solid #b3b3b3;
+	border-bottom: 2px solid #b3b3b3;
 }

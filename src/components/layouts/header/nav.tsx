@@ -9,7 +9,6 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
 import { useEffect, useState } from "react";

@@ -30,6 +30,12 @@ export default defineConfig({
         chunkFileNames: "vite_assets/[name]-[hash].js",
         assetFileNames: "vite_assets/[name]-[hash][extname]",
       },
+      onwarn(warning, warn) {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return
+        }
+        warn(warning)
+      }
     },
     // sourcemap: true,
     // manifest: true

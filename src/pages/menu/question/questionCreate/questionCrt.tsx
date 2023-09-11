@@ -1,7 +1,7 @@
 import Layout from "@components/layouts/layout";
 import React, { useState } from "react";
 
-import QuestionList from "./questionList";
+import QuestionList from "./QuestionList";
 
 import {
   Box,
