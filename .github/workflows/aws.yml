@@ -39,7 +39,7 @@ jobs:
         host: ${{ env.EC2_HOST }}
         port: ${{ secrets.SSH_PORT }}
         key: ${{ secrets.PRIVATE_KEY }}
-        source: "./build/libs/*.jar"
+        source: "build/*"
         target: ${{ env.SERVICE_HOME }}
         strip_components: 2
     - name: Execute Script
