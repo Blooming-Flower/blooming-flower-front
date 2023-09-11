@@ -1,63 +1,70 @@
 import {
-  Box,
-  Grid,
   IconButton,
   List,
   ListItem,
   ListItemText,
-  ListItemAvatar,
-  Avatar,
   styled,
+  ListItemButton,
+  Collapse,
+  ListItemIcon,
+  ListSubheader,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 //css
 import "@css/questionCreate/questionList.scss";
-
-const Demo = styled("div")(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-}));
-
-const generate = (element: React.ReactElement) => {
-  return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    })
-  );
-};
+import { ExpandMore, ExpandLess, StarBorder } from "@mui/icons-material";
 
 const QuestionList = () => {
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   return (
     <div className="questionList-item">
-      <Grid item xs={6} md={4}>
-        <Demo>
-          <List dense={dense}>
-            {generate(
-              <ListItem
-                secondaryAction={
-                  <IconButton edge="end" aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                }
-              >
-                {/* <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon />
-                    </Avatar>
-                  </ListItemAvatar> */}
-                <ListItemText
-                  primary="Single-line item"
-                  secondary={secondary ? "Secondary text" : null}
-                />
-              </ListItem>
-            )}
-          </List>
-        </Demo>
-      </Grid>
+      <List
+        sx={{
+          maxWidth: 360,
+          bgcolor: "background.paper",
+          position: "relative",
+          overflow: "auto",
+          maxHeight: 300,
+          "& ul": { padding: 0 },
+        }}
+        subheader={<li />}
+      >
+        {[0, 1, 2, 3, 4].map((sectionId) => (
+          <li key={`section-${sectionId}`}>
+            <ul>
+              <ListSubheader>{`수능특강 ${sectionId}`}</ListSubheader>
+              {[0, 1, 2].map((item) => (
+                <ListItem
+                  key={`item-${sectionId}-${item}`}
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  }
+                >
+                  <ListItemButton onClick={handleClick}>
+                    <ListItemText primary={`YBM ${item}`} />
+                    {open ? <ExpandLess /> : <ExpandMore />}
+                  </ListItemButton>
+                  <Collapse in={open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      <ListItemButton sx={{ pl: 2 }}>
+                        <ListItemText primary="Starred" />
+                      </ListItemButton>
+                    </List>
+                  </Collapse>
+                </ListItem>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </List>
     </div>
   );
 };

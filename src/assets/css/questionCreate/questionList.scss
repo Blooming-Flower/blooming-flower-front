@@ -1,7 +1,7 @@
 .questionList-item {
-  height: 376px;
   margin-top: 118px;
   border: 1px solid #dddddd;
+  height: 100%;
 }
 
 .css-1k9ek97 {
@@ -12,6 +12,11 @@
   margin: 0px auto !important;
 }
 
-.css-h4y409-MuiList-root {
-  border: 0px solid #dddddd !important;
+.css-1hln3ey-MuiList-root {
+  max-width: 200px !important;
+}
+
+.css-mu1651-MuiList-root {
+  max-height: 500px !important;
+  border-radius: 10px !important;
 }
