@@ -1,9 +1,7 @@
 import * as React from "react";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import { styled } from "@mui/system";
-import { Box } from "@mui/material";
 
-const TextareaIntroduction = () => {
   const orange = {
     100: "#ececec",
     200: "#fff1dd",
@@ -26,7 +24,7 @@ const TextareaIntroduction = () => {
     900: "#ffb230",
   };
 
-  const StyledTextarea = styled(TextareaAutosize)(
+  export const StyledTextarea = styled(TextareaAutosize)(
     ({ theme }) => `
     min-width:100%;
     max-width:100%;
@@ -63,13 +61,3 @@ const TextareaIntroduction = () => {
   `
   );
 
-  return (
-    <StyledTextarea
-      minRows={10}
-      maxRows={20}
-      aria-label="maximum height"
-      placeholder="지문"
-    />
-  );
-};
-export default TextareaIntroduction;

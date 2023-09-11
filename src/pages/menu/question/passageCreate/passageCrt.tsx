@@ -2,7 +2,8 @@ import Layout from "@components/layouts/layout";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import {
-  Box, Button,
+  Box,
+  Button,
   FormControl,
   FormHelperText,
   Grid,
@@ -11,23 +12,52 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CustomButton from "@components/ui/button/custeomButton";
 import { PASSAGETYPE } from "@common/const";
 import { YEAR } from "@common/const";
-import TextareaIntroduction from "@components/ui/text/textarea";
+import { StyledTextarea } from "@components/ui/text/textarea";
+import { $POST } from "@utils/request";
+import { getRowContainerTypeForName } from "ag-grid-community";
 
 const PassageCrt = () => {
   const [year, setYear] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [unit, setUnit] = React.useState("");
+  const [num, setNumber] = React.useState("");
+  const [content, setContent] = React.useState("");
+  const [passageType, setPassageType] = React.useState("");
   const [able, setAble] = useState("");
-
   const handleClick = (type: string) => {
+    switch(type){
+      case '교과서': setPassageType('TEXT_BOOK'); break;
+      case '모의고사': setPassageType('MOCK_TEST'); break;
+      case 'EBS': setPassageType('EBS'); break;
+      case '부교재': setPassageType('SUB_TEXT_BOOK'); break;
+      default : setPassageType('OUT_SIDE_PASSAGE');
+    }
     console.log(type);
     setAble(type);
   };
-  const handleYear = (event: SelectChangeEvent) => {
-    setYear(event.target.value as string);
+
+  const savePassage = async () => {
+    await $POST(
+      "api/v1/passage/save",
+      {
+        'passageType': passageType,
+        'passageYear': year,
+        'passageName': name,
+        'passageUnit': unit,
+        'passageNumber': num,
+        'passageContent': content,
+      },
+      (res: any) => {
+        console.log(res);
+      }
+    );
   };
+
+  // @ts-ignore
   return (
     <Layout>
       <div className="mainCont">
@@ -64,7 +94,7 @@ const PassageCrt = () => {
                 <FormControl className="table-select">
                   <Select
                     value={year}
-                    onChange={handleYear}
+                    onChange={(e) => setYear(e.target.value as string)}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                   >
@@ -84,8 +114,8 @@ const PassageCrt = () => {
               <div className="table-content table-top">
                 <FormControl className="table-select">
                   <Select
-                    value={year}
-                    onChange={handleYear}
+                    value={name}
+                    onChange={(e) => setName(e.target.value as string)}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                   >
@@ -105,8 +135,8 @@ const PassageCrt = () => {
               <div className="table-content">
                 <FormControl className="table-select">
                   <Select
-                    value={year}
-                    onChange={handleYear}
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value as string)}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                   >
@@ -126,8 +156,8 @@ const PassageCrt = () => {
               <div className="table-content">
                 <FormControl className="table-select">
                   <Select
-                    value={year}
-                    onChange={handleYear}
+                    value={num}
+                    onChange={(e) => setNumber(e.target.value as string)}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                   >
@@ -142,9 +172,30 @@ const PassageCrt = () => {
             </Grid>
           </Grid>
         </Box>
-        <Button variant="text" sx={{float:'right', color:'gray'}}>Reset</Button>
-        <TextareaIntroduction />
-        <CustomButton label={"저장"} type={"true"} />
+        <Button
+          variant="text"
+          sx={{ float: "right", color: "gray" }}
+          onClick={() => {
+            setNumber("");
+            setName("");
+            setYear("");
+            setUnit("");
+            setAble("");
+          }}
+        >
+          Reset
+        </Button>
+        <StyledTextarea
+          minRows={10}
+          maxRows={20}
+          aria-label="maximum height"
+          placeholder="지문"
+          className="passage-text"
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <div onClick={savePassage}>
+          <CustomButton label={"저장"} type={"true"} />
+        </div>
       </div>
     </Layout>
   );

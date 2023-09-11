@@ -1,20 +1,16 @@
 import Layout from "@components/layouts/layout";
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef, useGridApiRef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import {
   Button,
-  createTheme,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
-  outlinedInputClasses,
   Pagination,
   Select,
   SelectChangeEvent,
   TextField,
-  Theme,
   ThemeProvider,
   useTheme,
 } from "@mui/material";
@@ -25,7 +21,7 @@ import { ChangeEvent, useRef } from "react";
 import { $GET } from "@utils/request";
 import { debounce } from "@utils/useDebounce";
 import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
-import {addId} from "@utils/functions";
+import { addId } from "@utils/functions";
 
 const PassageMng = () => {
   const outerTheme = useTheme();
@@ -36,11 +32,11 @@ const PassageMng = () => {
   const popupRef: any = useRef();
 
   //년도 체인지 이벤트
-  const handleBook = (event: SelectChangeEvent) => {
+  const handleYear = async (event: SelectChangeEvent) => {
     yearData = event.target.value as string;
     setYear(yearData);
-    console.log(yearData);
-    $GET(
+    document.querySelector('#outlined-basic')!.innerHTML = "";
+    await $GET(
       "/api/v1/passage/search/list?page=?" +
         page.toString() +
         "&size=10&passageYear=" +
@@ -51,8 +47,9 @@ const PassageMng = () => {
     );
   };
   // 교재명 체인지 이벤트
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    $GET(
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if(year != "")
+    await $GET(
       "/api/v1/passage/search/list?page=?" +
         page.toString() +
         "&size=10&passageYear=" +
@@ -153,7 +150,7 @@ const PassageMng = () => {
                 id="demo-simple-select"
                 value={year}
                 label="Year"
-                onChange={handleBook}
+                onChange={handleYear}
               >
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
