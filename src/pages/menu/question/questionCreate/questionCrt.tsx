@@ -106,7 +106,7 @@ const QuestionCrt = () => {
       <Grid container spacing={2}>
         <div className="mainCont mainCont2">
           <Typography
-            variant="h3"
+            variant="h4"
             sx={{ fontWeight: "500", color: "#ff8b2c", paddingBottom: "20px" }}
           >
             문제 출제
