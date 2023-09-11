@@ -5,8 +5,8 @@ export const VITE_APP_IMGS =
 /* ******************* WAS URL ******************* */
 const ROOT_URL: string = window.location.host
 const HTTP: string = 'http://'
-const SERVER: string = '15.165.161.19:29091'
-const SERVER_URL: string = HTTP + SERVER
+const SERVER: string = '43.201.142.170:29091'
+export const SERVER_URL: string = HTTP + SERVER
 
 export const URL = {
 	BASE_PROXY: '/common/gis/base.jsp',

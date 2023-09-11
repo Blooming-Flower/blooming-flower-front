@@ -22,53 +22,96 @@ import {
 import Typography from "@mui/material/Typography";
 import { YEAR } from "@common/const";
 import PassagePopup from "@pages/menu/question/passageManage/passagePopup";
-import { useRef } from "react";
+import {ChangeEvent, useRef} from "react";
+import { $GET } from "@utils/request";
+import {debounce} from "@utils/useDebounce";
+
+
 
 const PassageMng = () => {
   const outerTheme = useTheme();
-  const [book, setBook] = React.useState("");
+  let yearTest:string
+  const [year, setYear] = React.useState("");
   const [page, setPage] = React.useState(0);
   const popupRef: any = useRef();
-  const handleBook = (event: SelectChangeEvent) => {
-    setBook(event.target.value as string);
-  };
 
+  const handleBook = (event: SelectChangeEvent) => {
+    yearTest = event.target.value as string
+    setYear(yearTest)
+    console.log(yearTest)
+    $GET(
+      "/api/v1/passage/search/list?page=?" +
+        page.toString() +
+        "&size=10&passageYear=" +
+        yearTest,
+      (res: any) => {
+        console.log(res);
+      }
+    );
+  };
+const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
+  $GET(
+      "/api/v1/passage/search/list?page=?" +
+      page.toString() +
+      "&size=10&passageYear=" +
+      year+'&passageName='+e.target.value,
+      (res: any) => {
+        console.log(res);
+      }
+  );
+}
+  const debouncedOnChange = debounce<typeof handleChange>(handleChange, 500);
   const handleClickOpen = () => {
     popupRef.current.handleOpen();
   };
 
   const columns: GridColDef[] = [
-    { field: "year", headerName: "연도", width: 90 },
+    {
+      field: "year",
+      headerName: "연도",
+      width: 190,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "name",
       headerName: "교재명",
-      width: 150,
+      headerAlign: "center",
+      width: 300,
       editable: true,
+      align: "center",
     },
     {
       field: "chapter",
       headerName: "강",
+      headerAlign: "center",
       width: 150,
       editable: true,
+      align: "center",
     },
     {
       field: "num",
       headerName: "번호",
-      type: "number",
+      headerAlign: "center",
+      type: "string",
       width: 110,
       editable: true,
+      align: "center",
     },
     {
       field: "count",
       headerName: "문제 수",
+      headerAlign: "center",
       sortable: false,
       width: 160,
       editable: true,
+      align: "center",
     },
     {
       field: "actions",
       type: "actions",
       headerName: "수정",
+      headerAlign: "center",
       width: 160,
       getActions: (params) => [
         <Button
@@ -80,6 +123,7 @@ const PassageMng = () => {
           수정
         </Button>,
       ],
+      align: "center",
     },
   ];
 
@@ -137,7 +181,7 @@ const PassageMng = () => {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={book}
+                value={year}
                 label="Year"
                 onChange={handleBook}
               >
@@ -154,6 +198,7 @@ const PassageMng = () => {
                   id="outlined-basic"
                   label="교재명"
                   variant="outlined"
+                  onChange={debouncedOnChange}
                 />
               </ThemeProvider>
             </FormControl>
@@ -167,14 +212,14 @@ const PassageMng = () => {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}
             checkboxSelection
             disableRowSelectionOnClick
             hideFooterPagination={true}
-            sx={{ fontWeight: "300" }}
+            sx={{ fontWeight: "500", fontSize: "15px" }}
           />
           <Pagination
             count={parseInt((rows.length / 5).toString()) + 1}

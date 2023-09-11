@@ -8,6 +8,9 @@ export default defineConfig({
     host: true,
     port: 5000,
     open: true, //'/map' //true
+    proxy: {
+      '/api': 'http://43.201.142.170:29091'
+    }
   },
   build: {
     cssCodeSplit: false,
