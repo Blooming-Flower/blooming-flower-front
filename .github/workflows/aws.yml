@@ -15,8 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-	env:
+    env:
       CI: false
     strategy:
       matrix:
