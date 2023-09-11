@@ -51,54 +51,6 @@
 	margin: 10px auto !important;
 }
 
-#welfare {
-	.welfare-img {
-		float: left;
-		width: 200px;
-		height: 100%;
-		padding: 50px 0;
-		@include mobile {
-			width: 150px;
-		}
-	}
-	.MuiCard-root:hover {
-		box-shadow: 0 10px 20px 0 rgba(213, 213, 213, 0.8);
-	}
-	@include tablet {
-		width: 90% !important;
-	}
-	@include mobile {
-		width: 90% !important;
-	}
-	.MuiGrid-item {
-		@include tablet {
-			padding: 10px !important;
-		}
-		@include mobile {
-			width: 100% !important;
-			padding: 10px !important;
-		}
-		.welfare-title {
-			padding-top: 30px;
-			@include mobile {
-				font-size: 15px !important;
-			}
-		}
-		.welfare-content {
-			color: #6d6d6d;
-			padding-top: 10px;
-			padding-right: 10px;
-			@include mobile {
-				font-size: 15px !important;
-				padding-top: 0;
-			}
-			@include tablet {
-				padding-top: 0;
-			}
-		}
-	}
-}
-
 .Mui-focused .MuiOutlinedInput-notchedOutline{
 	border-color: #ffc23b !important;
 }
@@ -121,7 +73,9 @@
 		cursor: pointer !important;
 	}
 }
-
+.MuiDataGrid-overlay{
+	display: none !important;
+}
 .button-front{
 	height: 40px;
 	float: left;

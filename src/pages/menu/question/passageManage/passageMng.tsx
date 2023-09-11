@@ -1,7 +1,7 @@
 import Layout from "@components/layouts/layout";
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, useGridApiRef } from "@mui/x-data-grid";
 import {
   Button,
   createTheme,
@@ -13,7 +13,6 @@ import {
   Pagination,
   Select,
   SelectChangeEvent,
-  styled,
   TextField,
   Theme,
   ThemeProvider,
@@ -22,44 +21,51 @@ import {
 import Typography from "@mui/material/Typography";
 import { YEAR } from "@common/const";
 import PassagePopup from "@pages/menu/question/passageManage/passagePopup";
-import {ChangeEvent, useRef} from "react";
+import { ChangeEvent, useRef } from "react";
 import { $GET } from "@utils/request";
-import {debounce} from "@utils/useDebounce";
-
-
+import { debounce } from "@utils/useDebounce";
+import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
+import {addId} from "@utils/functions";
 
 const PassageMng = () => {
   const outerTheme = useTheme();
-  let yearTest:string
+  let yearData: string;
   const [year, setYear] = React.useState("");
   const [page, setPage] = React.useState(0);
+  const [data, setData] = React.useState([]);
   const popupRef: any = useRef();
 
+  //년도 체인지 이벤트
   const handleBook = (event: SelectChangeEvent) => {
-    yearTest = event.target.value as string
-    setYear(yearTest)
-    console.log(yearTest)
+    yearData = event.target.value as string;
+    setYear(yearData);
+    console.log(yearData);
     $GET(
       "/api/v1/passage/search/list?page=?" +
         page.toString() +
         "&size=10&passageYear=" +
-        yearTest,
+        yearData,
       (res: any) => {
-        console.log(res);
+        setData(addId(res, yearData));
       }
     );
   };
-const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
-  $GET(
+  // 교재명 체인지 이벤트
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    $GET(
       "/api/v1/passage/search/list?page=?" +
-      page.toString() +
-      "&size=10&passageYear=" +
-      year+'&passageName='+e.target.value,
+        page.toString() +
+        "&size=10&passageYear=" +
+        year +
+        "&passageName=" +
+        e.target.value,
       (res: any) => {
-        console.log(res);
+        for (let i = 0; i < res.data.content.length; i++) {
+          setData(addId(res, yearData));
+        }
       }
-  );
-}
+    );
+  };
   const debouncedOnChange = debounce<typeof handleChange>(handleChange, 500);
   const handleClickOpen = () => {
     popupRef.current.handleOpen();
@@ -74,7 +80,7 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
       headerAlign: "center",
     },
     {
-      field: "name",
+      field: "passageName",
       headerName: "교재명",
       headerAlign: "center",
       width: 300,
@@ -82,7 +88,7 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
       align: "center",
     },
     {
-      field: "chapter",
+      field: "passageUnit",
       headerName: "강",
       headerAlign: "center",
       width: 150,
@@ -90,7 +96,7 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
       align: "center",
     },
     {
-      field: "num",
+      field: "passageNumber",
       headerName: "번호",
       headerAlign: "center",
       type: "string",
@@ -99,16 +105,17 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
       align: "center",
     },
     {
-      field: "count",
+      field: "questionCount",
       headerName: "문제 수",
       headerAlign: "center",
       sortable: false,
+      type: "number",
       width: 160,
       editable: true,
       align: "center",
     },
     {
-      field: "actions",
+      field: "passageId",
       type: "actions",
       headerName: "수정",
       headerAlign: "center",
@@ -127,43 +134,6 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      year: "2020",
-      name: "수능특강 Light 영어독해",
-      chapter: "18강",
-      count: 8,
-      num: 11,
-    },
-    {
-      id: 2,
-      year: "2023",
-      name: "수능특강 Light 영어독해",
-      chapter: "17강",
-      count: 10,
-      num: 11,
-    },
-    {
-      id: 3,
-      year: "2020",
-      name: "올림포스1",
-      chapter: "Test1",
-      count: 12,
-      num: 11,
-    },
-    {
-      id: 4,
-      year: "2022",
-      name: "올림포스 연합기출",
-      chapter: "Test2",
-      count: 35,
-      num: 11,
-    },
-    { id: 5, year: "2021", name: "Jon", chapter: 1, count: 35, num: 11 },
-    { id: 6, year: "2023", name: "Jon", chapter: 1, count: 35, num: 11 },
-    { id: 7, year: "2023", name: "Jon", chapter: 1, count: 35, num: 11 },
-  ];
   return (
     <Layout>
       <div className="mainCont">
@@ -207,7 +177,7 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
             </Button>
           </Box>
           <DataGrid
-            rows={rows}
+            rows={data}
             columns={columns}
             initialState={{
               pagination: {
@@ -222,7 +192,7 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
             sx={{ fontWeight: "500", fontSize: "15px" }}
           />
           <Pagination
-            count={parseInt((rows.length / 5).toString()) + 1}
+            count={parseInt((data.length / 5).toString()) + 1}
             onChange={(event, value) => setPage(value - 1)}
             page={page + 1}
             showFirstButton
@@ -238,71 +208,3 @@ const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
 };
 
 export default PassageMng;
-/********************************************** 스타일 ***************************************************/
-const customTheme = (outerTheme: Theme) =>
-  createTheme({
-    palette: {
-      mode: outerTheme.palette.mode,
-    },
-    components: {
-      MuiTextField: {
-        styleOverrides: {
-          root: {
-            "--TextField-brandBorderColor": "rgba(0,0,0,0.23)",
-            "--TextField-brandBorderHoverColor": "#040404",
-            "--TextField-brandBorderFocusedColor": "#ffc23b",
-            "& label.Mui-focused": {
-              color: "var(--TextField-brandBorderFocusedColor)",
-            },
-          },
-        },
-      },
-      MuiOutlinedInput: {
-        styleOverrides: {
-          notchedOutline: {
-            borderColor: "var(--TextField-brandBorderColor)",
-          },
-          root: {
-            [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-              borderColor: "var(--TextField-brandBorderHoverColor)",
-            },
-            [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-              borderColor: "var(--TextField-brandBorderFocusedColor)",
-            },
-          },
-        },
-      },
-      MuiFilledInput: {
-        styleOverrides: {
-          root: {
-            "&:before, &:after": {
-              borderBottom: "2px solid var(--TextField-brandBorderColor)",
-            },
-            "&:hover:not(.Mui-disabled, .Mui-error):before": {
-              borderBottom: "2px solid var(--TextField-brandBorderHoverColor)",
-            },
-            "&.Mui-focused:after": {
-              borderBottom:
-                "2px solid var(--TextField-brandBorderFocusedColor)",
-            },
-          },
-        },
-      },
-      MuiInput: {
-        styleOverrides: {
-          root: {
-            "&:before": {
-              borderBottom: "2px solid var(--TextField-brandBorderColor)",
-            },
-            "&:hover:not(.Mui-disabled, .Mui-error):before": {
-              borderBottom: "2px solid var(--TextField-brandBorderHoverColor)",
-            },
-            "&.Mui-focused:after": {
-              borderBottom:
-                "2px solid var(--TextField-brandBorderFocusedColor)",
-            },
-          },
-        },
-      },
-    },
-  });
