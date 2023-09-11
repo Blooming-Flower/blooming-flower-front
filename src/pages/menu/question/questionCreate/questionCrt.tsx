@@ -1,13 +1,12 @@
 import Layout from "@components/layouts/layout";
 import React, { useState } from "react";
 
+import QuestionList from "./QuestionList";
+
 import {
   Box,
-  Button,
   FormControl,
-  List,
-  ListItem,
-  ListItemText,
+  Grid,
   MenuItem,
   Pagination,
   Select,
@@ -17,7 +16,7 @@ import {
 
 //css
 import "@css/questionCreate/questionCrt.scss";
-import { GridActionsCellItem, GridColDef, DataGrid } from "@mui/x-data-grid";
+import { GridColDef, DataGrid } from "@mui/x-data-grid";
 
 //연도 , 교재 , 강 Select
 const yearSelect = [
@@ -103,11 +102,11 @@ const QuestionCrt = () => {
     { id: 7, year: "2023", name: "Jon", chapter: 1, count: 35, num: 11 },
   ];
   return (
-    <>
-      <Layout>
+    <Layout>
+      <Grid container spacing={2}>
         <div className="mainCont mainCont2">
           <Typography
-            variant="h3"
+            variant="h4"
             sx={{ fontWeight: "500", color: "#ff8b2c", paddingBottom: "20px" }}
           >
             문제 출제
@@ -222,15 +221,9 @@ const QuestionCrt = () => {
             sx={{ display: "flex" }}
           />
         </div>
-        <Box sx={{ float: "right" }}>
-          <List>
-            <ListItem>
-              <ListItemText primary="수능특강" />
-            </ListItem>
-          </List>
-        </Box>
-      </Layout>
-    </>
+        <QuestionList />
+      </Grid>
+    </Layout>
   );
 };
 
