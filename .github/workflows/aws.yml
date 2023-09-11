@@ -29,7 +29,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: "npm"
     - name: Install modules
-      run: npm install --force
+      run: npm install --save --legacy-peer-deps
     - name: Build project
       run: npm run build
     - name: Copy jar to EC2
