@@ -1,0 +1,54 @@
+name: Blooming Flower Service CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  EC2_HOST: ${{ secrets.BLOOMING_FLOWER_HOST }}
+  SERVICE_HOME: ${{ secrets.BLOOMING_FLOWER_HOME }}
+  SCRIPT: shell/blooming-flower-deploy.sh
+  
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.11.18]
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+        registry-url: "https://npm.pkg.github.com"
+    - name: Install dependencies
+      run: npm install
+      env:
+        CI: true
+    - name: Run Build
+      run: npm build
+    - name: Copy jar to EC2
+      uses: appleboy/scp-action@master
+      with:
+        username: ${{ secrets.EC2_USERNAME }}
+        host: ${{ env.EC2_HOST }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        source: "./build/libs/*.jar"
+        target: ${{ env.SERVICE_HOME }}
+        strip_components: 2
+    - name: Execute Script
+      uses: appleboy/ssh-action@master
+      with:
+        username: ${{ secrets.EC2_USERNAME }}
+        host: ${{ env.EC2_HOST }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script_stop: true
+        script: chmod 744 ${{ env.SERVICE_HOME }}/${{ env.SCRIPT }} && ${{ env.SERVICE_HOME }}/${{ env.SCRIPT }} restart
+
