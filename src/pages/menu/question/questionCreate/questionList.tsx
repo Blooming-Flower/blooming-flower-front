@@ -19,7 +19,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CustomButton from "@components/ui/button/custeomButton";
 
 const QuestionList = () => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleClick = () => {
     setOpen(!open);
   };
