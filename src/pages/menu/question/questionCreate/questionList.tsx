@@ -14,9 +14,11 @@ import "@css/questionCreate/questionList.scss";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CustomButton from "@components/ui/button/custeomButton";
+import { useNavigate } from "react-router-dom";
 
-const questionList = (props: any) => {
+const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
   const handleClick = () => {
     setOpen(!open);
   };
@@ -75,7 +77,9 @@ const questionList = (props: any) => {
         ))}
 
         <CustomButton
-          onClick={() => console.log("버튼클릭")}
+          onClick={() => {
+            navigate("/question/questionTab");
+          }}
           label={"GO!"}
           type={"true"}
         >
@@ -86,4 +90,8 @@ const questionList = (props: any) => {
   );
 };
 
-export default questionList;
+export default QuestionList;
+
+// <button onClick={() => { navigate(-1); }} >
+// 이전 페이지로 이동하기
+// </button>

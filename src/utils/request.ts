@@ -6,8 +6,7 @@ const _url: string = URL.SERVER_URL
 
 const _customAxios: AxiosInstance = axios.create({
 	baseURL: _url,
-	withCredentials: true,
-	headers: { Accept: '*/*' }
+	headers: { Accept: '*/*'}
 })
 
 /**

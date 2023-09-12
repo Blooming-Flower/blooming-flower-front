@@ -8,6 +8,15 @@ export default defineConfig({
     host: true,
     port: 5000,
     open: true, //'/map' //true
+    proxy: {
+      '/api': {
+	    target: 'http://43.201.142.170:29091',
+	    changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
+        ws: true
+	  }
+    }
   },
   build: {
     cssCodeSplit: false,

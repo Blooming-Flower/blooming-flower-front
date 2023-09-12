@@ -4,12 +4,14 @@ import {
   Button,
   Collapse,
   IconButton,
-  ListItemButton, ListItemIcon,
-  ListItemText, ListSubheader,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
   styled,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import * as React from "react";
@@ -64,7 +66,7 @@ const PassagePopup = forwardRef((props: {}, ref: ForwardedRef<any>) => {
         <CloseIcon />
       </IconButton>
       <DialogContent>
-        <VerticalTabs/>
+        <VerticalTabs />
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleClose}>
