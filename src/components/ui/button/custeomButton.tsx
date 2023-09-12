@@ -1,20 +1,23 @@
 import { Button } from "@mui/material";
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 
 const CustomButton = (props: {
   label: string;
   type: string;
   borderType?: string | undefined;
-  children: React.ReactNode;
-  onClick?: () => void;
+  children?: React.ReactNode;
+  domain?: string;
+  // onClick?: () => void;
 }) => {
+  const navigate = useNavigate();
   return props.borderType == "round" ? (
     <Button
       color="warning"
       size="large"
       variant="contained"
       value={props.label}
-      onClick={props.onClick}
+      onClick={() => navigate(props.domain!)}
       disabled={props.label != props.type}
       sx={{ height: "40px", borderRadius: "20px", fontSize: "15px" }}
     >
@@ -27,7 +30,7 @@ const CustomButton = (props: {
       size="large"
       variant="contained"
       value={props.label}
-      onClick={props.onClick}
+      onClick={() => navigate(props.domain!)}
       sx={{
         height: "40px",
         borderRadius: "10px",
