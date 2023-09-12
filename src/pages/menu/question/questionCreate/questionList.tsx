@@ -3,26 +3,31 @@ import {
   List,
   ListItem,
   ListItemText,
-  styled,
   ListItemButton,
   Collapse,
-  ListItemIcon,
   ListSubheader,
 } from "@mui/material";
 import React, { useState } from "react";
 
 //css
 import "@css/questionCreate/questionList.scss";
-import { ExpandMore, ExpandLess, StarBorder } from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CustomButton from "@components/ui/button/custeomButton";
 
-const QuestionList = () => {
+const questionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
   const handleClick = () => {
     setOpen(!open);
   };
+
+  // const [clickedButton, setClickedButton] = useState<HTMLButtonElement | null>(
+  //   null
+  // );
+  // const handleMouseEvent = (event: any) => {
+  //   console.log(event.target);
+  //   console.log(event.currentTarget);
+  // };
 
   return (
     <div className="questionList-item">
@@ -68,10 +73,17 @@ const QuestionList = () => {
             </ul>
           </li>
         ))}
-        <CustomButton label={"GO!"} type={"true"} />
+
+        <CustomButton
+          onClick={() => console.log("버튼클릭")}
+          label={"GO!"}
+          type={"true"}
+        >
+          {props.Children}
+        </CustomButton>
       </List>
     </div>
   );
 };
 
-export default QuestionList;
+export default questionList;
