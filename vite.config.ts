@@ -6,10 +6,14 @@ export default defineConfig({
   assetsInclude: ["**/*.doc"],
   server: {
     host: true,
-    port: 29091,
+    port: 5000,
     open: true, //'/map' //true
     proxy: {
-      '/api':'http://43.201.142.170:29091'
+      '/api': {
+	    target: 'http://43.201.142.170:29091',
+	    changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, '')
+	  }
     }
   },
   build: {
@@ -63,5 +67,6 @@ export default defineConfig({
       additionalLegacyPolyfills: ["regenerator-runtime/runtime"],
     }),
   ],
-  base: "/"
+  base: "/",
+  // base: '/tobecom'
 });
