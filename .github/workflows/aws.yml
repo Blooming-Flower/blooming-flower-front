@@ -39,7 +39,7 @@ jobs:
         host: ${{ env.EC2_HOST }}
         port: ${{ secrets.SSH_PORT }}
         key: ${{ secrets.PRIVATE_KEY }}
-        source: "*"  # React 앱 빌드 디렉토리
+        source: "dist/*"  # React 앱 빌드 디렉토리
         target: ${{ env.SERVICE_HOME }}
         # strip_components: 1
     - name: Execute Script
