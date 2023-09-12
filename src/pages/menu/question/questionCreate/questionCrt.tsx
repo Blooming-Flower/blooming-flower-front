@@ -1,7 +1,7 @@
 import Layout from "@components/layouts/layout";
 import React, { useState } from "react";
 
-import QuestionList from "@pages/menu/question/questionCreate/questionList";
+import QuestionList from "@pages/menu/question/questionCreate/QuestionList";
 
 import {
   Box,
