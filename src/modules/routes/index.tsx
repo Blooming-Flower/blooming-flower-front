@@ -14,6 +14,7 @@ import PassageMng from "@pages/menu/question/passageCreate/passageCrt";
 import ExamCrt from "@pages/menu/question/examCreate/examCrt";
 import ExamView from "@pages/menu/question/examView/examView";
 import ExamMng from "@pages/menu/question/examManage/examMng";
+import QuestionTab from "@pages/menu/question/questionCreate/QuestionTab";
 
 const Router = () => {
   return (
@@ -25,6 +26,7 @@ const Router = () => {
         <Route path={PATH.QUESTION0} element={<PassageCrt />} />
         <Route path={PATH.QUESTION1} element={<PassageMng />} />
         <Route path={PATH.QUESTION2} element={<QuestionCrt />} />
+        <Route path={PATH.QUESTION6} element={<QuestionTab />} />
         <Route path={PATH.QUESTION3} element={<ExamCrt />} />
         <Route path={PATH.QUESTION4} element={<ExamView />} />
         <Route path={PATH.QUESTION5} element={<ExamMng />} />

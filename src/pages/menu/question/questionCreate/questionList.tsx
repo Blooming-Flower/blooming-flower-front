@@ -15,6 +15,7 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CustomButton from "@components/ui/button/custeomButton";
 import { useNavigate } from "react-router-dom";
+import { PATH } from "@common/domain";
 
 const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
@@ -76,13 +77,7 @@ const QuestionList = (props: any) => {
           </li>
         ))}
 
-        <CustomButton
-          onClick={() => {
-            navigate("/question/questionTab");
-          }}
-          label={"GO!"}
-          type={"true"}
-        >
+        <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
           {props.Children}
         </CustomButton>
       </List>
