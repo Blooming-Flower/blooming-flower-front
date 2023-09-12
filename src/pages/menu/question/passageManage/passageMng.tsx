@@ -37,7 +37,7 @@ const PassageMng = () => {
     setYear(yearData);
     document.querySelector('#outlined-basic')!.innerHTML = "";
     await $GET(
-      "/api/v1/passage/search/list?page=?" +
+      "/api/v1/passage/search/list?page=" +
         page.toString() +
         "&size=10&passageYear=" +
         yearData,
