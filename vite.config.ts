@@ -10,9 +10,9 @@ export default defineConfig({
     open: true, //'/map' //true
     proxy: {
       '/api': {
-	    target: 'http://43.201.142.170:29091'
+	    target: 'http://43.201.142.170:29091',
 	    changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
+            rewrite: (path) => path.replace(/^\/api/, '')
 	  }
     }
   },
