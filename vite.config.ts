@@ -9,7 +9,13 @@ export default defineConfig({
     port: 5000,
     open: true, //'/map' //true
     proxy: {
-      '/api': 'http://43.201.142.170:29091'
+      '/api': {
+	    target: 'http://43.201.142.170:29091',
+	    changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
+        ws: true
+	  }
     }
   },
   build: {

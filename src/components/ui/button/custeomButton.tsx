@@ -1,27 +1,42 @@
 import { Button } from "@mui/material";
 import * as React from "react";
 
-const CustomButton = (props: { label: string; type: string, borderType?:string}) => {
-  return (
-      props.borderType == 'round' ?
+const CustomButton = (props: {
+  label: string;
+  type: string;
+  borderType?: string | undefined;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) => {
+  return props.borderType == "round" ? (
     <Button
       color="warning"
       size="large"
       variant="contained"
       value={props.label}
+      onClick={props.onClick}
       disabled={props.label != props.type}
-      sx={{ height: "40px", borderRadius:'20px', fontSize:'15px' }}
+      sx={{ height: "40px", borderRadius: "20px", fontSize: "15px" }}
     >
       {props.label}
-    </Button> :
+      {props.children}
+    </Button>
+  ) : (
     <Button
-        color="warning"
-        size="large"
-        variant="contained"
-        value={props.label}
-        sx={{ height: "40px", borderRadius:'10px', fontSize:'15px', float:'right' }}
+      color="warning"
+      size="large"
+      variant="contained"
+      value={props.label}
+      onClick={props.onClick}
+      sx={{
+        height: "40px",
+        borderRadius: "10px",
+        fontSize: "15px",
+        float: "right",
+      }}
     >
       {props.label}
+      {props.children}
     </Button>
   );
 };

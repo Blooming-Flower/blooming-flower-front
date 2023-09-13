@@ -121,3 +121,18 @@ export const isNone = (value: string | number) => {
 
 	return temp == '' ? true : false
 }
+
+/**
+ * <PRE>
+ * 1. Name : addId
+ * 2. Comment   : Mui 그리드를 위한 id 생성기
+ * 3. Author    : JSH
+ * <PRE>
+ */
+export const addId = (res:any, yearData:string) => {
+	for (let i = 0; i < res.data.content.length; i++) {
+		res.data.content[i].id = i;
+		res.data.content[i].year = yearData;
+	}
+	return res.data.content
+}

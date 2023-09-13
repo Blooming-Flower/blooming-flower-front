@@ -10,7 +10,7 @@ export const SERVER_URL: string = HTTP + SERVER
 
 export const URL = {
 	BASE_PROXY: '/common/gis/base.jsp',
-	SERVER_URL: ROOT_URL.indexOf('localhost') !== -1 ? HTTP + ROOT_URL : HTTP + SERVER
+	SERVER_URL: HTTP + SERVER
 }
 
 /* ******************* 메시지 박스티입 ******************* */
