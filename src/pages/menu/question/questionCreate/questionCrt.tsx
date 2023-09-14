@@ -108,7 +108,7 @@ const QuestionCrt = () => {
                 id="demo-simple-select"
                 value={searchYear}
                 label="Year"
-                onChange={handleYear}
+                onChange={handleBook}
               >
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
@@ -131,7 +131,7 @@ const QuestionCrt = () => {
               연도
             </Typography>
             <FormControl sx={{ width: "300px", marginLeft: "20px" }}>
-              <Select id="select-box" value={searchYear} onChange={handleYear}>
+              <Select id="select-box" value={searchYear} onChange={handleBook}>
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
