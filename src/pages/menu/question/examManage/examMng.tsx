@@ -4,7 +4,7 @@ import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import * as React from "react";
-import pdfSvg from "/src/assets/svg/pdfSvg.svg";
+// import pdfSvg from "/src/assets/svg/pdfSvg.svg";
 
 const ExamMng = () => {
   const [searcText, setSearchText] = React.useState("");
@@ -50,7 +50,12 @@ const ExamMng = () => {
       align: "center",
       headerAlign: "center",
       renderCell: () => (
-        <img src={pdfSvg} width={30} height={30} onClick={downPdf} />
+        <img
+          src="/src/assets/svg/pdfSvg.svg"
+          width={30}
+          height={30}
+          onClick={downPdf}
+        />
       ),
     },
     {
