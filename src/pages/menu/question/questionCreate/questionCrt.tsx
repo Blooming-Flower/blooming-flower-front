@@ -33,20 +33,10 @@ const QuestionCrt = () => {
   const [searchlecture, setSearchlecture] = React.useState("");
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
-
-  //연도 이벤트
-  const handleYear = async (event: SelectChangeEvent) => {
-    try {
-      bookData = event.target.value as string;
-      setSearchTextBook(bookData);
-      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names`;
-      const customAxios = axios.create({});
-      const res = await customAxios.get(API_URL);
-      const data = res.data;
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleBook = (event: SelectChangeEvent) => {
+    setSearchYear(event.target.value as string);
+    setSearchTextBook(event.target.value as string);
+    setSearchlecture(event.target.value as string);
   };
 
   // 교재 유형 , 연도에 해당되는 교재명 api
