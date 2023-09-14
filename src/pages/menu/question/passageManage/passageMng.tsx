@@ -35,7 +35,7 @@ const PassageMng = () => {
   const handleYear = async (event: SelectChangeEvent) => {
     yearData = event.target.value as string;
     setYear(yearData);
-    document.querySelector('#outlined-basic')!.innerHTML = "";
+    document.querySelector("#outlined-basic")!.innerHTML = "";
     await $GET(
       "/api/v1/passage/search/list?page=" +
         page.toString() +
@@ -48,20 +48,23 @@ const PassageMng = () => {
   };
   // 교재명 체인지 이벤트
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    if(year != "")
-    await $GET(
-      "/api/v1/passage/search/list?page=?" +
-        page.toString() +
-        "&size=10&passageYear=" +
-        year +
-        "&passageName=" +
-        e.target.value,
-      (res: any) => {
-        for (let i = 0; i < res.data.content.length; i++) {
-          setData(addId(res, yearData));
+    if (year != "")
+      await $GET(
+        "/api/v1/passage/search/list?page=" +
+          page.toString() +
+          "&size=10&passageYear=" +
+          year +
+          "&passageName=" +
+          e.target.value,
+        (res: any) => {
+          if(res.data.content.length != 0) {
+            for (let i = 0; i < res.data.content.length; i++) {
+              console.log(year);
+              setData(addId(res, year));
+            }
+          } else setData([]);
         }
-      }
-    );
+      );
   };
   const debouncedOnChange = debounce<typeof handleChange>(handleChange, 500);
   const handleClickOpen = () => {
@@ -75,6 +78,7 @@ const PassageMng = () => {
       width: 190,
       align: "center",
       headerAlign: "center",
+      sortable: false,
     },
     {
       field: "passageName",
@@ -83,6 +87,7 @@ const PassageMng = () => {
       width: 300,
       editable: true,
       align: "center",
+      sortable: false,
     },
     {
       field: "passageUnit",
@@ -91,6 +96,7 @@ const PassageMng = () => {
       width: 150,
       editable: true,
       align: "center",
+      sortable: false,
     },
     {
       field: "passageNumber",
@@ -100,6 +106,7 @@ const PassageMng = () => {
       width: 110,
       editable: true,
       align: "center",
+      sortable: false,
     },
     {
       field: "questionCount",
@@ -116,6 +123,7 @@ const PassageMng = () => {
       type: "actions",
       headerName: "수정",
       headerAlign: "center",
+      sortable: false,
       width: 160,
       getActions: (params) => [
         <Button

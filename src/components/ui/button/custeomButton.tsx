@@ -6,9 +6,8 @@ const CustomButton = (props: {
   label: string;
   type: string;
   borderType?: string | undefined;
-  children?: React.ReactNode;
-  domain?: string;
-  // onClick?: () => void;
+  children: React.ReactNode;
+  onClick?: () => void;
 }) => {
   const navigate = useNavigate();
   return props.borderType == "round" ? (

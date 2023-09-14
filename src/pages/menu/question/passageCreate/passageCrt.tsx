@@ -2,44 +2,47 @@ import Layout from "@components/layouts/layout";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
-  FormHelperText,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
-  SelectChangeEvent,
+  Select, TextField, ThemeProvider, useTheme,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import {ChangeEvent, useState} from "react";
 import CustomButton from "@components/ui/button/custeomButton";
 import { PASSAGETYPE } from "@common/const";
 import { YEAR } from "@common/const";
 import { StyledTextarea } from "@components/ui/text/textarea";
-import { $POST } from "@utils/request";
-import { getRowContainerTypeForName } from "ag-grid-community";
+import {$GET, $POST} from "@utils/request";
+import {customTheme} from "@pages/menu/question/passageManage/customThemePsg";
+import {debounce} from "@utils/useDebounce";
 
 const PassageCrt = () => {
+  let nameList : {
+    label: any;
+  }[]
+  const outerTheme = useTheme();
   const [year, setYear] = React.useState("");
-  const [name, setName] = React.useState("");
+  const [name, setName] = React.useState('');
+  const [dataName, setDataName] = React.useState([]);
   const [unit, setUnit] = React.useState("");
   const [num, setNumber] = React.useState("");
   const [content, setContent] = React.useState("");
-  const [passageType, setPassageType] = React.useState("");
-  const [able, setAble] = useState("");
+  const [passageType, setPassageType] = React.useState("P1");
+  const [able, setAble] = useState("교과서");
   const handleClick = (type: string) => {
     switch(type){
-      case '교과서': setPassageType('TEXT_BOOK'); break;
-      case '모의고사': setPassageType('MOCK_TEST'); break;
-      case 'EBS': setPassageType('EBS'); break;
-      case '부교재': setPassageType('SUB_TEXT_BOOK'); break;
-      default : setPassageType('OUT_SIDE_PASSAGE');
+      case '교과서': setPassageType('P1'); break;
+      case '모의고사': setPassageType('P2'); break;
+      case 'EBS': setPassageType('P3'); break;
+      case '부교재': setPassageType('P4'); break;
+      default : setPassageType('P5');
     }
-    console.log(type);
     setAble(type);
   };
-
+//지문저장
   const savePassage = async () => {
     await $POST(
       "api/v1/passage/save",
@@ -56,8 +59,22 @@ const PassageCrt = () => {
       }
     );
   };
-
-  // @ts-ignore
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+      await $GET(
+          "/api/v1/passage/search/name?passageType=" +
+          passageType +
+          "&passageName=" +
+          e.target.value,
+          (res: any) => {
+            if (res.data.length != 0) {
+              setDataName(res.data)
+            }
+          }
+      );
+      console.log(e.target.value)
+    setName(e.target.value)
+  };
+  const debouncedOnChange = debounce<typeof handleChange>(handleChange, 500);
   return (
     <Layout>
       <div className="mainCont">
@@ -112,19 +129,16 @@ const PassageCrt = () => {
             </Grid>
             <Grid xs={4} item={true}>
               <div className="table-content table-top">
-                <FormControl className="table-select">
-                  <Select
-                    value={name}
-                    onChange={(e) => setName(e.target.value as string)}
-                    displayEmpty
-                    inputProps={{ "aria-label": "Without label" }}
-                  >
-                    {YEAR.map((text, id) => (
-                      <MenuItem key={id} value={text}>
-                        {text}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                <FormControl sx={{ width: "580px", marginLeft: "20px" }}>
+                  <ThemeProvider theme={customTheme(outerTheme)}>
+                    <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={dataName}
+                        sx={{ width: 300 }}
+                        renderInput={(temp) => <TextField {...temp} onChange={debouncedOnChange} label="교재명" />}
+                    />
+                  </ThemeProvider>
                 </FormControl>
               </div>
             </Grid>
