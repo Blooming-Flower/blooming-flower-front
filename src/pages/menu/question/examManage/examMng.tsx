@@ -4,16 +4,18 @@ import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import * as React from "react";
-import {ReactComponent as PdfSvg} from 'src/assets/svg/PdfSvg.svg';
+import { ReactComponent as PdfSvg } from "src/assets/svg/PdfSvg.svg";
 
 const ExamMng = () => {
   const [searcText, setSearchText] = React.useState("");
   const [page, setPage] = React.useState(0);
   const popupRef: any = React.useRef();
 
-  const textFieldOnChange = (event : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const textFieldOnChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const {
-      currentTarget: { value }
+      currentTarget: { value },
     } = event;
     setSearchText(value);
   };
@@ -53,7 +55,7 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
-      getActions: (params : GridRowParams) => [
+      getActions: (params: GridRowParams) => [
         <Button
           variant="outlined"
           color="warning"
@@ -69,8 +71,8 @@ const ExamMng = () => {
     {
       id: 1,
       title: "[2023-2 중간]종촌고2",
-      createDate: (new Date()).toISOString().split('T')[0],
-      downPdf : <PdfSvg width={50} height={50} fill="#ED1C24"/>
+      createDate: new Date().toISOString().split("T")[0],
+      downPdf: <PdfSvg width={50} height={50} fill="#ED1C24" />,
     },
   ];
 
@@ -94,7 +96,9 @@ const ExamMng = () => {
           >
             {searcText}
           </TextField>
-          <CustomButton type="string" label="검색">{''}</CustomButton>
+          <CustomButton type="string" label="검색">
+            {""}
+          </CustomButton>
         </div>
         <div>
           <DataGrid
