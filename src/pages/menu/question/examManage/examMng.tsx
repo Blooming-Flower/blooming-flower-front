@@ -4,22 +4,27 @@ import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import * as React from "react";
-import {ReactComponent as PdfSvg} from 'src/assets/svg/PdfSvg.svg';
+import pdfSvg from "/src/assets/svg/pdfSvg.svg";
 
 const ExamMng = () => {
   const [searcText, setSearchText] = React.useState("");
   const [page, setPage] = React.useState(0);
-  const popupRef: any = React.useRef();
 
-  const textFieldOnChange = (event : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const textFieldOnChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const {
-      currentTarget: { value }
+      currentTarget: { value },
     } = event;
     setSearchText(value);
   };
 
   const deleteExam = () => {
-    popupRef.current.handleOpen();
+    console.log("api로 삭제 요청");
+  };
+
+  const downPdf = () => {
+    console.log("pdf 다운도르");
   };
 
   const columns: GridColDef[] = [
@@ -29,6 +34,7 @@ const ExamMng = () => {
       width: 700,
       align: "center",
       headerAlign: "center",
+      editable: true,
     },
     {
       field: "createDate",
@@ -43,9 +49,9 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
-      // getActions: (params : GridRowParams) => {
-      //   <PdfSvg></PdfSvg>
-      // }
+      renderCell: () => (
+        <img src={pdfSvg} width={30} height={30} onClick={downPdf} />
+      ),
     },
     {
       field: "actions",
@@ -53,12 +59,12 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
-      getActions: (params : GridRowParams) => [
+      getActions: (params: GridRowParams) => [
         <Button
           variant="outlined"
           color="warning"
           size="medium"
-          onClick={deleteExam}
+          onClick={() => deleteExam()}
         >
           삭제
         </Button>,
@@ -68,9 +74,24 @@ const ExamMng = () => {
   const rows = [
     {
       id: 1,
+      title: "[2023-2 중간]종촌고1",
+      createDate: new Date().toISOString().split("T")[0],
+      downPdf: "",
+      actions: "",
+    },
+    {
+      id: 2,
       title: "[2023-2 중간]종촌고2",
-      createDate: (new Date()).toISOString().split('T')[0],
-      downPdf : <PdfSvg width={50} height={50} fill="#ED1C24"/>
+      createDate: new Date().toISOString().split("T")[0],
+      // downPdf: "",
+      actions: "",
+    },
+    {
+      id: 3,
+      title: "[2023-2 중간]종촌고3",
+      createDate: new Date().toISOString().split("T")[0],
+      downPdf: "",
+      // actions: "",
     },
   ];
 
@@ -84,9 +105,8 @@ const ExamMng = () => {
         >
           시험지관리
         </Typography>
-        <div style={{ textAlign: "right" }}>
+        <div style={{ textAlign: "right", marginBottom: 20 }}>
           <TextField
-            // size="small"
             label="타이틀"
             variant="outlined"
             onChange={textFieldOnChange}
@@ -94,7 +114,7 @@ const ExamMng = () => {
           >
             {searcText}
           </TextField>
-          <CustomButton type="string" label="검색">{''}</CustomButton>
+          <CustomButton type="string" label="검색" />
         </div>
         <div>
           <DataGrid
