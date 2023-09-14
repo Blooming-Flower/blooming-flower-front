@@ -37,13 +37,13 @@ const QuestionCrt = () => {
   //연도 이벤트
   const handleYear = async (event: SelectChangeEvent) => {
     try {
-      bookData = event.target.value as string;
-      setSearchTextBook(bookData);
-      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names`;
+      yearData = event.target.value as string;
+      setSearchYear(bookData);
+      const API_URL =
+        "http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=P1&year=2023";
       const customAxios = axios.create({});
       const res = await customAxios.get(API_URL);
-      const data = res.data;
-      console.log(data);
+      setData(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -113,8 +113,14 @@ const QuestionCrt = () => {
               지문 유형
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
-              <Select value={searchTextBook} onChange={handleYear} label="Year">
-                {PASSAGETYPE.map((text, id) => (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={searchYear}
+                label="Year"
+                onChange={handleYear}
+              >
+                {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
                   </MenuItem>
