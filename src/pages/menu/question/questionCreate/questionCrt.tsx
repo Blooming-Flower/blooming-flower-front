@@ -33,10 +33,20 @@ const QuestionCrt = () => {
   const [searchlecture, setSearchlecture] = React.useState("");
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const handleBook = (event: SelectChangeEvent) => {
-    setSearchYear(event.target.value as string);
-    setSearchTextBook(event.target.value as string);
-    setSearchlecture(event.target.value as string);
+
+  //연도 이벤트
+  const handleYear = async (event: SelectChangeEvent) => {
+    try {
+      bookData = event.target.value as string;
+      setSearchTextBook(bookData);
+      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names`;
+      const customAxios = axios.create({});
+      const res = await customAxios.get(API_URL);
+      const data = res.data;
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // 교재 유형 , 연도에 해당되는 교재명 api
@@ -103,8 +113,14 @@ const QuestionCrt = () => {
               지문 유형
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
-              <Select value={searchYear} onChange={handleBook}>
-                {yearSelect.map((text, id) => (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={searchYear}
+                label="Year"
+                onChange={handleYear}
+              >
+                {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
                   </MenuItem>
