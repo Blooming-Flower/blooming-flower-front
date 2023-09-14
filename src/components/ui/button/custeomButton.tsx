@@ -5,7 +5,8 @@ const CustomButton = (props: {
   label: string;
   type: string;
   borderType?: string | undefined;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  domain?:string | undefined;
   onClick?: () => void;
 }) => {
   return props.borderType == "round" ? (
