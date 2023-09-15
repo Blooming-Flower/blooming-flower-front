@@ -1,10 +1,20 @@
-import React from "react";
+import Layout from "@components/layouts/layout";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
 
 const QuestionTab = () => {
   return (
-    <div>
-      <h2>문제출제 두 번째 페이지</h2>
-    </div>
+    <Layout>
+      <div className="mainCont">
+        <Typography
+          variant="h2"
+          className="menu-title"
+          sx={{ color: "#ff8b2c", paddingBottom: "20px" }}
+        >
+          문제출제 토스트 UI
+        </Typography>
+      </div>
+    </Layout>
   );
 };
 
