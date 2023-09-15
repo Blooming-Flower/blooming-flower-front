@@ -4,33 +4,39 @@ import * as React from "react";
 import {
   Autocomplete,
   Box,
-  Button, createFilterOptions,
+  Button,
+  createFilterOptions,
   FormControl,
   Grid,
   MenuItem,
-  Select, SelectChangeEvent, TextField, ThemeProvider, useTheme,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  ThemeProvider,
+  useTheme,
 } from "@mui/material";
-import {ChangeEvent, useState} from "react";
+import { ChangeEvent, useState } from "react";
 import CustomButton from "@components/ui/button/custeomButton";
 import { PASSAGETYPE } from "@common/const";
 import { YEAR } from "@common/const";
 import { StyledTextarea } from "@components/ui/text/textarea";
-import {$GET, $POST} from "@utils/request";
-import {customTheme} from "@pages/menu/question/passageManage/customThemePsg";
-import {debounce} from "@utils/useDebounce";
-import {checkPassage, savePassage} from "@utils/callApi";
+import { $GET, $POST } from "@utils/request";
+import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
+import { debounce } from "@utils/useDebounce";
+import { checkPassage, savePassage } from "@utils/callApi";
 interface filterOptionType {
-  passageId:number,
-  passageName:string
+  passageId: number;
+  passageName: string;
 }
 const filterOptions = createFilterOptions({
-  matchFrom: 'start',
+  matchFrom: "start",
   stringify: (option: filterOptionType) => option.passageName,
 });
 const PassageCrt = () => {
   const outerTheme = useTheme();
+  const [clear, setClear] = React.useState("");
   const [year, setYear] = React.useState("");
-  const [name, setName] = React.useState('');
+  const [name, setName] = React.useState("");
   const [dataName, setDataName] = React.useState([]);
   const [unit, setUnit] = React.useState("");
   const [num, setNumber] = React.useState("");
@@ -38,38 +44,47 @@ const PassageCrt = () => {
   const [passageType, setPassageType] = React.useState("P1");
   const [able, setAble] = useState("교과서");
   const handleClick = (type: string) => {
-    switch(type){
-      case '교과서': setPassageType('P1'); break;
-      case '모의고사': setPassageType('P2'); break;
-      case 'EBS': setPassageType('P3'); break;
-      case '부교재': setPassageType('P4'); break;
-      default : setPassageType('P5');
+    switch (type) {
+      case "교과서":
+        setPassageType("P1");
+        break;
+      case "모의고사":
+        setPassageType("P2");
+        break;
+      case "EBS":
+        setPassageType("P3");
+        break;
+      case "부교재":
+        setPassageType("P4");
+        break;
+      default:
+        setPassageType("P5");
     }
     setAble(type);
   };
-//지문저장
-  const save =  () => {
-    const res = savePassage(passageType,year,name,unit,num,content)
+  //지문저장
+  const save = () => {
+    const res = savePassage(passageType, year, name, unit, num, content);
     console.log(res);
   };
   //지문 중복체크
-const handleNum = (e:SelectChangeEvent) => {
-  setNumber(e.target.value as string)
-  const res = checkPassage(passageType,year,name,unit,num)
-  console.log(res)
-}
+  const handleNum = (e: SelectChangeEvent) => {
+    setNumber(e.target.value as string);
+    const res = checkPassage(passageType, year, name, unit, num);
+    console.log(res);
+  };
   //지문타입별 교재 SELECT
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  setName(e.target.value)
-  $GET(
-        "/api/v1/passage/search/name?passageType=" +
+    setName(e.target.value);
+    $GET(
+      "/api/v1/passage/search/name?passageType=" +
         passageType +
         "&passageName=" +
         e.target.value,
-        (res: any) => {
-          setDataName(res.data)
-        }
-    )
+      (res: any) => {
+        setDataName(res.data);
+      }
+    );
   };
   const debouncedOnChange = debounce<typeof handleChange>(handleChange, 200);
   return (
@@ -126,22 +141,38 @@ const handleNum = (e:SelectChangeEvent) => {
             </Grid>
             <Grid xs={4} item={true}>
               <div className="table-content table-top">
-                <FormControl sx={{ width: "580px", marginLeft: "20px" }}>
+                <FormControl className="table-input-select">
                   <ThemeProvider theme={customTheme(outerTheme)}>
                     <Autocomplete
-                        disablePortal
-                        id="combo-box-demo"
-                        filterOptions={filterOptions}
-                        getOptionLabel={(option)=>option.passageName}
-                        isOptionEqualToValue={(option, value) => option.passageId !== value.passageId}
-                        options={dataName}
-                        sx={{ width: 300 }}
-                        renderOption={(props, option)=>{
-                          return (<li {...props} key={option.passageId} style={{backgroundColor:'white'}}>
+                      key={clear}
+                      disablePortal
+                      id="combo-box-demo"
+                      filterOptions={filterOptions}
+                      getOptionLabel={(option) =>
+                        option.passageName ? option.passageName : ""
+                      }
+                      isOptionEqualToValue={(option, value) =>
+                        option.passageId !== value.passageId
+                      }
+                      options={dataName}
+                      renderOption={(props, option) => {
+                        return (
+                          <li
+                            {...props}
+                            key={option.passageId}
+                            style={{ backgroundColor: "white" }}
+                          >
                             {option.passageName}
-                          </li>)
-                        }}
-                        renderInput={(params) => <TextField {...params} onChange={debouncedOnChange} label="교재명" />}
+                          </li>
+                        );
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          onChange={debouncedOnChange}
+                          label="교재명"
+                        />
+                      )}
                     />
                   </ThemeProvider>
                 </FormControl>
@@ -195,11 +226,13 @@ const handleNum = (e:SelectChangeEvent) => {
           variant="text"
           sx={{ float: "right", color: "gray" }}
           onClick={() => {
+            setDataName([]);
             setNumber("");
             setName("");
             setYear("");
             setUnit("");
             setAble("");
+            setClear(() => (clear == "" ? "clear" : ""));
           }}
         >
           Reset
