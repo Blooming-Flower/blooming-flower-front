@@ -4,11 +4,11 @@ import * as React from "react";
 import {
   Autocomplete,
   Box,
-  Button,
+  Button, createFilterOptions,
   FormControl,
   Grid,
   MenuItem,
-  Select, TextField, ThemeProvider, useTheme,
+  Select, SelectChangeEvent, TextField, ThemeProvider, useTheme,
 } from "@mui/material";
 import {ChangeEvent, useState} from "react";
 import CustomButton from "@components/ui/button/custeomButton";
@@ -18,11 +18,16 @@ import { StyledTextarea } from "@components/ui/text/textarea";
 import {$GET, $POST} from "@utils/request";
 import {customTheme} from "@pages/menu/question/passageManage/customThemePsg";
 import {debounce} from "@utils/useDebounce";
-
+import {checkPassage, savePassage} from "@utils/callApi";
+interface filterOptionType {
+  passageId:number,
+  passageName:string
+}
+const filterOptions = createFilterOptions({
+  matchFrom: 'start',
+  stringify: (option: filterOptionType) => option.passageName,
+});
 const PassageCrt = () => {
-  let nameList : {
-    label: any;
-  }[]
   const outerTheme = useTheme();
   const [year, setYear] = React.useState("");
   const [name, setName] = React.useState('');
@@ -43,38 +48,30 @@ const PassageCrt = () => {
     setAble(type);
   };
 //지문저장
-  const savePassage = async () => {
-    await $POST(
-      "api/v1/passage/save",
-      {
-        'passageType': passageType,
-        'passageYear': year,
-        'passageName': name,
-        'passageUnit': unit,
-        'passageNumber': num,
-        'passageContent': content,
-      },
-      (res: any) => {
-        console.log(res);
-      }
-    );
+  const save =  () => {
+    const res = savePassage(passageType,year,name,unit,num,content)
+    console.log(res);
   };
-  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-      await $GET(
-          "/api/v1/passage/search/name?passageType=" +
-          passageType +
-          "&passageName=" +
-          e.target.value,
-          (res: any) => {
-            if (res.data.length != 0) {
-              setDataName(res.data)
-            }
-          }
-      );
-      console.log(e.target.value)
-    setName(e.target.value)
+  //지문 중복체크
+const handleNum = (e:SelectChangeEvent) => {
+  setNumber(e.target.value as string)
+  const res = checkPassage(passageType,year,name,unit,num)
+  console.log(res)
+}
+  //지문타입별 교재 SELECT
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  setName(e.target.value)
+  $GET(
+        "/api/v1/passage/search/name?passageType=" +
+        passageType +
+        "&passageName=" +
+        e.target.value,
+        (res: any) => {
+          setDataName(res.data)
+        }
+    )
   };
-  const debouncedOnChange = debounce<typeof handleChange>(handleChange, 500);
+  const debouncedOnChange = debounce<typeof handleChange>(handleChange, 200);
   return (
     <Layout>
       <div className="mainCont">
@@ -134,9 +131,17 @@ const PassageCrt = () => {
                     <Autocomplete
                         disablePortal
                         id="combo-box-demo"
+                        filterOptions={filterOptions}
+                        getOptionLabel={(option)=>option.passageName}
+                        isOptionEqualToValue={(option, value) => option.passageId !== value.passageId}
                         options={dataName}
                         sx={{ width: 300 }}
-                        renderInput={(temp) => <TextField {...temp} onChange={debouncedOnChange} label="교재명" />}
+                        renderOption={(props, option)=>{
+                          return (<li {...props} key={option.passageId} style={{backgroundColor:'white'}}>
+                            {option.passageName}
+                          </li>)
+                        }}
+                        renderInput={(params) => <TextField {...params} onChange={debouncedOnChange} label="교재명" />}
                     />
                   </ThemeProvider>
                 </FormControl>
@@ -171,7 +176,7 @@ const PassageCrt = () => {
                 <FormControl className="table-select">
                   <Select
                     value={num}
-                    onChange={(e) => setNumber(e.target.value as string)}
+                    onChange={handleNum}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                   >
@@ -207,7 +212,7 @@ const PassageCrt = () => {
           className="passage-text"
           onChange={(e) => setContent(e.target.value)}
         />
-        <div onClick={savePassage}>
+        <div onClick={save}>
           <CustomButton label={"저장"} type={"true"} />
         </div>
       </div>

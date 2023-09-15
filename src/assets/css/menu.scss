@@ -127,3 +127,15 @@
 	border-top: 2px solid #b3b3b3;
 	border-bottom: 2px solid #b3b3b3;
 }
+.MuiPopper-root{
+	.MuiAutocomplete-listbox {
+		//background-color: white;
+		.Mui-focused {
+			background-color: rgba(255, 0, 0, 0.12) !important
+		}
+		.Mui-expanded
+		{
+			background-color: white !important;
+		}
+	}
+}
