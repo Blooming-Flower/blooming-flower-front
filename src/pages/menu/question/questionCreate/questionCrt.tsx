@@ -16,79 +16,102 @@ import {
 
 //css
 import "@css/questionCreate/questionCrt.scss";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { GridColDef, DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import axios from "axios";
 import { addId } from "@utils/functions";
+// import { CheckBox } from "@mui/icons-material";
+import { CheckBox } from "@mui/icons-material";
 
 //지문 체크 박스
 const checkBoxList = [{}];
 
 const QuestionCrt = () => {
+  const [searchlecture, setSearchlecture] = React.useState("교과서");
   const [searchYear, setSearchYear] = React.useState("");
-  let yearData: string;
-  const [searchTextBook, setSearchTextBook] = React.useState("");
-  let bookData: string;
-  const [searchlecture, setSearchlecture] = React.useState("");
+  const [searchTextBook, setSearchTextBook] = React.useState([]);
+
+  const [passageName, setPassageName] = React.useState("");
+
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
 
-  const handleBook = () => {
-    let reqOption = {
-      method: "get",
-      header: {
-        "content-type": "application/json;charset=UTF-8 ",
-      },
-    };
-    fetch(
-      "http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=P1&year=2023",
-      reqOption
-    )
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-    return [data, handleBook];
+  const convertPassageType = (type: string) => {
+    switch (type) {
+      case "교과서":
+        return "P1";
+      case "모의고사":
+        return "P2";
+      case "EBS":
+        return "P3";
+      case "부교재":
+        return "P4";
+      default:
+        return "P5";
+    }
+  };
+
+  // [문제 출제] 강, 지문 번호 조회
+  const handlePassageName = async (event: SelectChangeEvent) => {
+    try {
+      console.log("event.target.value::", event.target.value);
+      const passageName = event.target.value;
+      const passageType = convertPassageType(searchlecture);
+      // const year = event.target.value;
+
+      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-numbers?
+      page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const res = await axios.get(API_URL);
+      console.log(res);
+
+      setPassageName(event.target.value);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   //연도 이벤트
-  // const handleYear = async (event: SelectChangeEvent) => {
-  //   try {
-  //     yearData = event.target.value as string;
-  //     setSearchYear(yearData);
-  //     const API_URL =
-  //       "http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=P1&year=2023";
-  //     const res = await axios.get(API_URL);
-  //     console.log(res);
-  //     (res: any) => {
-  //       setData(addId(res, yearData));
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const handleYear = async (event: SelectChangeEvent) => {
+    try {
+      console.log("event.target.value::", event.target.value);
+      const passageType = convertPassageType(searchlecture);
+      const year = event.target.value;
+
+      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
+      const res = await axios.get(API_URL);
+      console.log(res);
+      setSearchTextBook(res.data);
+      setSearchYear(event.target.value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // // 교재 유형 , 연도에 해당되는 교재명 api
-  // const handleBook = async (event: SelectChangeEvent) => {
-  //   try {
-  //     yearData = event.target.value as string;
-  //     setSearchlecture(bookData);
-  //     const API_URL =
-  //       "http://43.201.142.170:29091/api/v1/question/search/passage-numbers?page=0&size=1&sort=string&passageType=P1&passageYear=2023&passageName=%EB%AA%A8%EC%9D%98%EA%B3%A0%EC%82%AC";
-  //     const res = await axios.get(API_URL);
-  //     console.log(res);
-  //     (res: any) => {
-  //       setData(addId(res, yearData));
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const handleLecture = async (event: SelectChangeEvent) => {
+    try {
+      //yearData = event.target.value as string;
+      const lecture = event.target.value;
+      if (searchYear) {
+        const passageType = convertPassageType(lecture);
 
-  // 지문유형 , 연도 , 교재로 바꾸고
-  // 강 지문 리스트 받아오는 거 만들기
+        const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
+        const res = await axios.get(API_URL);
+        console.log(res);
+        setSearchTextBook(res.data);
+        // (res: any) => {
+        //   //  setData(addId(res, yearData));
+        // };
+      }
+      setSearchlecture(lecture);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns: GridColDef[] = [
     {
-      field: "passageUnit",
+      field: "year",
       headerName: "강",
       width: 150,
       editable: true,
@@ -96,12 +119,20 @@ const QuestionCrt = () => {
       sortable: false,
     },
     {
-      field: "questionCount",
+      field: "count",
       headerName: "지문",
       type: "number",
       width: 300,
       editable: true,
       align: "center",
+    },
+  ];
+
+  const rows = [
+    {
+      id: 1,
+      year: "2020",
+      count: [1, 2, 3],
     },
   ];
 
@@ -138,9 +169,9 @@ const QuestionCrt = () => {
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
               <Select
-                value={searchlecture || ""}
+                value={searchlecture || "교과서"}
                 label="지문유형"
-                onChange={handleBook}
+                onChange={handleLecture}
               >
                 {PASSAGETYPE.map((text, id) => (
                   <MenuItem key={id} value={text}>
@@ -163,7 +194,12 @@ const QuestionCrt = () => {
               연도
             </Typography>
             <FormControl sx={{ width: "300px", marginLeft: "20px" }}>
-              <Select id="select-box" value={searchYear || ""} label="Year">
+              <Select
+                id="select-box"
+                value={searchYear || ""}
+                label="Year"
+                onChange={handleYear}
+              >
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
@@ -185,8 +221,12 @@ const QuestionCrt = () => {
               교재
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
-              <Select id="select-box" value={searchlecture || ""}>
-                {PASSAGETYPE.map((text, id) => (
+              <Select
+                id="select-box"
+                value={passageName}
+                onChange={handlePassageName}
+              >
+                {searchTextBook.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
                   </MenuItem>
@@ -196,7 +236,7 @@ const QuestionCrt = () => {
           </Box>
           {/* 지문선택 */}
           <DataGrid
-            rows={data}
+            rows={rows}
             columns={columns}
             initialState={{
               pagination: {
