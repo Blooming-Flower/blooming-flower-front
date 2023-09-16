@@ -4,19 +4,19 @@ import React, { useEffect, useState } from "react";
 import QuestionList from "@pages/menu/question/questionCreate/questionList";
 
 import {
-  Box,
-  FormControl,
-  Grid,
-  MenuItem,
-  Pagination,
-  Select,
-  SelectChangeEvent,
-  Typography,
+    Box, Button,
+    FormControl,
+    Grid,
+    MenuItem,
+    Pagination,
+    Select,
+    SelectChangeEvent,
+    Typography,
 } from "@mui/material";
 
 //css
 import "@css/questionCreate/questionCrt.scss";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import {GridColDef, DataGrid, GridRowParams} from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import { addId } from "@utils/functions";
 import { $GET } from "@utils/request";
@@ -53,9 +53,18 @@ const QuestionCrt = () => {
     {
       field: "num",
       headerName: "지문",
-      type: "number",
+      type: "actions",
       width: 300,
       editable: true,
+        getActions: (params: GridRowParams) => [
+            <Button
+                variant="outlined"
+                color="warning"
+                size="medium"
+            >
+                수정
+            </Button>,
+        ],
     },
   ];
 
