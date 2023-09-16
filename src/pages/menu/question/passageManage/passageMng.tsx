@@ -29,6 +29,7 @@ import { debounce } from "@utils/useDebounce";
 import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
 import { addId } from "@utils/functions";
 import axios, { Axios } from "axios";
+import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
 
 const PassageMng = () => {
   const apiRef = useGridApiRef();
@@ -206,6 +207,9 @@ const PassageMng = () => {
           </Box>
           <DataGrid
             rows={data}
+            slots={{
+              noRowsOverlay: CustomNoRowsOverlay,
+            }}
             columns={columns}
             initialState={{
               pagination: {
@@ -218,7 +222,7 @@ const PassageMng = () => {
             checkboxSelection
             // disableRowSelectionOnClick
             hideFooterPagination={true}
-            sx={{ fontWeight: "500", fontSize: "15px" }}
+            sx={{ fontWeight: "500", fontSize: "15px", height:'700px' }}
           />
           <Pagination
             count={parseInt((data.length / 5).toString()) + 1}
