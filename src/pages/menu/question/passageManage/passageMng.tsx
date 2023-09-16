@@ -28,8 +28,9 @@ import { $DELETE, $GET } from "@utils/request";
 import { debounce } from "@utils/useDebounce";
 import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
 import { addId } from "@utils/functions";
-import axios, { Axios } from "axios";
+import axios, { Axios } from "axios"
 import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
+import CustomPagination from "@components/ui/grid/customPage";
 
 const PassageMng = () => {
   const apiRef = useGridApiRef();
@@ -209,20 +210,21 @@ const PassageMng = () => {
             rows={data}
             slots={{
               noRowsOverlay: CustomNoRowsOverlay,
+              pagination: CustomPagination,
             }}
             columns={columns}
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
+                  pageSize: 5,
                 },
               },
             }}
             apiRef={apiRef}
             checkboxSelection
             // disableRowSelectionOnClick
-            hideFooterPagination={true}
-            sx={{ fontWeight: "500", fontSize: "15px", height:'700px' }}
+            hideFooterPagination={false}
+            sx={{ fontWeight: "500", fontSize: "15px", height:'600px' }}
           />
           <Pagination
             count={parseInt((data.length / 5).toString()) + 1}
