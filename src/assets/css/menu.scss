@@ -116,6 +116,12 @@
 		padding-top: 10px !important
 	}
 }
+.table-input-select{
+	width: 95%;;
+	display: flex !important;
+	margin-top:5px !important;
+	margin-left: 10px !important;
+}
 
 .MuiPaper-root.MuiDialog-paper{
 	max-width: 1000px !important;
@@ -126,4 +132,16 @@
 	font-weight: bold;
 	border-top: 2px solid #b3b3b3;
 	border-bottom: 2px solid #b3b3b3;
+}
+.MuiPopper-root{
+	.MuiAutocomplete-listbox {
+		//background-color: white;
+		.Mui-focused {
+			background-color: rgba(255, 0, 0, 0.12) !important
+		}
+		.Mui-expanded
+		{
+			background-color: white !important;
+		}
+	}
 }
