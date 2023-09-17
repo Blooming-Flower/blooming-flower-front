@@ -1,6 +1,5 @@
 import Layout from "@components/layouts/layout";
 import React, { useEffect, useState } from "react";
-
 import QuestionList from "@pages/menu/question/questionCreate/questionList";
 
 import {
@@ -16,25 +15,19 @@ import {
 
 //css
 import "@css/questionCreate/questionCrt.scss";
-import { GridColDef, DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import axios from "axios";
-import { addId } from "@utils/functions";
-// import { CheckBox } from "@mui/icons-material";
-import { CheckBox } from "@mui/icons-material";
-
-//지문 체크 박스
-const checkBoxList = [{}];
+import { rowId } from "@utils/functions";
 
 const QuestionCrt = () => {
   const [searchlecture, setSearchlecture] = React.useState("교과서");
   const [searchYear, setSearchYear] = React.useState("");
   const [searchTextBook, setSearchTextBook] = React.useState([]);
-
   const [passageName, setPassageName] = React.useState("");
-
   const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [rowData, setRowData] = React.useState([] as any);
 
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -54,17 +47,24 @@ const QuestionCrt = () => {
   // [문제 출제] 강, 지문 번호 조회
   const handlePassageName = async (event: SelectChangeEvent) => {
     try {
-      console.log("event.target.value::", event.target.value);
+      // console.log("event.target.value::", event.target.value);
       const passageName = event.target.value;
       const passageType = convertPassageType(searchlecture);
-      // const year = event.target.value;
 
       const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-numbers?
       page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
-      const res = await axios.get(API_URL);
+      const res: any = await axios.get(API_URL);
       console.log(res);
-
       setPassageName(event.target.value);
+
+      if (res.data.length != 0) {
+        for (let i = 0; i < res.data.length; i++) {
+          res.data[i].id = i;
+        }
+      }
+
+      setRowData(res.data);
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -99,9 +99,6 @@ const QuestionCrt = () => {
         const res = await axios.get(API_URL);
         console.log(res);
         setSearchTextBook(res.data);
-        // (res: any) => {
-        //   //  setData(addId(res, yearData));
-        // };
       }
       setSearchlecture(lecture);
     } catch (error) {
@@ -111,7 +108,7 @@ const QuestionCrt = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "year",
+      field: "passageUnit",
       headerName: "강",
       width: 150,
       editable: true,
@@ -119,20 +116,38 @@ const QuestionCrt = () => {
       sortable: false,
     },
     {
-      field: "count",
+      field: "passageInfo",
       headerName: "지문",
-      type: "number",
+      type: "actions",
       width: 300,
       editable: true,
+      getActions: (params) => [
+        <>
+          {params.row.passageInfo.map((row: any) => {
+            return (
+              <div key={row.passageId}>
+                <input type="checkbox" />
+                {row.passageId}
+              </div>
+            );
+          })}
+        </>,
+      ],
       align: "center",
     },
   ];
 
   const rows = [
     {
-      id: 1,
-      year: "2020",
-      count: [1, 2, 3],
+      passageUnit: String,
+      passageInfo: [
+        {
+          passageUnit: String,
+          passageNumber: String,
+          passageId: Number,
+          questionCount: Number,
+        },
+      ],
     },
   ];
 
@@ -236,7 +251,8 @@ const QuestionCrt = () => {
           </Box>
           {/* 지문선택 */}
           <DataGrid
-            rows={rows}
+            rows={rowData}
+            getRowId={(row) => row.id}
             columns={columns}
             initialState={{
               pagination: {
@@ -251,7 +267,7 @@ const QuestionCrt = () => {
             sx={{ fontWeight: "500", fontSize: "15px" }}
           />
           <Pagination
-            count={parseInt((data.length / 5).toString()) + 1}
+            count={parseInt((rowData.length / 5).toString()) + 1}
             onChange={(event, value) => setPage(value - 1)}
             page={page + 1}
             showFirstButton
