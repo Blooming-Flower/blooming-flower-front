@@ -18,9 +18,13 @@ const Pagination = ({
 
     return (
         <MuiPagination
-            color="primary"
+            color="standard"
             className={className}
             count={pageCount}
+            showFirstButton
+            showLastButton
+            shape="rounded"
+            sx={{ display: "flex" }}
             page={page + 1}
             onChange={(event, newPage) => {
                 onPageChange(event as any, newPage - 1);

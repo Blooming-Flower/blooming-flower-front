@@ -215,8 +215,8 @@ const PassageMng = () => {
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel: {
-                  pageSize: 5,
+                paginationModel:{
+                  pageSize: 5
                 },
               },
             }}
@@ -224,16 +224,7 @@ const PassageMng = () => {
             checkboxSelection
             // disableRowSelectionOnClick
             hideFooterPagination={false}
-            sx={{ fontWeight: "500", fontSize: "15px", height:'600px' }}
-          />
-          <Pagination
-            count={parseInt((data.length / 5).toString()) + 1}
-            onChange={(event, value) => setPage(value - 1)}
-            page={page + 1}
-            showFirstButton
-            showLastButton
-            shape="rounded"
-            sx={{ display: "flex" }}
+            sx={data.length > 0 ?{ fontWeight: "500", fontSize: "15px", height:'100%' } : {fontWeight: "500", fontSize: "15px", height:'400px' }}
           />
         </Box>
       </div>
