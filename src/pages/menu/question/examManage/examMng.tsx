@@ -2,13 +2,24 @@ import Layout from "@components/layouts/layout";
 import CustomButton from "@components/ui/button/custeomButton";
 import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCallbackDetails,
+  GridCellEditStopParams,
+  GridColDef,
+  GridRowParams,
+  MuiBaseEvent,
+  MuiEvent,
+} from "@mui/x-data-grid";
+import { log } from "console";
 import * as React from "react";
 // import pdfSvg from "/src/assets/svg/pdfSvg.svg";
 
 const ExamMng = () => {
   const [searcText, setSearchText] = React.useState("");
   const [page, setPage] = React.useState(0);
+
+  let beforValue;
 
   const textFieldOnChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -25,6 +36,16 @@ const ExamMng = () => {
 
   const downPdf = () => {
     console.log("pdf 다운도르");
+  };
+
+  const titleEdit = (
+    params: GridCellEditStopParams<any, any, any>,
+    event: MuiEvent<MuiBaseEvent>,
+    details: GridCallbackDetails<any>
+  ) => {
+    if (event.target.value != params.title) {
+      console.log("변경 요청 보내기");
+    }
   };
 
   const columns: GridColDef[] = [
@@ -59,12 +80,13 @@ const ExamMng = () => {
       ),
     },
     {
-      field: "actions",
+      field: "examId",
+      type: "actions",
       headerName: "삭제",
       width: 150,
       align: "center",
       headerAlign: "center",
-      getActions: (params: GridRowParams) => [
+      getActions: (params) => [
         <Button
           variant="outlined"
           color="warning"
@@ -82,21 +104,21 @@ const ExamMng = () => {
       title: "[2023-2 중간]종촌고1",
       createDate: new Date().toISOString().split("T")[0],
       downPdf: "",
-      actions: "",
+      examId: 1,
     },
     {
       id: 2,
       title: "[2023-2 중간]종촌고2",
       createDate: new Date().toISOString().split("T")[0],
       // downPdf: "",
-      actions: "",
+      examId: 2,
     },
     {
       id: 3,
       title: "[2023-2 중간]종촌고3",
       createDate: new Date().toISOString().split("T")[0],
       downPdf: "",
-      // actions: "",
+      examId: 3,
     },
   ];
 
@@ -134,6 +156,13 @@ const ExamMng = () => {
                 },
               },
             }}
+            onCellEditStart={(params, event, details) => {
+              console.log(params);
+              console.log(event);
+              console.log(event.target);
+              console.log(details);
+            }}
+            onCellEditStop={titleEdit}
             sx={{ fontWeight: "500", fontSize: "15px" }}
             hideFooterPagination={true}
           />
