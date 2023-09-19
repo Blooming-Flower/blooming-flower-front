@@ -5,7 +5,6 @@ import {
   ListItemText,
   ListItemButton,
   Collapse,
-  ListSubheader,
 } from "@mui/material";
 import React, { useState } from "react";
 
@@ -16,21 +15,16 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CustomButton from "@components/ui/button/custeomButton";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
+import QuestionCrt from "./questionCrt";
+import { GridCellWrapper } from "@mui/x-data-grid/components/cell/GridCell";
 
 const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
+  const issues = [...Array(10).keys()];
   const navigate = useNavigate();
   const handleClick = () => {
     setOpen(!open);
   };
-
-  // const [clickedButton, setClickedButton] = useState<HTMLButtonElement | null>(
-  //   null
-  // );
-  // const handleMouseEvent = (event: any) => {
-  //   console.log(event.target);
-  //   console.log(event.currentTarget);
-  // };
 
   return (
     <div className="questionList-item">
@@ -45,25 +39,26 @@ const QuestionList = (props: any) => {
         }}
         subheader={<li />}
       >
-        {[0, 1].map((sectionId) => (
-          <li key={`section-${sectionId}`}>
+        {/* {sampleData.map((params: any) => (
+          <li>
             <ul>
-              <ListSubheader>{`수능특강 ${sectionId}`}</ListSubheader>
-              {[0, 1, 2].map((item) => (
+              {params.date.map((log: any) => (
                 <ListItem
-                  key={`item-${sectionId}-${item}`}
+                  key={log.date}
+                  selectedDates={selectedDates}
+                  setSelectedDates={setSelectedDates}
                   secondaryAction={
                     <IconButton edge="end" aria-label="delete">
                       <HighlightOffIcon />
                     </IconButton>
                   }
                 >
-                  <ListItemText primary={`YBM ${item}`} />
+                  <ListItemText primary={`${log}`} />
                 </ListItem>
               ))}
-
+              {/* 복합지문 드롭다운 메뉴
               <ListItemButton onClick={handleClick}>
-                <ListItemText primary="YBM 3" />
+                <ListItemText primary="복합지문" />
                 {open ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={open} timeout="auto" unmountOnExit>
@@ -75,7 +70,7 @@ const QuestionList = (props: any) => {
               </Collapse>
             </ul>
           </li>
-        ))}
+        ))}  */}
 
         <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
           {props.Children}

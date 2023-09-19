@@ -1,11 +1,12 @@
 import Layout from "@components/layouts/layout";
-import React, { useEffect, useState } from "react";
+import * as React from "react";
 import QuestionList from "@pages/menu/question/questionCreate/questionList";
 
 import {
   Box,
   FormControl,
   Grid,
+  InputLabel,
   MenuItem,
   Pagination,
   Select,
@@ -18,17 +19,19 @@ import "@css/questionCreate/questionCrt.scss";
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import axios from "axios";
-import { rowId } from "@utils/functions";
 
-const QuestionCrt = () => {
-  const [searchlecture, setSearchlecture] = React.useState("교과서");
+const QuestionCrt = (props: any) => {
+  const [searchlecture, setSearchlecture] = React.useState("");
   const [searchYear, setSearchYear] = React.useState("");
   const [searchTextBook, setSearchTextBook] = React.useState([]);
   const [passageName, setPassageName] = React.useState("");
-  const [data, setData] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowData, setRowData] = React.useState([] as any);
+  const [checked, setChecked] = React.useState([0]);
 
+  const handleOnChange = (evt: any) => {
+    console.log(evt.target.value);
+  };
   const convertPassageType = (type: string) => {
     switch (type) {
       case "교과서":
@@ -47,7 +50,6 @@ const QuestionCrt = () => {
   // [문제 출제] 강, 지문 번호 조회
   const handlePassageName = async (event: SelectChangeEvent) => {
     try {
-      // console.log("event.target.value::", event.target.value);
       const passageName = event.target.value;
       const passageType = convertPassageType(searchlecture);
 
@@ -62,7 +64,6 @@ const QuestionCrt = () => {
           res.data[i].id = i;
         }
       }
-
       setRowData(res.data);
       console.log(res.data);
     } catch (error) {
@@ -106,6 +107,19 @@ const QuestionCrt = () => {
     }
   };
 
+  //지문 체크박스 이벤트
+  const handleToggle = (value: number) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    setChecked(newChecked);
+    console.log(newChecked);
+  };
+
   const columns: GridColDef[] = [
     {
       field: "passageUnit",
@@ -125,8 +139,12 @@ const QuestionCrt = () => {
         <>
           {params.row.passageInfo.map((row: any) => {
             return (
-              <div key={row.passageId}>
-                <input type="checkbox" />
+              <div key={row.passageId} onClick={handleToggle(row)}>
+                <input
+                  type="checkbox"
+                  value={rowData.passageId}
+                  checked={checked.indexOf(row) !== -1}
+                />
                 {row.passageId}
               </div>
             );
@@ -134,20 +152,6 @@ const QuestionCrt = () => {
         </>,
       ],
       align: "center",
-    },
-  ];
-
-  const rows = [
-    {
-      passageUnit: String,
-      passageInfo: [
-        {
-          passageUnit: String,
-          passageNumber: String,
-          passageId: Number,
-          questionCount: Number,
-        },
-      ],
     },
   ];
 
@@ -183,8 +187,9 @@ const QuestionCrt = () => {
               지문 유형
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
+              <InputLabel id="demo-simple-select-label">교과서</InputLabel>
               <Select
-                value={searchlecture || "교과서"}
+                value={searchlecture}
                 label="지문유형"
                 onChange={handleLecture}
               >
@@ -209,9 +214,10 @@ const QuestionCrt = () => {
               연도
             </Typography>
             <FormControl sx={{ width: "300px", marginLeft: "20px" }}>
+              <InputLabel id="demo-simple-select-label">2023</InputLabel>
               <Select
                 id="select-box"
-                value={searchYear || ""}
+                value={searchYear}
                 label="Year"
                 onChange={handleYear}
               >
@@ -236,6 +242,7 @@ const QuestionCrt = () => {
               교재
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
+              <InputLabel id="demo-simple-select-label">교재1</InputLabel>
               <Select
                 id="select-box"
                 value={passageName}
