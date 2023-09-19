@@ -1,5 +1,5 @@
 import DialogTitle from "@mui/material/DialogTitle";
-import { Button, IconButton, styled } from "@mui/material";
+import {Button, Grid, IconButton, Paper, styled} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -18,10 +18,12 @@ import { $GET } from "@utils/request";
 const PassagePopup = forwardRef(
   (props: { passageId: number | undefined }, ref: ForwardedRef<any>) => {
     const [open, setOpen] = React.useState(false);
+    const [content, setContent] = React.useState("");
     useEffect(() => {
       if (props.passageId != undefined) {
         $GET("/api/v1/passage/search/" + props.passageId, (res: any) => {
-          console.log(res);
+            console.log(res.data.passageContent)
+            setContent(res.data.passageContent)
         });
       }
     }, [open]);
@@ -63,7 +65,16 @@ const PassagePopup = forwardRef(
           <CloseIcon />
         </IconButton>
         <DialogContent>
-          <VerticalTabs />
+            <Grid container>
+                <Grid item lg={3}>
+                    <VerticalTabs />
+                </Grid>
+                <Grid item lg={9}>
+                    <Item>
+                        {content}
+                    </Item>
+                </Grid>
+            </Grid>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose}>
@@ -81,6 +92,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
   "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
-  },
+  }
 }));
 export default PassagePopup;
+const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    height: '600px',
+    lineHeight: '60px',
+    width:'90%',
+    margin:'0 auto'
+}));
