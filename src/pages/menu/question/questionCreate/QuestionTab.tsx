@@ -129,7 +129,7 @@ const QuestionTab = () => {
 
   const chooseRef = useGridApiRef();
   const answerRef = useGridApiRef();
-  const editorRef = React.useRef();
+  const editorRef: React.MutableRefObject<any> = React.useRef();
 
   const tempSave = () => {
     const chooseData = chooseRef.current
@@ -139,7 +139,8 @@ const QuestionTab = () => {
         return { chooseSeq, chooseContent };
       });
     const answerData = [...answerRef.current.getSelectedRows().keys()];
-    const questionContent = editorRef.current?.getInstance().getHTML();
+    const questionContent = editorRef.current.getInstance().getHTML();
+
     console.log(chooseData);
     console.log(answerData);
     console.log(questionContent);

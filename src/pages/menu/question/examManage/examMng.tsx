@@ -45,7 +45,7 @@ const ExamMng = () => {
       event.defaultMuiPrevented = true;
       return;
     }
-    console.log(event);
+
     const { value: newTitle } = event.target;
     const { row: newExam, formattedValue } = params;
 

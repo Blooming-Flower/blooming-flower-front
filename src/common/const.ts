@@ -138,7 +138,7 @@ export const QUESTIONTYPE = {
   Q23: "복합유형",
 };
 
-export const DEFAULT_QUESTION = {
+export const DEFAULT_QUESTION: any = {
   Q1: "다음 글의 주제로 가장 적절한 것은?",
   Q2: "다음 글의 제목으로 가장 적절한 것은?",
   Q3: "다음 글의 목적으로 가장 적절한 것은?",
