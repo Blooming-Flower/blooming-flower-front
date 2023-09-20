@@ -39,12 +39,13 @@ const ExamMng = () => {
 
   const titleEdit = (
     params: GridCellEditStopParams<any, any, any>,
-    event: MuiEvent<MuiBaseEvent>
+    event: MuiEvent<MuiBaseEvent | any>
   ) => {
     if (params.reason === GridCellEditStopReasons.cellFocusOut) {
       event.defaultMuiPrevented = true;
       return;
     }
+    console.log(event);
     const { value: newTitle } = event.target;
     const { row: newExam, formattedValue } = params;
 
