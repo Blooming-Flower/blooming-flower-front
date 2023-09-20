@@ -24,6 +24,8 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
 
+  const { width, height } = props;
+
   // const [clickedButton, setClickedButton] = useState<HTMLButtonElement | null>(
   //   null
   // );
@@ -36,11 +38,13 @@ const QuestionList = (props: any) => {
     <div className="questionList-item">
       <List
         sx={{
-          maxWidth: 360,
+          // maxWidth: 360,
           bgcolor: "background.paper",
           position: "relative",
           overflow: "auto",
-          maxHeight: 300,
+          // maxHeight: 300,
+          width: width ?? "auto",
+          height: height ?? "auto",
           "& ul": { padding: 0 },
         }}
         subheader={<li />}
