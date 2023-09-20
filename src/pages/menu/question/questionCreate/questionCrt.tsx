@@ -29,9 +29,6 @@ const QuestionCrt = (props: any) => {
   const [rowData, setRowData] = React.useState([] as any);
   const [checked, setChecked] = React.useState([0]);
 
-  const handleOnChange = (evt: any) => {
-    console.log(evt.target.value);
-  };
   const convertPassageType = (type: string) => {
     switch (type) {
       case "교과서":
@@ -107,7 +104,7 @@ const QuestionCrt = (props: any) => {
     }
   };
 
-  //지문 체크박스 이벤트
+  //지문 체크박스 이벤트 (선택&취소)
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -139,11 +136,12 @@ const QuestionCrt = (props: any) => {
         <>
           {params.row.passageInfo.map((row: any) => {
             return (
-              <div key={row.passageId} onClick={handleToggle(row)}>
+              <div key={row.passageNumber}>
                 <input
                   type="checkbox"
                   value={rowData.passageId}
-                  checked={checked.indexOf(row) !== -1}
+                  onClick={handleToggle(row)}
+                  defaultChecked={checked.indexOf(row) !== -1}
                 />
                 {row.passageId}
               </div>

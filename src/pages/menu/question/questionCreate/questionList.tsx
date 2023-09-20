@@ -19,12 +19,14 @@ import QuestionCrt from "./questionCrt";
 import { GridCellWrapper } from "@mui/x-data-grid/components/cell/GridCell";
 
 const QuestionList = (props: any) => {
-  const [open, setOpen] = React.useState(false);
-  const issues = [...Array(10).keys()];
-  const navigate = useNavigate();
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  //const [open, setOpen] = React.useState(false);
+  // const navigate = useNavigate();
+  // const handleClick = () => {
+  //   setOpen(!open);
+  // };
+  //checkbox list up
+
+  const [checkListItem, setCheckListItem] = React.useState([] as any);
 
   return (
     <div className="questionList-item">
