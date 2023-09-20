@@ -6,6 +6,7 @@ import {
   DataGrid,
   GridCallbackDetails,
   GridCellEditStopParams,
+  GridCellEditStopReasons,
   GridColDef,
   GridRowParams,
   MuiBaseEvent,
@@ -18,8 +19,6 @@ import * as React from "react";
 const ExamMng = () => {
   const [searcText, setSearchText] = React.useState("");
   const [page, setPage] = React.useState(0);
-
-  let beforValue;
 
   const textFieldOnChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -40,11 +39,18 @@ const ExamMng = () => {
 
   const titleEdit = (
     params: GridCellEditStopParams<any, any, any>,
-    event: MuiEvent<MuiBaseEvent>,
-    details: GridCallbackDetails<any>
+    event: MuiEvent<MuiBaseEvent>
   ) => {
-    if (event.target.value != params.title) {
-      console.log("변경 요청 보내기");
+    if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+      event.defaultMuiPrevented = true;
+      return;
+    }
+    const { value: newTitle } = event.target;
+    const { row: newExam, formattedValue } = params;
+
+    if (formattedValue !== newTitle) {
+      newExam.title = newTitle;
+      console.log("타이틀 변경 요청", newExam);
     }
   };
 
@@ -156,12 +162,7 @@ const ExamMng = () => {
                 },
               },
             }}
-            onCellEditStart={(params, event, details) => {
-              console.log(params);
-              console.log(event);
-              console.log(event.target);
-              console.log(details);
-            }}
+            onCellEditStart={(params, event, details) => {}}
             onCellEditStop={titleEdit}
             sx={{ fontWeight: "500", fontSize: "15px" }}
             hideFooterPagination={true}
