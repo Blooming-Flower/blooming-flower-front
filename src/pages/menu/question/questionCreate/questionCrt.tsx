@@ -1,7 +1,5 @@
 import Layout from "@components/layouts/layout";
 import * as React from "react";
-import QuestionList from "@pages/menu/question/questionCreate/questionList";
-
 import {
   Alert,
   Box,
@@ -21,6 +19,7 @@ import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import axios from "axios";
 import { PATH } from "@common/domain";
+
 //css
 import "@css/questionCreate/questionList.scss";
 import "@css/questionCreate/questionCrt.scss";
@@ -112,22 +111,23 @@ const QuestionCrt = (params: any) => {
   };
 
   //지문 체크박스 이벤트 (선택&취소)
-  const handleToggle = (value: any) => () => {
-    const currentIndex = checked.indexOf(value);
+  const handleToggle = (item: any) => () => {
+    const currentIndex = checked.indexOf(item);
     const newChecked = [...checked];
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push(item);
     } else {
       newChecked.splice(currentIndex, 1);
     }
     setChecked(newChecked);
     console.log(newChecked);
+    console.log("checked ;;;", checked);
   };
 
   //체크박스 해당 아이템 삭제
-  // const onRemove = (value: any) => {
-  //   setChecked(checked.filter((el) => el !== value));
-  // };
+  const onRemove = (item: any) => {
+    setChecked(checked.filter((el: any) => el !== item));
+  };
 
   const columns: GridColDef[] = [
     {
@@ -152,10 +152,7 @@ const QuestionCrt = (params: any) => {
                 <input
                   type="checkbox"
                   value={row.passageId}
-                  onClick={handleToggle(row)}
-                  onChange={(e) => {
-                    handleToggle(e.target.checked);
-                  }}
+                  onClick={handleToggle(console.log(row))}
                   defaultChecked={checked.indexOf(row) !== -1}
                 />
                 {row.passageId}
@@ -313,11 +310,16 @@ const QuestionCrt = (params: any) => {
             {checked.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
             {checked.map((row: any) => {
               return (
-                <div key={row}>
+                <div key={row.passageId}>
                   <ListItem
                     className="checkbox-list"
+                    value={console.log("리스트업 로우", row)}
                     secondaryAction={
-                      <IconButton edge="end" aria-label="delete">
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => onRemove(row)}
+                      >
                         <HighlightOffIcon />
                       </IconButton>
                     }
