@@ -136,7 +136,7 @@ const QuestionCrt = (props: any) => {
         <>
           {params.row.passageInfo.map((row: any) => {
             return (
-              <div key={row.passageNumber}>
+              <div key={row.passageNumber} id="checkbox-list">
                 <input
                   type="checkbox"
                   value={rowData.passageId}
@@ -158,8 +158,9 @@ const QuestionCrt = (props: any) => {
       <Grid container spacing={2}>
         <div className="mainCont mainCont2">
           <Typography
-            variant="h4"
-            sx={{ fontWeight: "500", color: "#ff8b2c", paddingBottom: "20px" }}
+            variant="h2"
+            className="menu-title"
+            sx={{ color: "#ff8b2c", paddingBottom: "20px" }}
           >
             문제 출제
           </Typography>

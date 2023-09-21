@@ -1,9 +1,9 @@
 .questionList-item {
   width: 100%;
   max-width: 200px;
-  margin-top: 107px;
+  margin-top: 132px;
+  height: 475px;
   border: 1px solid #dddddd;
-  height: 100%;
   border-radius: 10px;
   box-shadow: 0px 0px 3px 3px #dddddd;
   .css-1k9ek97 {
@@ -14,26 +14,22 @@
     margin: 0px auto !important;
   }
 
-  .css-1hln3ey-MuiList-root {
+  .MuiList-root {
     max-width: 200px !important;
-  }
-
-  .css-mu1651-MuiList-root {
-    max-height: 475px !important;
-    border-radius: 10px !important;
-  }
-
-  .css-mu1651-MuiList-root {
     max-height: 473px !important;
+    height: 100%;
     border-radius: 10px !important;
   }
 
-  .css-518kzi-MuiListItemSecondaryAction-root {
+  .MuiListItemSecondaryAction-root {
     top: 22px !important;
   }
 
   .MuiButtonBase-root.MuiButton-root {
     width: 66px !important;
     height: 35px !important;
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 }

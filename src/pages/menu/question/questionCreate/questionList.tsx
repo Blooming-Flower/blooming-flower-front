@@ -6,7 +6,7 @@ import {
   ListItemButton,
   Collapse,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //css
 import "@css/questionCreate/questionList.scss";
@@ -18,7 +18,7 @@ import { PATH } from "@common/domain";
 import QuestionCrt from "./questionCrt";
 import { GridCellWrapper } from "@mui/x-data-grid/components/cell/GridCell";
 
-const QuestionList = (props: any) => {
+const QuestionList = (params: any) => {
   //const [open, setOpen] = React.useState(false);
   // const navigate = useNavigate();
   // const handleClick = () => {
@@ -26,7 +26,12 @@ const QuestionList = (props: any) => {
   // };
   //checkbox list up
 
-  const [checkListItem, setCheckListItem] = React.useState([] as any);
+  const [checkListItem, setCheckListItem] =
+    document.querySelectorAll(".checkbox-list");
+  const [checkBox, setCheckBox] = React.useState([]);
+  useEffect(() => {
+    console.log(checkBox[0]);
+  }, [checkBox]);
 
   return (
     <div className="questionList-item">
@@ -41,6 +46,22 @@ const QuestionList = (props: any) => {
         }}
         subheader={<li />}
       >
+        {checkBox.map((checks: any) => {
+          return (
+            <div key={checks?.passageNumber}>
+              <ListItem
+                className="checkbox-list"
+                onChange={checks?.passageId}
+                secondaryAction={
+                  <IconButton edge="end" aria-label="delete">
+                    <HighlightOffIcon />
+                  </IconButton>
+                }
+              ></ListItem>
+            </div>
+          );
+        })}
+
         {/* {sampleData.map((params: any) => (
           <li>
             <ul>
@@ -75,7 +96,7 @@ const QuestionList = (props: any) => {
         ))}  */}
 
         <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
-          {props.Children}
+          {params.Children}
         </CustomButton>
       </List>
     </div>
@@ -84,6 +105,13 @@ const QuestionList = (props: any) => {
 
 export default QuestionList;
 
+function setRowData() {
+  throw new Error("Function not implemented.");
+}
+
+function handlePassageName() {
+  throw new Error("Function not implemented.");
+}
 // <button onClick={() => { navigate(-1); }} >
 // 이전 페이지로 이동하기
 // </button>
