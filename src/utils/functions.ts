@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@mui/material'
+import { useMediaQuery } from "@mui/material";
 
 /**
  * <PRE>
@@ -8,8 +8,8 @@ import { useMediaQuery } from '@mui/material'
  * <PRE>
  */
 export const LogErr = (error: any, message: string, targetName: string) => {
-	console.log(`${message} error>> ${error} ... <${message}>`)
-}
+  console.log(`${message} error>> ${error} ... <${message}>`);
+};
 
 /**
  * <PRE>
@@ -19,8 +19,8 @@ export const LogErr = (error: any, message: string, targetName: string) => {
  * <PRE>
  */
 export const LogInfo = (message: string) => {
-	console.log(`Info >>> ${message}`)
-}
+  console.log(`Info >>> ${message}`);
+};
 
 /**
  * <PRE>
@@ -30,8 +30,8 @@ export const LogInfo = (message: string) => {
  * <PRE>
  */
 export const pad = (num: string | number) => {
-	return num.toString().length < 2 ? '0' + num : num
-}
+  return num.toString().length < 2 ? "0" + num : num;
+};
 
 /**
  * <PRE>
@@ -41,21 +41,21 @@ export const pad = (num: string | number) => {
  * <PRE>
  */
 export const makeFormatToday = () => {
-	const date = new Date()
-	const year = date.getFullYear()
-	const month = pad(date.getMonth() + 1)
-	const day = pad(date.getDate())
-	const hh = pad(date.getHours())
-	const ms = pad(date.getMinutes())
-	const ss = pad(date.getSeconds())
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hh = pad(date.getHours());
+  const ms = pad(date.getMinutes());
+  const ss = pad(date.getSeconds());
 
-	return {
-		year: year,
-		month: month,
-		day: day,
-		full: year + '-' + pad(month) + '-' + day + ' ' + hh + ':' + ms + ':' + ss
-	}
-}
+  return {
+    year: year,
+    month: month,
+    day: day,
+    full: year + "-" + pad(month) + "-" + day + " " + hh + ":" + ms + ":" + ss,
+  };
+};
 
 /**
  * <PRE>
@@ -65,13 +65,13 @@ export const makeFormatToday = () => {
  * <PRE>
  */
 export const numNoCommas = (val: string) => {
-	let value: string
+  let value: string;
 
-	val = val.replace(/[^0-9]/g, '') // 입력값이 숫자가 아니면 공백
-	value = val.replace(/,/g, '') // ,값 공백처리
+  val = val.replace(/[^0-9]/g, ""); // 입력값이 숫자가 아니면 공백
+  value = val.replace(/,/g, ""); // ,값 공백처리
 
-	return parseInt(value)
-}
+  return parseInt(value);
+};
 
 /**
  * <PRE>
@@ -81,32 +81,34 @@ export const numNoCommas = (val: string) => {
  * <PRE>
  */
 export const numCommas = (val: number) => {
-	const value = String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  const value = String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-	return value
-}
+  return value;
+};
 
 export const getViewSize = () => {
-	const mobile = 600 //sm (small) : 600px ~ 960px
-	const tablet = 960 //md (medium): 960px ~ 1280px
-	const desktop = 1280 //lg (large) : 1280px ~ 1920px
+  const mobile = 600; //sm (small) : 600px ~ 960px
+  const tablet = 960; //md (medium): 960px ~ 1280px
+  const desktop = 1280; //lg (large) : 1280px ~ 1920px
 
-	const isPc = useMediaQuery(`(min-width: ${desktop}px)`)
-	const isTablet = useMediaQuery(`(min-width: ${tablet}px) and (max-width: ${desktop - 1}px)`)
-	const isMobile = useMediaQuery(`(max-width: ${tablet - 1}px)`)
+  const isPc = useMediaQuery(`(min-width: ${desktop}px)`);
+  const isTablet = useMediaQuery(
+    `(min-width: ${tablet}px) and (max-width: ${desktop - 1}px)`
+  );
+  const isMobile = useMediaQuery(`(max-width: ${tablet - 1}px)`);
 
-	let size
+  let size;
 
-	if (isPc) {
-		size = 'lg'
-	} else if (isTablet) {
-		size = 'md'
-	} else if (isMobile) {
-		size = 'sm'
-	}
+  if (isPc) {
+    size = "lg";
+  } else if (isTablet) {
+    size = "md";
+  } else if (isMobile) {
+    size = "sm";
+  }
 
-	return size
-}
+  return size;
+};
 
 /**
  * <PRE>
@@ -116,11 +118,11 @@ export const getViewSize = () => {
  * <PRE>
  */
 export const isNone = (value: string | number) => {
-	let temp = typeof value == 'string' ? value : String(value)
-	temp = temp.replace(/ /g, '')
+  let temp = typeof value == "string" ? value : String(value);
+  temp = temp.replace(/ /g, "");
 
-	return temp == '' ? true : false
-}
+  return temp == "" ? true : false;
+};
 
 /**
  * <PRE>
@@ -129,10 +131,17 @@ export const isNone = (value: string | number) => {
  * 3. Author    : JSH
  * <PRE>
  */
-export const addId = (res:any, yearData:string) => {
-	for (let i = 0; i < res.data.content.length; i++) {
-		res.data.content[i].id = i;
-		res.data.content[i].year = yearData;
-	}
-	return res.data.content
-}
+export const addId = (res: any, yearData: string) => {
+  for (let i = 0; i < res.data.content.length; i++) {
+    res.data.content[i].id = i;
+    res.data.content[i].year = yearData;
+  }
+  return res.data.content;
+};
+
+export const rowId = (res: any) => {
+  for (let i = 0; i < res.data.length; i++) {
+    res.data[i].id = i;
+  }
+  return res.data;
+};
