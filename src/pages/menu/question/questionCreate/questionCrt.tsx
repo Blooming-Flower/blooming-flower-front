@@ -21,7 +21,7 @@ import "@css/questionCreate/questionCrt.scss";
 import QuestionList from "./questionList";
 
 const QuestionCrt = (params: any) => {
-  const [searchlecture, setSearchlecture] = React.useState("");
+  const [searchPassage, setSearchPassage] = React.useState("");
   const [searchYear, setSearchYear] = React.useState("");
   const [searchTextBook, setSearchTextBook] = React.useState([]);
   const [passageName, setPassageName] = React.useState("");
@@ -50,7 +50,7 @@ const QuestionCrt = (params: any) => {
   const handlePassageName = async (event: SelectChangeEvent) => {
     try {
       const passageName = event.target.value;
-      const passageType = convertPassageType(searchlecture);
+      const passageType = convertPassageType(searchPassage);
 
       const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-numbers?
       page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
@@ -71,8 +71,7 @@ const QuestionCrt = (params: any) => {
   //연도 이벤트
   const handleYear = async (event: SelectChangeEvent) => {
     try {
-      console.log("event.target.value::", event.target.value);
-      const passageType = convertPassageType(searchlecture);
+      const passageType = convertPassageType(searchPassage);
       const year = event.target.value;
 
       const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
@@ -84,10 +83,9 @@ const QuestionCrt = (params: any) => {
     }
   };
 
-  // // 교재 유형 , 연도에 해당되는 교재명 api
-  const handleLecture = async (event: SelectChangeEvent) => {
+  // // 지문 유형 , 연도에 해당되는 교재명 api
+  const handlePassage = async (event: SelectChangeEvent) => {
     try {
-      //yearData = event.target.value as string;
       const lecture = event.target.value;
       if (searchYear) {
         const passageType = convertPassageType(lecture);
@@ -96,7 +94,7 @@ const QuestionCrt = (params: any) => {
         const res = await axios.get(API_URL);
         setSearchTextBook(res.data);
       }
-      setSearchlecture(lecture);
+      setSearchPassage(lecture);
     } catch (error) {
       console.log(error);
     }
@@ -195,12 +193,7 @@ const QuestionCrt = (params: any) => {
               지문 유형
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
-              <InputLabel id="demo-simple-select-label">교과서</InputLabel>
-              <Select
-                value={searchlecture}
-                label="지문유형"
-                onChange={handleLecture}
-              >
+              <Select value={searchPassage} onChange={handlePassage}>
                 {PASSAGETYPE.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
@@ -222,7 +215,7 @@ const QuestionCrt = (params: any) => {
               연도
             </Typography>
             <FormControl sx={{ width: "300px", marginLeft: "20px" }}>
-              <Select id="select-box" value={searchYear} onChange={handleYear}>
+              <Select value={searchYear} onChange={handleYear}>
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
@@ -244,12 +237,7 @@ const QuestionCrt = (params: any) => {
               교재
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
-              <InputLabel id="demo-simple-select-label">교재1</InputLabel>
-              <Select
-                id="select-box"
-                value={passageName}
-                onChange={handlePassageName}
-              >
+              <Select value={passageName} onChange={handlePassageName}>
                 {searchTextBook.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}

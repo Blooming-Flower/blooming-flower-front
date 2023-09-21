@@ -3,6 +3,11 @@
   max-width: 1450px !important;
 }
 
+.contents {
+
+  margin: -12px auto !important ;
+}
+
 .mainCont2 {
   float: left;
   max-height: 521px;
@@ -13,7 +18,7 @@
     top: 9px !important;
   }
   .MuiDataGrid-root {
-    max-width: 700px;
+    max-width: 780px !important;
     border-radius: 0 !important;
   }
   .MuiDataGrid-columnHeaderTitle {
@@ -54,6 +59,7 @@
   }
   .css-oiblgr {
     height: auto !important;
+    max-width: 780px !important;
   }
 
 }
