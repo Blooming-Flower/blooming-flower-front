@@ -123,6 +123,30 @@ export const $POST = (url: string, params: {}, success: Callback) => {
 
 /**
  * <PRE>
+ * 1. Name : $PUT
+ * 2. Comment   : AXIOS PUT 방식요청
+ * 3. Author    : JSH
+ * <PRE>
+ */
+export const $PUT = (url:string, params:{}, success:Callback) => {
+    if (_customAxios !== undefined) {
+        _customAxios
+            .put(url, params, { maxRedirects: 0 })
+            .then((response) => {
+                success(response);
+            })
+            .catch((error) => {
+                callError(error);
+            });
+    } else {
+        alert("AXIOS 인스턴스가 생성되지않음(PUT)");
+    }
+}
+
+
+
+/**
+ * <PRE>
  * 1. Name : $DELETE
  * 2. Comment   : AXIOS DELETE 방식요청
  * 3. Author    : JSH
@@ -139,7 +163,7 @@ export const $DELETE = (url: string, success: Callback) => {
         callError(error);
       });
   } else {
-    alert("AXIOS 인스턴스가 생성되지않음(GET)");
+    alert("AXIOS 인스턴스가 생성되지않음(DELETE)");
   }
 };
 
