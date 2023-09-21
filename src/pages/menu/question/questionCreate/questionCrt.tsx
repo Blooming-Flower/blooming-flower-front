@@ -55,7 +55,6 @@ const QuestionCrt = (params: any) => {
       const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-numbers?
       page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
-      console.log(res);
       setPassageName(event.target.value);
 
       if (res.data.length != 0) {
@@ -64,7 +63,6 @@ const QuestionCrt = (params: any) => {
         }
       }
       setRowData(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +77,6 @@ const QuestionCrt = (params: any) => {
 
       const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
       const res = await axios.get(API_URL);
-      console.log(res);
       setSearchTextBook(res.data);
       setSearchYear(event.target.value);
     } catch (error) {
@@ -97,7 +94,6 @@ const QuestionCrt = (params: any) => {
 
         const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
         const res = await axios.get(API_URL);
-        console.log(res);
         setSearchTextBook(res.data);
       }
       setSearchlecture(lecture);
@@ -111,7 +107,6 @@ const QuestionCrt = (params: any) => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
-    console.log("value;;;", value);
     if (currentIndex === -1) {
       newChecked.push(value);
       newRowDataList.push({
@@ -120,7 +115,6 @@ const QuestionCrt = (params: any) => {
         passageId: value.passageId,
         passageUnit: value.passageUnit,
       });
-      console.log(" newRowDataList;;;;", newRowDataList);
     } else {
       newChecked.splice(currentIndex, 1);
       newRowDataList.splice(currentIndex, 1);
@@ -129,15 +123,6 @@ const QuestionCrt = (params: any) => {
     setRowDataList(newRowDataList);
   };
 
-  //questionList 에 넘겨줄 rowData
-  // rowDataList = [
-  //   {
-  //     searchYear:,
-  //     searchlecture:,
-  //     passageNumber:,
-  //     passageId:
-  //   }
-  // ]
   const columns: GridColDef[] = [
     {
       field: "passageUnit",
@@ -163,7 +148,7 @@ const QuestionCrt = (params: any) => {
                   value={row.passageId}
                   onClick={handleToggle(row)}
                   onChange={(e) => {
-                    handleToggle(console.log(e.target.value));
+                    handleToggle(e.target.value);
                   }}
                   defaultChecked={checked.indexOf(row) !== -1}
                 />
