@@ -3,31 +3,38 @@ import * as React from "react";
 import QuestionList from "@pages/menu/question/questionCreate/questionList";
 
 import {
+  Alert,
   Box,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
+  List,
+  ListItem,
   MenuItem,
   Pagination,
   Select,
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-
-//css
-import "@css/questionCreate/questionCrt.scss";
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import axios from "axios";
+import { PATH } from "@common/domain";
+//css
+import "@css/questionCreate/questionList.scss";
+import "@css/questionCreate/questionCrt.scss";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CustomButton from "@components/ui/button/custeomButton";
 
-const QuestionCrt = (props: any) => {
+const QuestionCrt = (params: any) => {
   const [searchlecture, setSearchlecture] = React.useState("");
   const [searchYear, setSearchYear] = React.useState("");
   const [searchTextBook, setSearchTextBook] = React.useState([]);
   const [passageName, setPassageName] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [rowData, setRowData] = React.useState([] as any);
-  const [checked, setChecked] = React.useState([0]);
+  const [checked, setChecked] = React.useState([] as any);
 
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -105,7 +112,7 @@ const QuestionCrt = (props: any) => {
   };
 
   //지문 체크박스 이벤트 (선택&취소)
-  const handleToggle = (value: number) => () => {
+  const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
     if (currentIndex === -1) {
@@ -116,6 +123,11 @@ const QuestionCrt = (props: any) => {
     setChecked(newChecked);
     console.log(newChecked);
   };
+
+  //체크박스 해당 아이템 삭제
+  // const onRemove = (value: any) => {
+  //   setChecked(checked.filter((el) => el !== value));
+  // };
 
   const columns: GridColDef[] = [
     {
@@ -139,8 +151,11 @@ const QuestionCrt = (props: any) => {
               <div key={row.passageNumber} id="checkbox-list">
                 <input
                   type="checkbox"
-                  value={rowData.passageId}
+                  value={row.passageId}
                   onClick={handleToggle(row)}
+                  onChange={(e) => {
+                    handleToggle(e.target.checked);
+                  }}
                   defaultChecked={checked.indexOf(row) !== -1}
                 />
                 {row.passageId}
@@ -282,7 +297,41 @@ const QuestionCrt = (props: any) => {
             sx={{ display: "flex" }}
           />
         </div>
-        <QuestionList />
+        {/* <QuestionList /> */}
+        <div className="questionList-item">
+          <List
+            sx={{
+              maxWidth: 360,
+              bgcolor: "background.paper",
+              position: "relative",
+              overflow: "auto",
+              maxHeight: 300,
+              "& ul": { padding: 0 },
+            }}
+            subheader={<li />}
+          >
+            {checked.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
+            {checked.map((row: any) => {
+              return (
+                <div key={row}>
+                  <ListItem
+                    className="checkbox-list"
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="delete">
+                        <HighlightOffIcon />
+                      </IconButton>
+                    }
+                    {...row}
+                  ></ListItem>
+                </div>
+              );
+            })}
+
+            <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
+              {params.Children}
+            </CustomButton>
+          </List>
+        </div>
       </Grid>
     </Layout>
   );

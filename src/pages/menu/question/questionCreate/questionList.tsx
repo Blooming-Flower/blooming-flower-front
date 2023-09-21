@@ -26,12 +26,8 @@ const QuestionList = (params: any) => {
   // };
   //checkbox list up
 
-  const [checkListItem, setCheckListItem] =
-    document.querySelectorAll(".checkbox-list");
-  const [checkBox, setCheckBox] = React.useState([]);
-  useEffect(() => {
-    console.log(checkBox[0]);
-  }, [checkBox]);
+  const [selectedDates, setSelectedDates] = useState([]);
+  console.log(selectedDates);
 
   return (
     <div className="questionList-item">
@@ -46,21 +42,15 @@ const QuestionList = (params: any) => {
         }}
         subheader={<li />}
       >
-        {checkBox.map((checks: any) => {
-          return (
-            <div key={checks?.passageNumber}>
-              <ListItem
-                className="checkbox-list"
-                onChange={checks?.passageId}
-                secondaryAction={
-                  <IconButton edge="end" aria-label="delete">
-                    <HighlightOffIcon />
-                  </IconButton>
-                }
-              ></ListItem>
-            </div>
-          );
-        })}
+        {}
+        <ListItem
+          className="checkbox-list"
+          secondaryAction={
+            <IconButton edge="end" aria-label="delete">
+              <HighlightOffIcon />
+            </IconButton>
+          }
+        ></ListItem>
 
         {/* {sampleData.map((params: any) => (
           <li>
