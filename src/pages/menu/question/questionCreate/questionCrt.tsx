@@ -111,22 +111,20 @@ const QuestionCrt = (params: any) => {
   };
 
   //지문 체크박스 이벤트 (선택&취소)
-  const handleToggle = (item: any) => () => {
-    const currentIndex = checked.indexOf(item);
+  const handleToggle = (value: any) => () => {
+    const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
     if (currentIndex === -1) {
-      newChecked.push(item);
+      newChecked.push(value);
     } else {
       newChecked.splice(currentIndex, 1);
     }
     setChecked(newChecked);
-    console.log(newChecked);
-    console.log("checked ;;;", checked);
   };
 
   //체크박스 해당 아이템 삭제
-  const onRemove = (item: any) => {
-    setChecked(checked.filter((el: any) => el !== item));
+  const onRemove = (value: any) => {
+    setChecked(checked.filter((el: any) => el !== value));
   };
 
   const columns: GridColDef[] = [
@@ -152,7 +150,10 @@ const QuestionCrt = (params: any) => {
                 <input
                   type="checkbox"
                   value={row.passageId}
-                  onClick={handleToggle(console.log(row))}
+                  onClick={handleToggle(row)}
+                  onChange={(e) => {
+                    handleToggle(console.log(e.target.value));
+                  }}
                   defaultChecked={checked.indexOf(row) !== -1}
                 />
                 {row.passageId}
@@ -313,7 +314,7 @@ const QuestionCrt = (params: any) => {
                 <div key={row.passageId}>
                   <ListItem
                     className="checkbox-list"
-                    value={console.log("리스트업 로우", row)}
+                    value={row}
                     secondaryAction={
                       <IconButton
                         edge="end"
@@ -323,8 +324,12 @@ const QuestionCrt = (params: any) => {
                         <HighlightOffIcon />
                       </IconButton>
                     }
-                    {...row}
-                  ></ListItem>
+                  >
+                    {searchYear}
+                    {searchlecture}
+                    {row.passageNumber}
+                    {row.passageId}
+                  </ListItem>
                 </div>
               );
             })}
