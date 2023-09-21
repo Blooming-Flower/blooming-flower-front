@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   Alert,
   Box,
+  Button,
   FormControl,
   Grid,
   IconButton,
@@ -226,13 +227,7 @@ const QuestionCrt = (params: any) => {
               연도
             </Typography>
             <FormControl sx={{ width: "300px", marginLeft: "20px" }}>
-              <InputLabel id="demo-simple-select-label">2023</InputLabel>
-              <Select
-                id="select-box"
-                value={searchYear}
-                label="Year"
-                onChange={handleYear}
-              >
+              <Select id="select-box" value={searchYear} onChange={handleYear}>
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}

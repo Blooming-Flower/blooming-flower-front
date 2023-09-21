@@ -116,14 +116,50 @@
 		padding-top: 10px !important
 	}
 }
+.table-input-select{
+	width: 95%;;
+	display: flex !important;
+	margin-top:5px !important;
+	margin-left: 10px !important;
+}
 
 .MuiPaper-root.MuiDialog-paper{
-	max-width: 1000px !important;
-	width: 800px !important;
+	max-width: 1100px !important;
+	width: 1100px !important;
 }
 #nested-list-subheader{
 	font-size: 20px;
 	font-weight: bold;
 	border-top: 2px solid #b3b3b3;
 	border-bottom: 2px solid #b3b3b3;
+}
+.MuiPopper-root{
+	.MuiAutocomplete-listbox {
+		//background-color: white;
+		.Mui-focused {
+			background-color: rgba(255, 0, 0, 0.12) !important
+		}
+		.Mui-expanded
+		{
+			background-color: white !important;
+		}
+	}
+}
+.MuiDataGrid-footerContainer{
+	display: flex !important;
+	align-content: center !important;
+}
+.MuiTablePagination-toolbar{
+	p{
+		display: none;
+	}
+}
+.MuiTablePagination-root{
+	width: 100%;
+	padding:0 !important;
+	margin: 0 !important;
+	.MuiTablePagination-actions{
+		width: 100%;
+		margin: 0 !important;
+	}
 }

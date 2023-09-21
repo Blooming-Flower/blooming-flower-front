@@ -69,6 +69,9 @@ export default defineConfig({
       additionalLegacyPolyfills: ["regenerator-runtime/runtime"],
     }),
   ],
+  esbuild:{
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
+  },
   base: "/",
   // base: '/tobecom'
 });

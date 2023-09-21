@@ -2,9 +2,19 @@ import Layout from "@components/layouts/layout";
 import CustomButton from "@components/ui/button/custeomButton";
 import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCallbackDetails,
+  GridCellEditStopParams,
+  GridCellEditStopReasons,
+  GridColDef,
+  GridRowParams,
+  MuiBaseEvent,
+  MuiEvent,
+} from "@mui/x-data-grid";
+import { log } from "console";
 import * as React from "react";
-import pdfSvg from "/src/assets/svg/pdfSvg.svg";
+// import pdfSvg from "/src/assets/svg/pdfSvg.svg";
 
 const ExamMng = () => {
   const [searcText, setSearchText] = React.useState("");
@@ -25,6 +35,24 @@ const ExamMng = () => {
 
   const downPdf = () => {
     console.log("pdf 다운도르");
+  };
+
+  const titleEdit = (
+    params: GridCellEditStopParams<any, any, any>,
+    event: MuiEvent<MuiBaseEvent | any>
+  ) => {
+    if (params.reason === GridCellEditStopReasons.cellFocusOut) {
+      event.defaultMuiPrevented = true;
+      return;
+    }
+
+    const { value: newTitle } = event.target;
+    const { row: newExam, formattedValue } = params;
+
+    if (formattedValue !== newTitle) {
+      newExam.title = newTitle;
+      console.log("타이틀 변경 요청", newExam);
+    }
   };
 
   const columns: GridColDef[] = [
@@ -50,16 +78,22 @@ const ExamMng = () => {
       align: "center",
       headerAlign: "center",
       renderCell: () => (
-        <img src={pdfSvg} width={30} height={30} onClick={downPdf} />
+        <img
+          src="/src/assets/svg/pdfSvg.svg"
+          width={30}
+          height={30}
+          onClick={downPdf}
+        />
       ),
     },
     {
-      field: "actions",
+      field: "examId",
+      type: "actions",
       headerName: "삭제",
       width: 150,
       align: "center",
       headerAlign: "center",
-      getActions: (params: GridRowParams) => [
+      getActions: (params) => [
         <Button
           variant="outlined"
           color="warning"
@@ -77,21 +111,21 @@ const ExamMng = () => {
       title: "[2023-2 중간]종촌고1",
       createDate: new Date().toISOString().split("T")[0],
       downPdf: "",
-      actions: "",
+      examId: 1,
     },
     {
       id: 2,
       title: "[2023-2 중간]종촌고2",
       createDate: new Date().toISOString().split("T")[0],
       // downPdf: "",
-      actions: "",
+      examId: 2,
     },
     {
       id: 3,
       title: "[2023-2 중간]종촌고3",
       createDate: new Date().toISOString().split("T")[0],
       downPdf: "",
-      // actions: "",
+      examId: 3,
     },
   ];
 
@@ -129,6 +163,8 @@ const ExamMng = () => {
                 },
               },
             }}
+            onCellEditStart={(params, event, details) => {}}
+            onCellEditStop={titleEdit}
             sx={{ fontWeight: "500", fontSize: "15px" }}
             hideFooterPagination={true}
           />

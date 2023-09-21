@@ -6,6 +6,7 @@
   border: 1px solid #dddddd;
   border-radius: 10px;
   box-shadow: 0px 0px 3px 3px #dddddd;
+
   .css-1k9ek97 {
     background-color: none !important;
   }
@@ -23,6 +24,18 @@
 
   .MuiListItemSecondaryAction-root {
     top: 22px !important;
+  }
+
+  .MuiList-root::-webkit-scrollbar{
+    width: 10px;
+  }
+  .MuiList-root::-webkit-scrollbar-thumb{
+    background-color: #8a8683;
+    border-radius: 5px;
+  }
+  .MuiList-root::-webkit-scrollbar-track{
+    background-color: lightgray;
+    border-radius: 5px;
   }
 
   .MuiButtonBase-root.MuiButton-root {
