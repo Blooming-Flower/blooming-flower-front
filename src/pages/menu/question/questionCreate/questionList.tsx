@@ -90,7 +90,3 @@ const QuestionList = (props: any) => {
 };
 
 export default QuestionList;
-
-// <button onClick={() => { navigate(-1); }} >
-// 이전 페이지로 이동하기
-// </button>
