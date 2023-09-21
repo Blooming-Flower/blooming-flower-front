@@ -6,6 +6,7 @@ import {
   ListItemButton,
   Collapse,
   ListSubheader,
+  Alert,
 } from "@mui/material";
 import React, { useState } from "react";
 
@@ -23,66 +24,58 @@ const QuestionList = (props: any) => {
   const handleClick = () => {
     setOpen(!open);
   };
+  //문제유형 :  searchlecture
+  const { width, height, rowData, setRowData, buttonName } = props;
 
-  const { width, height } = props;
+  //리스트업 목록 삭제 버튼
+  const onRemove = (value: any) => {
+    setRowData(rowData.filter((el: any) => el !== value));
+  };
 
-  // const [clickedButton, setClickedButton] = useState<HTMLButtonElement | null>(
-  //   null
-  // );
-  // const handleMouseEvent = (event: any) => {
-  //   console.log(event.target);
-  //   console.log(event.currentTarget);
-  // };
+  console.log("rowData;;;;", rowData);
 
   return (
     <div className="questionList-item">
       <List
         sx={{
-          // maxWidth: 360,
+          maxWidth: width,
           bgcolor: "background.paper",
           position: "relative",
           overflow: "auto",
-          // maxHeight: 300,
-          width: width ?? "auto",
-          height: height ?? "auto",
+          maxHeight: height,
           "& ul": { padding: 0 },
         }}
         subheader={<li />}
       >
-        {[0, 1].map((sectionId) => (
-          <li key={`section-${sectionId}`}>
-            <ul>
-              <ListSubheader>{`수능특강 ${sectionId}`}</ListSubheader>
-              {[0, 1, 2].map((item) => (
-                <ListItem
-                  key={`item-${sectionId}-${item}`}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="delete">
-                      <HighlightOffIcon />
-                    </IconButton>
-                  }
-                >
-                  <ListItemText primary={`YBM ${item}`} />
-                </ListItem>
-              ))}
+        {rowData.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
 
-              <ListItemButton onClick={handleClick}>
-                <ListItemText primary="YBM 3" />
-                {open ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-              <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="Starred" />
-                  </ListItemButton>
-                </List>
-              </Collapse>
-            </ul>
-          </li>
-        ))}
+        {rowData.map((row: any) => {
+          return (
+            <div key={row.passageId}>
+              <ListItem
+                className="checkbox-list"
+                value={row}
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => onRemove(row)}
+                  >
+                    <HighlightOffIcon />
+                  </IconButton>
+                }
+              >
+                {row.passageYear}
+                {row.passageUnit}
+                {row.passageNumber}
+                {row.passageId}
+              </ListItem>
+            </div>
+          );
+        })}
 
         <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
-          {props.Children}
+          {buttonName}
         </CustomButton>
       </List>
     </div>
