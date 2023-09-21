@@ -1,15 +1,10 @@
 import Layout from "@components/layouts/layout";
 import * as React from "react";
 import {
-  Alert,
   Box,
-  Button,
   FormControl,
   Grid,
-  IconButton,
   InputLabel,
-  List,
-  ListItem,
   MenuItem,
   Pagination,
   Select,
@@ -19,13 +14,11 @@ import {
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import axios from "axios";
-import { PATH } from "@common/domain";
 
 //css
 import "@css/questionCreate/questionList.scss";
 import "@css/questionCreate/questionCrt.scss";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import CustomButton from "@components/ui/button/custeomButton";
+import QuestionList from "./questionList";
 
 const QuestionCrt = (params: any) => {
   const [searchlecture, setSearchlecture] = React.useState("");
@@ -35,6 +28,8 @@ const QuestionCrt = (params: any) => {
   const [page, setPage] = React.useState(0);
   const [rowData, setRowData] = React.useState([] as any);
   const [checked, setChecked] = React.useState([] as any);
+  //questionList 에 넘겨줄 rowData
+  const [rowDataList, setRowDataList] = React.useState([] as any);
 
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -115,19 +110,34 @@ const QuestionCrt = (params: any) => {
   const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
+    const newRowDataList = [...rowDataList];
+    console.log("value;;;", value);
     if (currentIndex === -1) {
       newChecked.push(value);
+      newRowDataList.push({
+        passageYear: searchYear,
+        passageNumber: value.passageNumber,
+        passageId: value.passageId,
+        passageUnit: value.passageUnit,
+      });
+      console.log(" newRowDataList;;;;", newRowDataList);
     } else {
       newChecked.splice(currentIndex, 1);
+      newRowDataList.splice(currentIndex, 1);
     }
     setChecked(newChecked);
+    setRowDataList(newRowDataList);
   };
 
-  //체크박스 해당 아이템 삭제
-  const onRemove = (value: any) => {
-    setChecked(checked.filter((el: any) => el !== value));
-  };
-
+  //questionList 에 넘겨줄 rowData
+  // rowDataList = [
+  //   {
+  //     searchYear:,
+  //     searchlecture:,
+  //     passageNumber:,
+  //     passageId:
+  //   }
+  // ]
   const columns: GridColDef[] = [
     {
       field: "passageUnit",
@@ -290,50 +300,14 @@ const QuestionCrt = (params: any) => {
             sx={{ display: "flex" }}
           />
         </div>
-        {/* <QuestionList /> */}
-        <div className="questionList-item">
-          <List
-            sx={{
-              maxWidth: 360,
-              bgcolor: "background.paper",
-              position: "relative",
-              overflow: "auto",
-              maxHeight: 300,
-              "& ul": { padding: 0 },
-            }}
-            subheader={<li />}
-          >
-            {checked.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
-            {checked.map((row: any) => {
-              return (
-                <div key={row.passageId}>
-                  <ListItem
-                    className="checkbox-list"
-                    value={row}
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => onRemove(row)}
-                      >
-                        <HighlightOffIcon />
-                      </IconButton>
-                    }
-                  >
-                    {searchYear}
-                    {searchlecture}
-                    {row.passageNumber}
-                    {row.passageId}
-                  </ListItem>
-                </div>
-              );
-            })}
 
-            <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
-              {params.Children}
-            </CustomButton>
-          </List>
-        </div>
+        <QuestionList
+          width={360}
+          height={300}
+          rowData={rowDataList}
+          setRowData={setRowDataList}
+          buttonName={params.Children}
+        />
       </Grid>
     </Layout>
   );
