@@ -21,19 +21,20 @@ import {
   useTheme,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { YEAR } from "@common/const";
+import {ALERT, YEAR} from "@common/const";
 import PassagePopup from "@pages/menu/question/passageManage/passagePopup";
-import { ChangeEvent, useRef } from "react";
+import {ChangeEvent, useEffect, useRef} from "react";
 import { $DELETE, $GET } from "@utils/request";
 import { debounce } from "@utils/useDebounce";
 import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
 import { addId } from "@utils/functions";
-import axios, { Axios } from "axios"
 import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
 import CustomPagination from "@components/ui/grid/customPage";
+import {alert} from "@utils/alert";
 
 const PassageMng = () => {
   const apiRef = useGridApiRef();
+  const [delCheck, setDelCheck] = React.useState(false);
   const outerTheme = useTheme();
   let yearData: string;
   const [popupParam, setPopupParam] = React.useState<number>();
@@ -77,15 +78,38 @@ const PassageMng = () => {
         }
       );
   };
-  const deletePassage = async () => {
+  //지문삭제
+  const deletePassage = () => {
     const passageTemp = apiRef.current.getSelectedRows();
-    await passageTemp.forEach((value, key, map) => {
-      $DELETE("/api/v1/passage/delete/" + value.passageId, (res: any) => {
-        console.log(res);
-      });
-    });
-    console.log(passageTemp);
+    alert.confirm({
+      type: ALERT.CONFIRM,
+      text: '지문을 삭제\n 하시겠습니까?\n\n',
+      confirmText: '확인',
+      confirmCall: async () => {
+        await passageTemp.forEach((value, key, map) => {
+          $DELETE("/api/v1/passage/delete/" + value.passageId, (res: any) => {
+            setDelCheck(!delCheck)
+            apiRef.current.setRowSelectionModel([])
+          });
+        });
+      }
+    })
   };
+  //지문삭제 성공시 그리드 초기화
+  useEffect(()=>{
+    if(year != ""){
+      $GET(
+          "/api/v1/passage/search/list?page=" +
+          page.toString() +
+          "&size=10&passageYear=" +
+          year,
+          (res: any) => {
+            setData(addId(res, year));
+          }
+      );
+
+    }
+  },[delCheck])
   const debouncedOnChange = debounce<typeof handleChange>(handleChange, 200);
   const handleClickOpen = (passageId: number) => {
     setPopupParam(passageId);
