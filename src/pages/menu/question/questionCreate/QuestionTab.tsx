@@ -28,6 +28,7 @@ import ChooseDataGrid from "./chooseDataGrid";
 const QuestionTab = () => {
   const [questionType, setQuestionType] = React.useState("");
   const [questionTitle, setQuestionTitle] = React.useState("");
+  const [rowData, setRowData] = React.useState([]);
   const [pastYn, setPastYn] = React.useState(false);
   const [subBox, setSubBox] = React.useState("");
 
@@ -251,8 +252,20 @@ const QuestionTab = () => {
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
-            <QuestionList width={250} height={300} />
-            <QuestionList width={250} height={300} />
+            <QuestionList
+              width={250}
+              height={300}
+              rowData={rowData}
+              setRowData={setRowData}
+              buttonName="완료"
+            />
+            <QuestionList
+              width={250}
+              height={300}
+              rowData={rowData}
+              setRowData={setRowData}
+              buttonName="완료"
+            />
           </div>
         </div>
       </div>
