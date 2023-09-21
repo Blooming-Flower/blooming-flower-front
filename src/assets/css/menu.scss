@@ -72,6 +72,11 @@
 	.Mui-disabled{
 		cursor: pointer !important;
 	}
+	.MuiButtonBase-root.MuiButton-root{
+		width: 100%;
+		height: 40px;
+		float: right;
+	}
 }
 .MuiDataGrid-overlay{
 	display: none !important;

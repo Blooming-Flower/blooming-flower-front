@@ -5,18 +5,23 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import * as React from "react";
 import Dialog from "@mui/material/Dialog";
+import { alert } from '@utils/alert'
+import { ALERT } from '@common/const'
 import {
-  ForwardedRef,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
+    ForwardedRef,
+    forwardRef,
+    useEffect,
+    useImperativeHandle, useRef,
 } from "react";
 import Typography from "@mui/material/Typography";
 import VerticalTabs from "@pages/menu/question/passageManage/passageTabs";
 import { $GET } from "@utils/request";
+import TuiEditor from "@components/ui/tui/toast";
+
 
 const PassagePopup = forwardRef(
   (props: { passageId: number | undefined }, ref: ForwardedRef<any>) => {
+      const editorRef = useRef<any>(null);
     const [open, setOpen] = React.useState(false);
     const [content, setContent] = React.useState("");
     useEffect(() => {
@@ -31,7 +36,14 @@ const PassagePopup = forwardRef(
       setOpen(false);
     };
     const handleOpen = () => {
-      setOpen(true);
+        alert.confirm({
+            type: ALERT.CONFIRM,
+            text: '수정\n 하시겠습니까?\n\n',
+            confirmText: '확인',
+            confirmCall: () => {
+                setOpen(true);
+            }
+        })
     };
 
     useImperativeHandle(ref, () => ({
@@ -43,11 +55,11 @@ const PassagePopup = forwardRef(
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <DialogTitle sx={{ m: 1, p: 2 }} id="customized-dialog-title">
+        <DialogTitle sx={{margin:'10px 0 0 10px'}} id="customized-dialog-title">
           <Typography
             component="div"
             variant="h3"
-            sx={{ fontWeight: "bold", color: "#ff8b2c", paddingBottom: "20px" }}
+            sx={{ fontWeight: "bold", color: "#ff8b2c" }}
           >
             수정
           </Typography>
@@ -65,21 +77,29 @@ const PassagePopup = forwardRef(
           <CloseIcon />
         </IconButton>
         <DialogContent>
+            <Button
+                variant="outlined"
+                color="warning"
+                size="medium"
+                className='popup-change'
+                sx={{margin:'0 50px 20px 0'}}
+                onClick={handleClose}
+            >
+                수정
+            </Button>
             <Grid container>
                 <Grid item lg={3}>
                     <VerticalTabs />
                 </Grid>
                 <Grid item lg={9}>
-                    <Item>
-                        {content}
-                    </Item>
+                        <Item>
+                            {content}
+                            <TuiEditor content={content} editorRef={editorRef}/>
+                        </Item>
                 </Grid>
             </Grid>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
-          </Button>
         </DialogActions>
       </BootstrapDialog>
     );
