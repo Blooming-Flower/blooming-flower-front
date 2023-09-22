@@ -21,6 +21,13 @@
   .MuiDataGrid-columnHeaderTitle {
     font-size: 1rem;
   }
+  .MuiTypography-root {
+    display: flex;
+   
+  }
+  .table-text {
+    padding-left: 4px;
+  }
   .MuiList-root {
     border: 1px solid #dddddd !important;
   }
