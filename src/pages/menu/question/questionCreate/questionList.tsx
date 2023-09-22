@@ -32,8 +32,6 @@ const QuestionList = (props: any) => {
     setRowData(rowData.filter((el: any) => el !== value));
   };
 
-  console.log("rowData;;;;", rowData);
-
   return (
     <div className="questionList-item">
       <List
