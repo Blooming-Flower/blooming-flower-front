@@ -168,7 +168,7 @@ const QuestionCrt = (params: any) => {
 
   return (
     <Layout>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className="grid-template">
         <div className="mainCont mainCont2">
           <Typography
             variant="h2"

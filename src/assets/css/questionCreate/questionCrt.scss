@@ -3,7 +3,11 @@
 .contents {
   margin: -12px auto !important ;
 }
-
+.grid-template {
+  margin-top: 0px !important;
+ margin-left: 0px !important;
+  flex-wrap: nowrap !important;
+}
 .mainCont2 {
   float: left;
   max-height: 521px;
@@ -64,12 +68,9 @@
   .MuiFormControl-root {
     width: 300px !important;
   }
+  
 
 }
 
 
-.MuiGrid-root {
-  margin-top: 0px !important;
-  margin-left: 20px !important;
-  flex-wrap: nowrap !important;
-}
+
