@@ -286,7 +286,7 @@ const ChooseDataGrid = (props: {
       hideFooterSelectedRowCount={true}
     />
   ) : (
-    ""
+    <></>
   );
 };
 export default ChooseDataGrid;
