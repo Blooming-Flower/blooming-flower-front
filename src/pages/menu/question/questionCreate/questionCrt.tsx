@@ -30,7 +30,10 @@ const QuestionCrt = (params: any) => {
   const [checked, setChecked] = React.useState([] as any);
   //questionList 에 넘겨줄 rowData
   const [rowDataList, setRowDataList] = React.useState([] as any);
+  //selectbox 재선택시 리스트 초기화
+  const [selectValue, setSelectValue] = React.useState("");
 
+  //지문유형 name 적용
   const convertPassageType = (type: string) => {
     switch (type) {
       case "교과서":
@@ -121,6 +124,9 @@ const QuestionCrt = (params: any) => {
     setRowDataList(newRowDataList);
   };
 
+  //selectbox 재선택시 리스트 초기화
+  const onClearSelect = () => {};
+  // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
     {
       field: "passageUnit",
@@ -162,7 +168,7 @@ const QuestionCrt = (params: any) => {
 
   return (
     <Layout>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className="grid-template">
         <div className="mainCont mainCont2">
           <Typography
             variant="h2"
@@ -190,9 +196,9 @@ const QuestionCrt = (params: any) => {
                 padding: "16px 0",
               }}
             >
-              지문 유형
+              <p className="table-text">지문유형</p>
             </Typography>
-            <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
+            <FormControl sx={{ marginLeft: "20px" }}>
               <Select value={searchPassage} onChange={handlePassage}>
                 {PASSAGETYPE.map((text, id) => (
                   <MenuItem key={id} value={text}>
@@ -212,9 +218,9 @@ const QuestionCrt = (params: any) => {
                 padding: "16px 0",
               }}
             >
-              연도
+              <p className="table-text">연도</p>
             </Typography>
-            <FormControl sx={{ width: "300px", marginLeft: "20px" }}>
+            <FormControl sx={{ marginLeft: "20px" }}>
               <Select value={searchYear} onChange={handleYear}>
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
@@ -234,9 +240,9 @@ const QuestionCrt = (params: any) => {
                 padding: "16px 0",
               }}
             >
-              교재
+              <p className="table-text">교재</p>
             </Typography>
-            <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
+            <FormControl sx={{ marginLeft: "20px" }}>
               <Select value={passageName} onChange={handlePassageName}>
                 {searchTextBook.map((text, id) => (
                   <MenuItem key={id} value={text}>
