@@ -154,6 +154,8 @@ const PassageCrt = () => {
   },[num])
   //지문타입별 교재 SELECT
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value)
+    if(e.target.value != "")
     $GET(
       "/api/v1/passage/search/name?passageType=" +
         passageType +
@@ -222,26 +224,26 @@ const PassageCrt = () => {
                 <FormControl className="table-input-select">
                   <ThemeProvider theme={customTheme(outerTheme)}>
                     <Autocomplete
-                        onChange={(e,v:any)=>setName(v.passageName)}
+                        onChange={(e,v:any)=>setName(v)}
                       key={clear}
                       disablePortal
                       id="combo-box-demo"
-                      filterOptions={filterOptions}
+                        freeSolo
                       getOptionLabel={(option) =>
-                        option.passageName ? option.passageName : ""
+                        option ? option : ""
                       }
                       isOptionEqualToValue={(option, value) =>
-                        option.passageId !== value.passageId
+                        option === value
                       }
                       options={dataName}
                       renderOption={(props, option) => {
                         return (
                           <li
                             {...props}
-                            key={option.passageId}
+                            key={option}
                             style={{ backgroundColor: "white" }}
                           >
-                            {option.passageName}
+                            {option}
                           </li>
                         );
                       }}
