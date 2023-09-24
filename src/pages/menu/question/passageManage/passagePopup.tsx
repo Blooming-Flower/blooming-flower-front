@@ -22,16 +22,20 @@ import TuiEditor from "@components/ui/tui/toast";
 const PassagePopup = forwardRef(
   (props: { passageId: number | undefined }, ref: ForwardedRef<any>) => {
       const editorRef = useRef<any>(null);
+      const [check, setCheck] = React.useState(false)
     const [open, setOpen] = React.useState(false);
     const [content, setContent] = React.useState("");
-    useEffect(() => {
+    const [listData, setListData] = React.useState([])
+    useEffect( () => {
+        console.log(props.passageId)
       if (props.passageId != undefined) {
         $GET("/api/v1/passage/search/" + props.passageId, (res: any) => {
-            console.log(res.data.passageContent)
+            setListData(res.data.questions)
             setContent(res.data.passageContent)
+            setOpen(true)
         });
       }
-    }, [open]);
+    }, [check]);
     const handleClose = () => {
       setOpen(false);
     };
@@ -41,7 +45,7 @@ const PassagePopup = forwardRef(
             text: '수정\n 하시겠습니까?\n\n',
             confirmText: '확인',
             confirmCall: () => {
-                setOpen(true);
+                setCheck(!check);
             }
         })
     };
@@ -89,7 +93,7 @@ const PassagePopup = forwardRef(
             </Button>
             <Grid container>
                 <Grid item lg={3}>
-                    <VerticalTabs />
+                    <VerticalTabs data={listData}/>
                 </Grid>
                 <Grid item lg={9}>
                         <Item>
