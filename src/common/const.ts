@@ -1,4 +1,6 @@
 /* ******************* 환경변수 ******************* */
+import {GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef} from "@mui/x-data-grid";
+
 export const VITE_APP_IMGS =
   import.meta.env.MODE == "development"
     ? import.meta.env.VITE_APP_LOCAL_IMGS
@@ -217,7 +219,7 @@ export const TXTNUM = {
   []
 }
 
-export const QUESTIONTYPE = {
+export const QUESTIONTYPE : KeyValueType = {
   Q1: "주제",
   Q2: "제목",
   Q3: "목적",
@@ -272,3 +274,45 @@ export const DEFAULT_QUESTION: any = {
   Q24: "다음 글의 빈칸에 들어갈 말을 서술하시오.",
   Q25: "다음 글을 읽고 문제에 답하시오.",
 };
+
+export const DEFAULTANSWERROWS = [
+  {
+    id: 1,
+    chooseSeq: "①",
+    answerContent: "1",
+  },
+  {
+    id: 2,
+    chooseSeq: "②",
+    answerContent: "2",
+  },
+  {
+    id: 3,
+    chooseSeq: "③",
+    answerContent: "3",
+  },
+  {
+    id: 4,
+    chooseSeq: "④",
+    answerContent: "4",
+  },
+  {
+    id: 5,
+    chooseSeq: "⑤",
+    answerContent: "5",
+  },
+];
+
+export const ANSWERCOLUMNS: GridColDef[] = [
+  {
+    field: "chooseSeq",
+    headerName: "선지번호",
+    width: 30,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    ...GRID_CHECKBOX_SELECTION_COL_DEF,
+    width: 30,
+  },
+];
