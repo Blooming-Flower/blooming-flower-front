@@ -12,6 +12,7 @@ import {
   SelectChangeEvent,
   TextField,
   Button,
+  Checkbox,
 } from "@mui/material";
 import { QUESTIONTYPE, DEFAULT_QUESTION } from "@common/const";
 import QuestionList from "./questionList";
@@ -21,65 +22,23 @@ import {
   GRID_CHECKBOX_SELECTION_COL_DEF,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { log } from "console";
+import { $POST } from "@utils/request";
+import ChooseDataGrid from "./chooseDataGrid";
 
 const QuestionTab = () => {
   const [questionType, setQuestionType] = React.useState("");
-  const [questionText, setQuestionText] = React.useState("");
+  const [questionTitle, setQuestionTitle] = React.useState("");
+  const [rowData, setRowData] = React.useState([]);
+  const [pastYn, setPastYn] = React.useState(false);
+  const [subBox, setSubBox] = React.useState("");
 
   const changeType = (e: SelectChangeEvent<string>) => {
     const {
       target: { value },
     } = e;
     setQuestionType(value as string);
-    setQuestionText(DEFAULT_QUESTION[value]);
+    setQuestionTitle(DEFAULT_QUESTION[value]);
   };
-
-  const columns: GridColDef[] = [
-    {
-      field: "chooseSeq",
-      headerName: "선지번호",
-      width: 30,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "chooseContent",
-      headerName: "선지내용",
-      width: 750,
-      align: "left",
-      headerAlign: "center",
-      editable: true,
-    },
-  ];
-
-  const rows = [
-    {
-      id: 1,
-      chooseSeq: "①",
-      chooseContent: "",
-    },
-    {
-      id: 2,
-      chooseSeq: "②",
-      chooseContent: "",
-    },
-    {
-      id: 3,
-      chooseSeq: "③",
-      chooseContent: "",
-    },
-    {
-      id: 4,
-      chooseSeq: "④",
-      chooseContent: "",
-    },
-    {
-      id: 5,
-      chooseSeq: "⑤",
-      chooseContent: "",
-    },
-  ];
 
   const answerColunms: GridColDef[] = [
     {
@@ -90,40 +49,35 @@ const QuestionTab = () => {
       headerAlign: "center",
     },
     {
-      // field: "answerContent",
-      // headerName: "",
       ...GRID_CHECKBOX_SELECTION_COL_DEF,
       width: 30,
-      // align: "center",
-      // headerAlign: "center",
-      // type: "check",
     },
   ];
-  const answerRows = [
+  const defaultAnswerRows = [
     {
       id: 1,
       chooseSeq: "①",
-      answerContent: "",
+      answerContent: "1",
     },
     {
       id: 2,
       chooseSeq: "②",
-      answerContent: "",
+      answerContent: "2",
     },
     {
       id: 3,
       chooseSeq: "③",
-      answerContent: "",
+      answerContent: "3",
     },
     {
       id: 4,
       chooseSeq: "④",
-      answerContent: "",
+      answerContent: "4",
     },
     {
       id: 5,
       chooseSeq: "⑤",
-      answerContent: "",
+      answerContent: "5",
     },
   ];
 
@@ -132,21 +86,49 @@ const QuestionTab = () => {
   const editorRef: React.MutableRefObject<any> = React.useRef();
 
   const tempSave = () => {
-    const chooseData = chooseRef.current
+    const chooseList = chooseRef.current
       .getAllRowIds()
       .map((id) => chooseRef.current.getRow(id))
       .map(({ id: chooseSeq, chooseContent }) => {
         return { chooseSeq, chooseContent };
       });
-    const answerData = [...answerRef.current.getSelectedRows().keys()];
+    const answerList = [...answerRef.current.getSelectedRows().keys()].map(
+      (seq) => {
+        return {
+          answerContent: answerRef.current.getSelectedRows().get(seq)
+            ?.answerContent,
+        };
+      }
+    );
     const questionContent = editorRef.current.getInstance().getHTML();
 
-    console.log(chooseData);
-    console.log(answerData);
-    console.log(questionContent);
+    const newQuestion = {
+      passageId: 22,
+      questionContent,
+      questionTitle,
+      questionParams: [
+        {
+          questionSubTitle: questionTitle,
+          pastYn,
+          questionType,
+          subBox,
+          chooseList,
+          answerList,
+        },
+      ],
+    };
 
-    // questionType
-    // questionText
+    $POST("/api/v1/question/save", newQuestion, () => {
+      setQuestionType("");
+      setQuestionTitle("");
+      setPastYn(false);
+      setSubBox("");
+      editorRef.current.getInstance().setHTML("");
+      [...answerRef.current.getSelectedRows().keys()].forEach((id) => {
+        answerRef.current.selectRow(id, false);
+      });
+      answerRef.current.setRows(defaultAnswerRows);
+    });
   };
 
   return (
@@ -162,7 +144,7 @@ const QuestionTab = () => {
         <div style={{ display: "flex", gap: 30 }}>
           <div style={{ width: 950 }}>
             <Grid container spacing={0} className="table-container">
-              <Grid xs={2} item={true}>
+              <Grid xs={1} item={true}>
                 <div className="table-title table-top">유형</div>
               </Grid>
               <Grid xs={2} item={true}>
@@ -183,16 +165,36 @@ const QuestionTab = () => {
                   </FormControl>
                 </div>
               </Grid>
-              <Grid xs={2} item={true}>
+              <Grid xs={1} item={true}>
+                <div className="table-title table-top">기출여부</div>
+              </Grid>
+              <Grid xs={1} item={true}>
+                <div className="table-content table-top">
+                  <FormControl className="table-select">
+                    <Checkbox
+                      checked={pastYn}
+                      onChange={() => setPastYn(!pastYn)}
+                      sx={{
+                        color: "#ff8b2c",
+                        "& .MuiSvgIcon-root": { fontSize: 28 },
+                        "&.Mui-checked": {
+                          color: "#ff8b2c",
+                        },
+                      }}
+                    />
+                  </FormControl>
+                </div>
+              </Grid>
+              <Grid xs={1} item={true}>
                 <div className="table-title table-top">발문</div>
               </Grid>
               <Grid xs={6} item={true}>
                 <div className="table-content table-top">
                   <FormControl className="table-input-select">
                     <TextField
-                      onChange={(e) => setQuestionText(e.target.value)}
+                      onChange={(e) => setQuestionTitle(e.target.value)}
                       label="교재명"
-                      value={questionText}
+                      value={questionTitle}
                     />
                   </FormControl>
                 </div>
@@ -208,7 +210,7 @@ const QuestionTab = () => {
                 toolbarItems={[
                   // 툴바 옵션 설정
                   ["heading", "bold", "italic", "strike"],
-                  ["hr", "quote"],
+                  // ["hr", "quote"],
                   ["ul", "ol", "task", "indent", "outdent"],
                   ["table", "image", "link"],
                   // ["code", "codeblock"],
@@ -217,20 +219,15 @@ const QuestionTab = () => {
             </div>
             <div style={{ display: "flex", gap: 30, marginTop: 10 }}>
               <div className="answer-wrap" style={{ width: 805, height: 262 }}>
-                <DataGrid
-                  apiRef={chooseRef}
-                  rows={rows}
-                  columns={columns}
-                  slots={{ columnHeaders: () => null }}
-                  hideFooter={true}
-                  hideFooterPagination={true}
-                  hideFooterSelectedRowCount={true}
+                <ChooseDataGrid
+                  chooseRef={chooseRef}
+                  questionType={questionType}
                 />
               </div>
               <div className="answer-wrap" style={{ width: 110, height: 262 }}>
                 <DataGrid
                   apiRef={answerRef}
-                  rows={answerRows}
+                  rows={defaultAnswerRows}
                   columns={answerColunms}
                   slots={{ columnHeaders: () => null }}
                   hideFooter={true}
@@ -255,8 +252,20 @@ const QuestionTab = () => {
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
-            <QuestionList width={250} height={300} />
-            <QuestionList width={250} height={300} />
+            <QuestionList
+              width={250}
+              height={300}
+              rowData={rowData}
+              setRowData={setRowData}
+              buttonName="완료"
+            />
+            <QuestionList
+              width={250}
+              height={300}
+              rowData={rowData}
+              setRowData={setRowData}
+              buttonName="완료"
+            />
           </div>
         </div>
       </div>

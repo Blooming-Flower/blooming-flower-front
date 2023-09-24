@@ -1,15 +1,10 @@
 import Layout from "@components/layouts/layout";
 import * as React from "react";
 import {
-  Alert,
   Box,
-  Button,
   FormControl,
   Grid,
-  IconButton,
   InputLabel,
-  List,
-  ListItem,
   MenuItem,
   Pagination,
   Select,
@@ -19,22 +14,22 @@ import {
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR } from "@common/const";
 import axios from "axios";
-import { PATH } from "@common/domain";
 
 //css
 import "@css/questionCreate/questionList.scss";
 import "@css/questionCreate/questionCrt.scss";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import CustomButton from "@components/ui/button/custeomButton";
+import QuestionList from "./questionList";
 
 const QuestionCrt = (params: any) => {
-  const [searchlecture, setSearchlecture] = React.useState("");
+  const [searchPassage, setSearchPassage] = React.useState("");
   const [searchYear, setSearchYear] = React.useState("");
   const [searchTextBook, setSearchTextBook] = React.useState([]);
   const [passageName, setPassageName] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [rowData, setRowData] = React.useState([] as any);
   const [checked, setChecked] = React.useState([] as any);
+  //questionList 에 넘겨줄 rowData
+  const [rowDataList, setRowDataList] = React.useState([] as any);
 
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -55,12 +50,11 @@ const QuestionCrt = (params: any) => {
   const handlePassageName = async (event: SelectChangeEvent) => {
     try {
       const passageName = event.target.value;
-      const passageType = convertPassageType(searchlecture);
+      const passageType = convertPassageType(searchPassage);
 
       const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-numbers?
       page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
-      console.log(res);
       setPassageName(event.target.value);
 
       if (res.data.length != 0) {
@@ -69,7 +63,6 @@ const QuestionCrt = (params: any) => {
         }
       }
       setRowData(res.data);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -78,13 +71,11 @@ const QuestionCrt = (params: any) => {
   //연도 이벤트
   const handleYear = async (event: SelectChangeEvent) => {
     try {
-      console.log("event.target.value::", event.target.value);
-      const passageType = convertPassageType(searchlecture);
+      const passageType = convertPassageType(searchPassage);
       const year = event.target.value;
 
       const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
       const res = await axios.get(API_URL);
-      console.log(res);
       setSearchTextBook(res.data);
       setSearchYear(event.target.value);
     } catch (error) {
@@ -92,20 +83,18 @@ const QuestionCrt = (params: any) => {
     }
   };
 
-  // // 교재 유형 , 연도에 해당되는 교재명 api
-  const handleLecture = async (event: SelectChangeEvent) => {
+  // // 지문 유형 , 연도에 해당되는 교재명 api
+  const handlePassage = async (event: SelectChangeEvent) => {
     try {
-      //yearData = event.target.value as string;
       const lecture = event.target.value;
       if (searchYear) {
         const passageType = convertPassageType(lecture);
 
         const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
         const res = await axios.get(API_URL);
-        console.log(res);
         setSearchTextBook(res.data);
       }
-      setSearchlecture(lecture);
+      setSearchPassage(lecture);
     } catch (error) {
       console.log(error);
     }
@@ -115,17 +104,21 @@ const QuestionCrt = (params: any) => {
   const handleToggle = (value: any) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
+    const newRowDataList = [...rowDataList];
     if (currentIndex === -1) {
       newChecked.push(value);
+      newRowDataList.push({
+        passageYear: searchYear,
+        passageNumber: value.passageNumber,
+        passageId: value.passageId,
+        passageUnit: value.passageUnit,
+      });
     } else {
       newChecked.splice(currentIndex, 1);
+      newRowDataList.splice(currentIndex, 1);
     }
     setChecked(newChecked);
-  };
-
-  //체크박스 해당 아이템 삭제
-  const onRemove = (value: any) => {
-    setChecked(checked.filter((el: any) => el !== value));
+    setRowDataList(newRowDataList);
   };
 
   const columns: GridColDef[] = [
@@ -153,7 +146,7 @@ const QuestionCrt = (params: any) => {
                   value={row.passageId}
                   onClick={handleToggle(row)}
                   onChange={(e) => {
-                    handleToggle(console.log(e.target.value));
+                    handleToggle(e.target.value);
                   }}
                   defaultChecked={checked.indexOf(row) !== -1}
                 />
@@ -200,12 +193,7 @@ const QuestionCrt = (params: any) => {
               지문 유형
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
-              <InputLabel id="demo-simple-select-label">교과서</InputLabel>
-              <Select
-                value={searchlecture}
-                label="지문유형"
-                onChange={handleLecture}
-              >
+              <Select value={searchPassage} onChange={handlePassage}>
                 {PASSAGETYPE.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
@@ -227,7 +215,7 @@ const QuestionCrt = (params: any) => {
               연도
             </Typography>
             <FormControl sx={{ width: "300px", marginLeft: "20px" }}>
-              <Select id="select-box" value={searchYear} onChange={handleYear}>
+              <Select value={searchYear} onChange={handleYear}>
                 {YEAR.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
@@ -249,12 +237,7 @@ const QuestionCrt = (params: any) => {
               교재
             </Typography>
             <FormControl sx={{ width: "110px", marginLeft: "20px" }}>
-              <InputLabel id="demo-simple-select-label">교재1</InputLabel>
-              <Select
-                id="select-box"
-                value={passageName}
-                onChange={handlePassageName}
-              >
+              <Select value={passageName} onChange={handlePassageName}>
                 {searchTextBook.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
@@ -290,50 +273,14 @@ const QuestionCrt = (params: any) => {
             sx={{ display: "flex" }}
           />
         </div>
-        {/* <QuestionList /> */}
-        <div className="questionList-item">
-          <List
-            sx={{
-              maxWidth: 360,
-              bgcolor: "background.paper",
-              position: "relative",
-              overflow: "auto",
-              maxHeight: 300,
-              "& ul": { padding: 0 },
-            }}
-            subheader={<li />}
-          >
-            {checked.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
-            {checked.map((row: any) => {
-              return (
-                <div key={row.passageId}>
-                  <ListItem
-                    className="checkbox-list"
-                    value={row}
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => onRemove(row)}
-                      >
-                        <HighlightOffIcon />
-                      </IconButton>
-                    }
-                  >
-                    {searchYear}
-                    {searchlecture}
-                    {row.passageNumber}
-                    {row.passageId}
-                  </ListItem>
-                </div>
-              );
-            })}
 
-            <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
-              {params.Children}
-            </CustomButton>
-          </List>
-        </div>
+        <QuestionList
+          width={360}
+          height={300}
+          rowData={rowDataList}
+          setRowData={setRowDataList}
+          buttonName={params.Children}
+        />
       </Grid>
     </Layout>
   );
