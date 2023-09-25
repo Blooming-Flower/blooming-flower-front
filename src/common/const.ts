@@ -1,4 +1,6 @@
 /* ******************* 환경변수 ******************* */
+import { GRID_CHECKBOX_SELECTION_COL_DEF, GridColDef } from "@mui/x-data-grid";
+
 export const VITE_APP_IMGS =
   import.meta.env.MODE == "development"
     ? import.meta.env.VITE_APP_LOCAL_IMGS
@@ -357,7 +359,7 @@ export const TXTNUM = {
   P6: [],
 };
 
-export const QUESTIONTYPE = {
+export const QUESTIONTYPE: KeyValueType = {
   Q1: "주제",
   Q2: "제목",
   Q3: "목적",
@@ -417,3 +419,44 @@ export const ARROW_TYPES = ["Q4"];
 export const ABC_TYPES = ["Q12", "Q14", "Q16"];
 export const AB_TYPES = ["Q18", "Q19"];
 export const WRITE_TYPES = ["Q20", "Q21", "Q22", "Q23", "Q24"];
+export const DEFAULTANSWERROWS = [
+  {
+    id: 1,
+    chooseSeq: "①",
+    answerContent: "1",
+  },
+  {
+    id: 2,
+    chooseSeq: "②",
+    answerContent: "2",
+  },
+  {
+    id: 3,
+    chooseSeq: "③",
+    answerContent: "3",
+  },
+  {
+    id: 4,
+    chooseSeq: "④",
+    answerContent: "4",
+  },
+  {
+    id: 5,
+    chooseSeq: "⑤",
+    answerContent: "5",
+  },
+];
+
+export const ANSWERCOLUMNS: GridColDef[] = [
+  {
+    field: "chooseSeq",
+    headerName: "선지번호",
+    width: 30,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    ...GRID_CHECKBOX_SELECTION_COL_DEF,
+    width: 30,
+  },
+];

@@ -1,31 +1,58 @@
 import DialogTitle from "@mui/material/DialogTitle";
-import {Button, Grid, IconButton, Paper, styled} from "@mui/material";
+import {
+    Button,
+    Checkbox,
+    FormControl,
+    Grid,
+    IconButton,
+    MenuItem,
+    Paper,
+    Select, SelectChangeEvent,
+    styled,
+    TextField
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import * as React from "react";
 import Dialog from "@mui/material/Dialog";
 import { alert } from '@utils/alert'
-import { ALERT } from '@common/const'
+import {ALERT, ANSWERCOLUMNS, DEFAULT_QUESTION, DEFAULTANSWERROWS, QUESTIONTYPE} from '@common/const'
 import {
     ForwardedRef,
     forwardRef,
     useEffect,
-    useImperativeHandle, useRef,
+    useImperativeHandle, useRef, useState,
 } from "react";
 import Typography from "@mui/material/Typography";
 import VerticalTabs from "@pages/menu/question/passageManage/passageTabs";
 import { $GET } from "@utils/request";
 import TuiEditor from "@components/ui/tui/toast";
-
+import ChooseDataGrid from "@pages/menu/question/questionCreate/chooseDataGrid";
+import {DataGrid, useGridApiRef} from "@mui/x-data-grid";
 
 const PassagePopup = forwardRef(
   (props: { passageId: number | undefined }, ref: ForwardedRef<any>) => {
-      const editorRef = useRef<any>(null);
+      const [callContent, setCallContent] = useState(false);
+      const editorRef : React.MutableRefObject<any> = React.useRef();
+      const chooseRef = useGridApiRef();
+      const answerRef = useGridApiRef();
       const [check, setCheck] = React.useState(false)
     const [open, setOpen] = React.useState(false);
     const [content, setContent] = React.useState("");
+    const [subContent, setSubContent] = React.useState("");
     const [listData, setListData] = React.useState([])
+      const [questionType, setQuestionType] = React.useState("");
+      const [questionTitle, setQuestionTitle] = React.useState("");
+      const [pastYn, setPastYn] = React.useState(false);
+
+      const changeType = (e: SelectChangeEvent<string>) => {
+          const {
+              target: { value },
+          } = e;
+          setQuestionType(value as string);
+          setQuestionTitle(DEFAULT_QUESTION[value]);
+      };
     useEffect( () => {
         console.log(props.passageId)
       if (props.passageId != undefined) {
@@ -36,6 +63,16 @@ const PassagePopup = forwardRef(
         });
       }
     }, [check]);
+      useEffect(()=>{
+          if(!open)
+              setContent("")
+          setListData([])
+          setSubContent("")
+          setQuestionType("")
+          setQuestionTitle("")
+          setPastYn(false)
+          setCallContent(false)
+      },[open])
     const handleClose = () => {
       setOpen(false);
     };
@@ -92,13 +129,95 @@ const PassagePopup = forwardRef(
                 수정
             </Button>
             <Grid container>
-                <Grid item lg={3}>
-                    <VerticalTabs data={listData}/>
+                <Grid item lg={2} >
+                    <VerticalTabs data={listData} controlContent={setCallContent} controlContentValue={callContent} controlType={setQuestionType} controlTypeValue={questionType} controlSubTitle={setQuestionTitle} editor={editorRef} controlPastYn={setPastYn}/>
                 </Grid>
-                <Grid item lg={9}>
-                        <Item>
-                            {content}
-                            <TuiEditor content={content} editorRef={editorRef}/>
+                <Grid item lg={10}>
+                        <Item style={{height:'100%', padding:'20px'}}>
+                            {callContent ?
+                                content
+                                :
+                                ""
+                            }
+                                    <Grid container spacing={0} className="table-container">
+                                        <Grid xs={1} item={true}>
+                                            <div className="table-title table-top">유형</div>
+                                        </Grid>
+                                        <Grid xs={2} item={true}>
+                                            <div className="table-content table-top">
+                                                <FormControl className="table-select">
+                                                    <Select
+                                                        value={questionType}
+                                                        onChange={changeType}
+                                                        displayEmpty
+                                                        inputProps={{ "aria-label": "Without label" }}
+                                                    >
+                                                        {Object.entries(QUESTIONTYPE).map(([type, text]) => (
+                                                            <MenuItem key={type} value={type}>
+                                                                {text}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </div>
+                                        </Grid>
+                                        <Grid xs={1} item={true}>
+                                            <div className="table-title table-top">기출여부</div>
+                                        </Grid>
+                                        <Grid xs={1} item={true}>
+                                            <div className="table-content table-top">
+                                                <FormControl className="table-select">
+                                                    <Checkbox
+                                                        checked={pastYn}
+                                                        onChange={() => setPastYn(!pastYn)}
+                                                        sx={{
+                                                            color: "#ff8b2c",
+                                                            "& .MuiSvgIcon-root": { fontSize: 28 },
+                                                            "&.Mui-checked": {
+                                                                color: "#ff8b2c",
+                                                            },
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                            </div>
+                                        </Grid>
+                                        <Grid xs={1} item={true}>
+                                            <div className="table-title table-top">발문</div>
+                                        </Grid>
+                                        <Grid xs={6} item={true}>
+                                            <div className="table-content table-top">
+                                                <FormControl className="table-input-select">
+                                                    <TextField
+                                                        onChange={(e) => setQuestionTitle(e.target.value)}
+                                                        label="발문"
+                                                        value={questionTitle}
+                                                    />
+                                                </FormControl>
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                                    <TuiEditor content={subContent} editorRef={editorRef} />
+                                    <Grid container>
+                                        <Grid item lg={10.5} >
+                                            <ChooseDataGrid
+                                                chooseRef={chooseRef}
+                                                questionType={questionType}
+                                            />
+                                        </Grid>
+                                        <Grid item lg={1.5}>
+                                            <DataGrid
+                                                apiRef={answerRef}
+                                                rows={DEFAULTANSWERROWS}
+                                                columns={ANSWERCOLUMNS}
+                                                slots={{ columnHeaders: () => null }}
+                                                hideFooter={true}
+                                                hideFooterPagination={true}
+                                                hideFooterSelectedRowCount={true}
+                                                checkboxSelection
+                                                sx={{ marginBottom: 1 }}
+                                            />
+                                        </Grid>
+                                    </Grid>
                         </Item>
                 </Grid>
             </Grid>
