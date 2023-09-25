@@ -14,7 +14,7 @@ import {
   Button,
   Checkbox,
 } from "@mui/material";
-import { QUESTIONTYPE, DEFAULT_QUESTION } from "@common/const";
+import { QUESTIONTYPE, DEFAULT_QUESTION, WRITE_TYPES } from "@common/const";
 import QuestionList from "./questionList";
 import {
   DataGrid,
@@ -24,13 +24,43 @@ import {
 } from "@mui/x-data-grid";
 import { $POST } from "@utils/request";
 import ChooseDataGrid from "./chooseDataGrid";
+import { useLocation } from "react-router-dom";
+import AnswerDataGrid from "./answerDataGrid";
 
 const QuestionTab = () => {
   const [questionType, setQuestionType] = React.useState("");
   const [questionTitle, setQuestionTitle] = React.useState("");
-  const [rowData, setRowData] = React.useState([]);
+  const [saveQuestions, setSaveQuestions] = React.useState([]);
   const [pastYn, setPastYn] = React.useState(false);
   const [subBox, setSubBox] = React.useState("");
+  const [passageId, setPassageId] = React.useState(0);
+  const passageDatas = useLocation().state;
+  /* 
+    {
+        "passageYear": "2023",
+        "passageNumber": "03",
+        "passageId": 41,
+        "passageUnit": "2과"
+    },
+    {
+        "passageYear": "2023",
+        "passageNumber": "1~12",
+        "passageId": 8,
+        "passageUnit": "1"
+    },
+    {
+        "passageYear": "2023",
+        "passageNumber": "01",
+        "passageId": 30,
+        "passageUnit": "1과"
+    },
+    {
+        "passageYear": "2023",
+        "passageNumber": "02",
+        "passageId": 38,
+        "passageUnit": "1과"
+    }
+] */
 
   const changeType = (e: SelectChangeEvent<string>) => {
     const {
@@ -38,72 +68,29 @@ const QuestionTab = () => {
     } = e;
     setQuestionType(value as string);
     setQuestionTitle(DEFAULT_QUESTION[value]);
+    answerRef2.current.resetWriteTypeRows();
   };
 
-  const answerColunms: GridColDef[] = [
-    {
-      field: "chooseSeq",
-      headerName: "선지번호",
-      width: 30,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      ...GRID_CHECKBOX_SELECTION_COL_DEF,
-      width: 30,
-    },
-  ];
-  const defaultAnswerRows = [
-    {
-      id: 1,
-      chooseSeq: "①",
-      answerContent: "1",
-    },
-    {
-      id: 2,
-      chooseSeq: "②",
-      answerContent: "2",
-    },
-    {
-      id: 3,
-      chooseSeq: "③",
-      answerContent: "3",
-    },
-    {
-      id: 4,
-      chooseSeq: "④",
-      answerContent: "4",
-    },
-    {
-      id: 5,
-      chooseSeq: "⑤",
-      answerContent: "5",
-    },
-  ];
-
   const chooseRef = useGridApiRef();
+  const chooseRef2 = React.useRef({
+    getChooseList: () => [],
+  });
   const answerRef = useGridApiRef();
-  const editorRef: React.MutableRefObject<any> = React.useRef();
+  const answerRef2 = React.useRef({
+    getAnswerList: () => [],
+    resetWriteTypeRows: () => {},
+  });
 
+  const editorRef: React.MutableRefObject<any> = React.useRef();
   const tempSave = () => {
-    const chooseList = chooseRef.current
-      .getAllRowIds()
-      .map((id) => chooseRef.current.getRow(id))
-      .map(({ id: chooseSeq, chooseContent }) => {
-        return { chooseSeq, chooseContent };
-      });
-    const answerList = [...answerRef.current.getSelectedRows().keys()].map(
-      (seq) => {
-        return {
-          answerContent: answerRef.current.getSelectedRows().get(seq)
-            ?.answerContent,
-        };
-      }
-    );
+    const chooseList = chooseRef2.current.getChooseList();
+    const answerList = answerRef2.current.getAnswerList();
     const questionContent = editorRef.current.getInstance().getHTML();
+    console.log("answerList", answerList);
+    console.log("chooseList", chooseList);
 
     const newQuestion = {
-      passageId: 22,
+      passageId,
       questionContent,
       questionTitle,
       questionParams: [
@@ -118,17 +105,14 @@ const QuestionTab = () => {
       ],
     };
 
-    $POST("/api/v1/question/save", newQuestion, () => {
-      setQuestionType("");
-      setQuestionTitle("");
-      setPastYn(false);
-      setSubBox("");
-      editorRef.current.getInstance().setHTML("");
-      [...answerRef.current.getSelectedRows().keys()].forEach((id) => {
-        answerRef.current.selectRow(id, false);
-      });
-      answerRef.current.setRows(defaultAnswerRows);
-    });
+    // $POST("/api/v1/question/save", newQuestion, () => {
+    //   setQuestionType("");
+    //   setQuestionTitle("");
+    //   setPastYn(false);
+    //   setSubBox("");
+    //   editorRef.current.getInstance().setHTML("");
+    //   resetAnswerGrid();
+    // });
   };
 
   return (
@@ -218,36 +202,82 @@ const QuestionTab = () => {
               ></Editor>
             </div>
             <div style={{ display: "flex", gap: 30, marginTop: 10 }}>
-              <div className="answer-wrap" style={{ width: 805, height: 262 }}>
-                <ChooseDataGrid
-                  chooseRef={chooseRef}
-                  questionType={questionType}
-                />
-              </div>
-              <div className="answer-wrap" style={{ width: 110, height: 262 }}>
-                <DataGrid
-                  apiRef={answerRef}
-                  rows={defaultAnswerRows}
-                  columns={answerColunms}
-                  slots={{ columnHeaders: () => null }}
-                  hideFooter={true}
-                  hideFooterPagination={true}
-                  hideFooterSelectedRowCount={true}
-                  checkboxSelection
-                  sx={{ marginBottom: 1 }}
-                />
-                <Button
-                  sx={{
-                    background: "#c9caca",
-                    color: "white",
-                  }}
-                  size="large"
-                  variant="contained"
-                  // color="gray"
-                  onClick={tempSave}
+              {questionType && !WRITE_TYPES.includes(questionType) ? (
+                <div
+                  className="answer-wrap"
+                  style={{ width: 805, height: 262 }}
                 >
-                  저장
-                </Button>
+                  <ChooseDataGrid
+                    chooseRef={chooseRef}
+                    questionType={questionType}
+                    ref={chooseRef2}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
+              <div
+                className="answer-wrap"
+                style={{
+                  width: 110,
+                  height: 262,
+                }}
+              >
+                {!questionType ? (
+                  <></>
+                ) : WRITE_TYPES.includes(questionType) ? (
+                  <div
+                    className="answer-wrap"
+                    style={{
+                      width: 950,
+                      height: 262,
+                    }}
+                  >
+                    <AnswerDataGrid
+                      questionType={questionType}
+                      answerRef={answerRef}
+                      ref={answerRef2}
+                    />
+                    <Button
+                      sx={{
+                        background: "#c9caca",
+                        color: "white",
+                      }}
+                      size="large"
+                      variant="contained"
+                      // color="gray"
+                      onClick={tempSave}
+                    >
+                      저장
+                    </Button>
+                  </div>
+                ) : (
+                  <div
+                    className="answer-wrap"
+                    style={{
+                      width: 110,
+                      height: 262,
+                    }}
+                  >
+                    <AnswerDataGrid
+                      questionType={questionType}
+                      answerRef={answerRef}
+                      ref={answerRef2}
+                    />
+                    <Button
+                      sx={{
+                        background: "#c9caca",
+                        color: "white",
+                      }}
+                      size="large"
+                      variant="contained"
+                      // color="gray"
+                      onClick={tempSave}
+                    >
+                      저장
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -255,16 +285,14 @@ const QuestionTab = () => {
             <QuestionList
               width={250}
               height={300}
-              rowData={rowData}
-              setRowData={setRowData}
-              buttonName="완료"
+              rowData={passageDatas}
+              setRowData={() => {}}
             />
             <QuestionList
               width={250}
               height={300}
-              rowData={rowData}
-              setRowData={setRowData}
-              buttonName="완료"
+              rowData={saveQuestions}
+              setRowData={setSaveQuestions}
             />
           </div>
         </div>

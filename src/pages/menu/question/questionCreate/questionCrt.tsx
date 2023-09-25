@@ -177,116 +177,119 @@ const QuestionCrt = (params: any) => {
           >
             문제 출제
           </Typography>
-          <Box
-            sx={{
-              maxWidth: "700px",
-              height: "100%",
-              borderBottom: "1px solid rgba(0, 0, 0, 0.23)",
-              borderTop: "1px solid rgba(0, 0, 0, 0.23)",
-              display: "flex",
-            }}
-          >
-            <Typography
-              sx={{
-                fontWeight: "700",
-                color: "#8A8683",
-                width: "70px",
-                backgroundColor: "#E8E7E7",
-                textAlign: "center",
-                padding: "16px 0",
-              }}
-            >
-              <p className="table-text">지문유형</p>
-            </Typography>
-            <FormControl sx={{ marginLeft: "20px" }}>
-              <Select value={searchPassage} onChange={handlePassage}>
-                {PASSAGETYPE.map((text, id) => (
-                  <MenuItem key={id} value={text}>
-                    {text}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <div style={{ display: "flex", gap: 15 }}>
+            <div>
+              <Box
+                sx={{
+                  maxWidth: "700px",
+                  height: "100%",
+                  borderBottom: "1px solid rgba(0, 0, 0, 0.23)",
+                  borderTop: "1px solid rgba(0, 0, 0, 0.23)",
+                  display: "flex",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: "700",
+                    color: "#8A8683",
+                    width: "70px",
+                    backgroundColor: "#E8E7E7",
+                    textAlign: "center",
+                    padding: "16px 0",
+                  }}
+                >
+                  <p className="table-text">지문유형</p>
+                </Typography>
+                <FormControl sx={{ marginLeft: "20px" }}>
+                  <Select value={searchPassage} onChange={handlePassage}>
+                    {PASSAGETYPE.map((text, id) => (
+                      <MenuItem key={id} value={text}>
+                        {text}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-            <Typography
-              sx={{
-                fontWeight: "700",
-                color: "#8A8683",
-                width: "70px",
-                backgroundColor: "#E8E7E7",
-                textAlign: "center",
-                padding: "16px 0",
-              }}
-            >
-              <p className="table-text">연도</p>
-            </Typography>
-            <FormControl sx={{ marginLeft: "20px" }}>
-              <Select value={searchYear} onChange={handleYear}>
-                {YEAR.map((text, id) => (
-                  <MenuItem key={id} value={text}>
-                    {text}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <Typography
+                  sx={{
+                    fontWeight: "700",
+                    color: "#8A8683",
+                    width: "70px",
+                    backgroundColor: "#E8E7E7",
+                    textAlign: "center",
+                    padding: "16px 0",
+                  }}
+                >
+                  <p className="table-text">연도</p>
+                </Typography>
+                <FormControl sx={{ marginLeft: "20px" }}>
+                  <Select value={searchYear} onChange={handleYear}>
+                    {YEAR.map((text, id) => (
+                      <MenuItem key={id} value={text}>
+                        {text}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-            <Typography
-              sx={{
-                fontWeight: "700",
-                color: "#8A8683",
-                width: "70px",
-                backgroundColor: "#E8E7E7",
-                textAlign: "center",
-                padding: "16px 0",
-              }}
-            >
-              <p className="table-text">교재</p>
-            </Typography>
-            <FormControl sx={{ marginLeft: "20px" }}>
-              <Select value={passageName} onChange={handlePassageName}>
-                {searchTextBook.map((text, id) => (
-                  <MenuItem key={id} value={text}>
-                    {text}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          {/* 지문선택 */}
-          <DataGrid
-            rows={rowData}
-            getRowId={(row) => row.id}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
-            checkboxSelection
-            disableRowSelectionOnClick
-            hideFooterPagination={true}
-            sx={{ fontWeight: "500", fontSize: "15px" }}
-          />
-          <Pagination
-            count={parseInt((rowData.length / 5).toString()) + 1}
-            onChange={(event, value) => setPage(value - 1)}
-            page={page + 1}
-            showFirstButton
-            showLastButton
-            shape="rounded"
-            sx={{ display: "flex" }}
-          />
+                <Typography
+                  sx={{
+                    fontWeight: "700",
+                    color: "#8A8683",
+                    width: "70px",
+                    backgroundColor: "#E8E7E7",
+                    textAlign: "center",
+                    padding: "16px 0",
+                  }}
+                >
+                  <p className="table-text">교재</p>
+                </Typography>
+                <FormControl sx={{ marginLeft: "20px" }}>
+                  <Select value={passageName} onChange={handlePassageName}>
+                    {searchTextBook.map((text, id) => (
+                      <MenuItem key={id} value={text}>
+                        {text}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              {/* 지문선택 */}
+              <DataGrid
+                rows={rowData}
+                getRowId={(row) => row.id}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                checkboxSelection
+                disableRowSelectionOnClick
+                hideFooterPagination={true}
+                sx={{ fontWeight: "500", fontSize: "15px" }}
+              />
+              <Pagination
+                count={parseInt((rowData.length / 5).toString()) + 1}
+                onChange={(event, value) => setPage(value - 1)}
+                page={page + 1}
+                showFirstButton
+                showLastButton
+                shape="rounded"
+                sx={{ display: "flex" }}
+              />
+            </div>
+            <QuestionList
+              width={360}
+              height={300}
+              rowData={rowDataList}
+              setRowData={setRowDataList}
+              buttonName={params.Children}
+            />
+          </div>
         </div>
-
-        <QuestionList
-          width={360}
-          height={300}
-          rowData={rowDataList}
-          setRowData={setRowDataList}
-          buttonName={params.Children}
-        />
       </Grid>
     </Layout>
   );

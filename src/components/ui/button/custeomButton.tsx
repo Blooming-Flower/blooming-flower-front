@@ -9,15 +9,17 @@ const CustomButton = (props: {
   children?: React.ReactNode;
   domain?: string | undefined;
   onClick?: () => void;
+  params?: any;
 }) => {
   const navigate = useNavigate();
+
   return props.borderType == "round" ? (
     <Button
       color="warning"
       size="large"
       variant="contained"
       value={props.label}
-      onClick={() => navigate(props.domain!)}
+      onClick={() => navigate(props.domain!, { state: props.params })}
       disabled={props.label != props.type}
       sx={{ height: "40px", borderRadius: "20px", fontSize: "15px" }}
     >
@@ -30,7 +32,7 @@ const CustomButton = (props: {
       size="large"
       variant="contained"
       value={props.label}
-      onClick={() => navigate(props.domain!)}
+      onClick={() => navigate(props.domain!, { state: props.params })}
       sx={{
         height: "40px",
         borderRadius: "10px",
