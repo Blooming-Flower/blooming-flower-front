@@ -33,48 +33,64 @@ import {DataGrid, useGridApiRef} from "@mui/x-data-grid";
 
 const PassagePopup = forwardRef(
   (props: { passageId: number | undefined }, ref: ForwardedRef<any>) => {
-      const [callContent, setCallContent] = useState(false);
+      const [parent, setParent] = useState({
+          display : 0,
+          callPassage : false,
+          check : false,
+          open : false,
+          type : "",
+          subType : "",
+          pastYn : false,
+          subPastYn : false,
+          title : "",
+          subTitle : "",
+          content : "",
+          subContent : ""
+      })
       const editorRef : React.MutableRefObject<any> = React.useRef();
       const chooseRef = useGridApiRef();
       const answerRef = useGridApiRef();
-      const [check, setCheck] = React.useState(false)
-    const [open, setOpen] = React.useState(false);
-    const [content, setContent] = React.useState("");
-    const [subContent, setSubContent] = React.useState("");
     const [listData, setListData] = React.useState([])
-      const [questionType, setQuestionType] = React.useState("");
-      const [questionTitle, setQuestionTitle] = React.useState("");
-      const [pastYn, setPastYn] = React.useState(false);
 
       const changeType = (e: SelectChangeEvent<string>) => {
           const {
               target: { value },
           } = e;
-          setQuestionType(value as string);
-          setQuestionTitle(DEFAULT_QUESTION[value]);
+          setParent((parent)=>({
+              ...parent,
+              type:value as string,
+              title:DEFAULT_QUESTION[value]
+          }))
       };
     useEffect( () => {
         console.log(props.passageId)
       if (props.passageId != undefined) {
         $GET("/api/v1/passage/search/" + props.passageId, (res: any) => {
             setListData(res.data.questions)
-            setContent(res.data.passageContent)
-            setOpen(true)
+            setParent((parent)=>({
+                ...parent,
+                content: res.data.passageContent,
+                open:true
+            }))
         });
       }
-    }, [check]);
-      useEffect(()=>{
-          if(!open)
-              setContent("")
-          setListData([])
-          setSubContent("")
-          setQuestionType("")
-          setQuestionTitle("")
-          setPastYn(false)
-          setCallContent(false)
-      },[open])
+    }, [parent.check]);
     const handleClose = () => {
-      setOpen(false);
+          setParent((parent)=>({
+              ...parent,
+              content:"",
+              subContent:"",
+              type:"",
+              title:"",
+              pastYn:false,
+              callPassage: false,
+              display : 0,
+              open : false,
+              subType : "",
+              subPastYn : false,
+              subTitle : ""
+          }))
+        setListData([])
     };
     const handleOpen = () => {
         alert.confirm({
@@ -82,7 +98,11 @@ const PassagePopup = forwardRef(
             text: '수정\n 하시겠습니까?\n\n',
             confirmText: '확인',
             confirmCall: () => {
-                setCheck(!check);
+                // setCheck(!check);
+                setParent((parent)=>({
+                    ...parent,
+                    check:!parent.check
+                }))
             }
         })
     };
@@ -94,7 +114,7 @@ const PassagePopup = forwardRef(
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={parent.open}
       >
         <DialogTitle sx={{margin:'10px 0 0 10px'}} id="customized-dialog-title">
           <Typography
@@ -130,94 +150,315 @@ const PassagePopup = forwardRef(
             </Button>
             <Grid container>
                 <Grid item lg={2} >
-                    <VerticalTabs data={listData} controlContent={setCallContent} controlContentValue={callContent} controlType={setQuestionType} controlTypeValue={questionType} controlSubTitle={setQuestionTitle} editor={editorRef} controlPastYn={setPastYn}/>
+                    <VerticalTabs parent={parent} setParent={setParent} data={listData} editor={editorRef} answerRef={answerRef} chooseRef={chooseRef}/>
                 </Grid>
                 <Grid item lg={10}>
                         <Item style={{height:'100%', padding:'20px'}}>
-                            {callContent ?
-                                content
+                            {parent.callPassage && parent.display != 0 ?
+                                parent.content
                                 :
                                 ""
                             }
-                                    <Grid container spacing={0} className="table-container">
-                                        <Grid xs={1} item={true}>
-                                            <div className="table-title table-top">유형</div>
-                                        </Grid>
-                                        <Grid xs={2} item={true}>
-                                            <div className="table-content table-top">
-                                                <FormControl className="table-select">
-                                                    <Select
-                                                        value={questionType}
-                                                        onChange={changeType}
-                                                        displayEmpty
-                                                        inputProps={{ "aria-label": "Without label" }}
-                                                    >
-                                                        {Object.entries(QUESTIONTYPE).map(([type, text]) => (
-                                                            <MenuItem key={type} value={type}>
-                                                                {text}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </div>
-                                        </Grid>
-                                        <Grid xs={1} item={true}>
-                                            <div className="table-title table-top">기출여부</div>
-                                        </Grid>
-                                        <Grid xs={1} item={true}>
-                                            <div className="table-content table-top">
-                                                <FormControl className="table-select">
-                                                    <Checkbox
-                                                        checked={pastYn}
-                                                        onChange={() => setPastYn(!pastYn)}
-                                                        sx={{
+                            {
+                                parent.display ==  0 ?
+                                    parent.content :
+                                parent.display == 1 ?
+                                <>
+                                <Grid container spacing={0} className="table-container">
+                                    <Grid xs={1} item={true}>
+                                        <div className="table-title table-top">유형</div>
+                                    </Grid>
+                                    <Grid xs={2} item={true}>
+                                        <div className="table-content table-top">
+                                            <FormControl className="table-select">
+                                                <Select
+                                                    value={parent.type}
+                                                    defaultValue={"복합유형"}
+                                                    onChange={changeType}
+                                                    // displayEmpty
+                                                    inputProps={{ "aria-label": "Without label" }}
+                                                >
+                                                    {Object.entries(QUESTIONTYPE).map(([type, text]) => (
+                                                        <MenuItem key={type} value={type}>
+                                                            {text}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </div>
+                                    </Grid>
+                                    <Grid xs={1} item={true}>
+                                        <div className="table-title table-top">기출여부</div>
+                                    </Grid>
+                                    <Grid xs={1} item={true}>
+                                        <div className="table-content table-top">
+                                            <FormControl className="table-select">
+                                                <Checkbox
+                                                    checked={parent.pastYn}
+                                                    onChange={() => setParent((parent)=>({...parent,pastYn: !parent.pastYn}))}
+                                                    sx={{
+                                                        color: "#ff8b2c",
+                                                        "& .MuiSvgIcon-root": { fontSize: 28 },
+                                                        "&.Mui-checked": {
                                                             color: "#ff8b2c",
-                                                            "& .MuiSvgIcon-root": { fontSize: 28 },
-                                                            "&.Mui-checked": {
+                                                        },
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </div>
+                                    </Grid>
+                                    <Grid xs={1} item={true}>
+                                        <div className="table-title table-top">발문</div>
+                                    </Grid>
+                                    <Grid xs={6} item={true}>
+                                        <div className="table-content table-top">
+                                            <FormControl className="table-input-select">
+                                                <TextField
+                                                    onChange={(e) => setParent((parent)=>({
+                                                        ...parent,
+                                                        title:e.target.value
+                                                    }))}
+                                                    label="발문"
+                                                    value={parent.title}
+                                                />
+                                            </FormControl>
+                                        </div>
+                                    </Grid>
+                                </Grid>
+                                <TuiEditor content={parent.subContent} editorRef={editorRef} />
+                                </>
+                                : parent.display == 2  ?
+                                    <>
+                                        <Grid container spacing={0} className="table-container">
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">유형</div>
+                                            </Grid>
+                                            <Grid xs={2} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-select">
+                                                        <Select
+                                                            value={parent.type}
+                                                            defaultValue={"복합유형"}
+                                                            onChange={changeType}
+                                                            // displayEmpty
+                                                            inputProps={{ "aria-label": "Without label" }}
+                                                        >
+                                                            {Object.entries(QUESTIONTYPE).map(([type, text]) => (
+                                                                <MenuItem key={type} value={type}>
+                                                                    {text}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">기출여부</div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-select">
+                                                        <Checkbox
+                                                            checked={parent.pastYn}
+                                                            onChange={() => setParent((parent)=>({...parent,pastYn: !parent.pastYn}))}
+                                                            sx={{
                                                                 color: "#ff8b2c",
-                                                            },
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                            </div>
+                                                                "& .MuiSvgIcon-root": { fontSize: 28 },
+                                                                "&.Mui-checked": {
+                                                                    color: "#ff8b2c",
+                                                                },
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">발문</div>
+                                            </Grid>
+                                            <Grid xs={6} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-input-select">
+                                                        <TextField
+                                                            onChange={(e) => setParent((parent)=>({
+                                                                ...parent,
+                                                                title:e.target.value
+                                                            }))}
+                                                            label="발문"
+                                                            value={parent.title}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
                                         </Grid>
-                                        <Grid xs={1} item={true}>
-                                            <div className="table-title table-top">발문</div>
+                                        <TuiEditor content={parent.subContent} editorRef={editorRef} />
+                                        <Grid container spacing={0} className="table-container">
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">유형</div>
+                                            </Grid>
+                                            <Grid xs={2} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-select">
+                                                        <Select
+                                                            value={parent.subType}
+                                                            onChange={changeType}
+                                                            displayEmpty
+                                                            inputProps={{ "aria-label": "Without label" }}
+                                                        >
+                                                            {Object.entries(QUESTIONTYPE).map(([type, text]) => (
+                                                                <MenuItem key={type} value={type}>
+                                                                    {text}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">기출여부</div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-select">
+                                                        <Checkbox
+                                                            checked={parent.subPastYn}
+                                                            onChange={() => setParent((parent)=>({...parent,subPastYn: !parent.subPastYn}))}
+                                                            sx={{
+                                                                color: "#ff8b2c",
+                                                                "& .MuiSvgIcon-root": { fontSize: 28 },
+                                                                "&.Mui-checked": {
+                                                                    color: "#ff8b2c",
+                                                                },
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">발문</div>
+                                            </Grid>
+                                            <Grid xs={6} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-input-select">
+                                                        <TextField
+                                                            onChange={(e) => setParent((parent)=>({
+                                                                ...parent,
+                                                                subTitle:e.target.value
+                                                            }))}
+                                                            label="발문"
+                                                            value={parent.subTitle}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
                                         </Grid>
-                                        <Grid xs={6} item={true}>
-                                            <div className="table-content table-top">
-                                                <FormControl className="table-input-select">
-                                                    <TextField
-                                                        onChange={(e) => setQuestionTitle(e.target.value)}
-                                                        label="발문"
-                                                        value={questionTitle}
-                                                    />
-                                                </FormControl>
-                                            </div>
+                                        <Grid container>
+                                            <Grid item lg={10.5} >
+                                                <ChooseDataGrid
+                                                    chooseRef={chooseRef}
+                                                    questionType={parent.subType}
+                                                />
+                                            </Grid>
+                                            <Grid item lg={1.5}>
+                                                <DataGrid
+                                                    apiRef={answerRef}
+                                                    rows={DEFAULTANSWERROWS}
+                                                    columns={ANSWERCOLUMNS}
+                                                    slots={{ columnHeaders: () => null }}
+                                                    hideFooter={true}
+                                                    hideFooterPagination={true}
+                                                    hideFooterSelectedRowCount={true}
+                                                    checkboxSelection
+                                                    sx={{ marginBottom: 1 }}
+                                                />
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                    <TuiEditor content={subContent} editorRef={editorRef} />
-                                    <Grid container>
-                                        <Grid item lg={10.5} >
-                                            <ChooseDataGrid
-                                                chooseRef={chooseRef}
-                                                questionType={questionType}
-                                            />
+                                    </>
+                                    :
+                                    <>
+                                        <Grid container spacing={0} className="table-container">
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">유형</div>
+                                            </Grid>
+                                            <Grid xs={2} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-select">
+                                                        <Select
+                                                            value={parent.type}
+                                                            onChange={changeType}
+                                                            displayEmpty
+                                                            inputProps={{ "aria-label": "Without label" }}
+                                                        >
+                                                            {Object.entries(QUESTIONTYPE).map(([type, text]) => (
+                                                                <MenuItem key={type} value={type}>
+                                                                    {text}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">기출여부</div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-select">
+                                                        <Checkbox
+                                                            checked={parent.pastYn}
+                                                            onChange={() => setParent((parent)=>({...parent,pastYn: !parent.pastYn}))}
+                                                            sx={{
+                                                                color: "#ff8b2c",
+                                                                "& .MuiSvgIcon-root": { fontSize: 28 },
+                                                                "&.Mui-checked": {
+                                                                    color: "#ff8b2c",
+                                                                },
+                                                            }}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
+                                            <Grid xs={1} item={true}>
+                                                <div className="table-title table-top">발문</div>
+                                            </Grid>
+                                            <Grid xs={6} item={true}>
+                                                <div className="table-content table-top">
+                                                    <FormControl className="table-input-select">
+                                                        <TextField
+                                                            onChange={(e) => setParent((parent)=>({
+                                                                ...parent,
+                                                                title:e.target.value
+                                                            }))}
+                                                            label="발문"
+                                                            value={parent.title}
+                                                        />
+                                                    </FormControl>
+                                                </div>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item lg={1.5}>
-                                            <DataGrid
-                                                apiRef={answerRef}
-                                                rows={DEFAULTANSWERROWS}
-                                                columns={ANSWERCOLUMNS}
-                                                slots={{ columnHeaders: () => null }}
-                                                hideFooter={true}
-                                                hideFooterPagination={true}
-                                                hideFooterSelectedRowCount={true}
-                                                checkboxSelection
-                                                sx={{ marginBottom: 1 }}
-                                            />
+                                        <TuiEditor content={parent.subContent} editorRef={editorRef} />
+                                        <Grid container>
+                                            <Grid item lg={10.5} >
+                                                <ChooseDataGrid
+                                                    chooseRef={chooseRef}
+                                                    questionType={parent.type}
+                                                />
+                                            </Grid>
+                                            <Grid item lg={1.5}>
+                                                <DataGrid
+                                                    apiRef={answerRef}
+                                                    rows={DEFAULTANSWERROWS}
+                                                    columns={ANSWERCOLUMNS}
+                                                    slots={{ columnHeaders: () => null }}
+                                                    hideFooter={true}
+                                                    hideFooterPagination={true}
+                                                    hideFooterSelectedRowCount={true}
+                                                    checkboxSelection
+                                                    sx={{ marginBottom: 1 }}
+                                                />
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
+                                    </>
+                            }
                         </Item>
                 </Grid>
             </Grid>

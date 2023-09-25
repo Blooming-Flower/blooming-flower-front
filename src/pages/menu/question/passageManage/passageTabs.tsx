@@ -10,37 +10,55 @@ import {
   ListItem,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import {Dispatch, SetStateAction} from "react";
+import {Dispatch, MutableRefObject, SetStateAction} from "react";
 import { QUESTIONTYPE } from "@common/const";
+import {GridApiCommunity} from "@mui/x-data-grid/internals";
 interface callParent {
   data: { question: [] }[],
-  controlContent:Dispatch<SetStateAction<boolean>>,
-  controlContentValue:boolean,
-  controlType:Dispatch<SetStateAction<string>>,
-  controlTypeValue:string,
-  controlSubTitle:Dispatch<SetStateAction<string>>,
+  parent : popupProps
+  setParent :setPopupProps
   editor:any,
-  controlPastYn:Dispatch<SetStateAction<boolean>>,
+  answerRef:any,
+  chooseRef:any
 }
 export default function NestedList(props:callParent) {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [listData, setListData] = React.useState(props.data);
-  const handleClick = () => {
+  const handleClick = (content:string,title:string) => {
+    props.setParent((parent:any)=>({
+      ...parent,
+      display:1,
+      type:"Q25",
+      title:title,
+      subContent:content
+    }))
+    props.editor.current.getInstance().setHTML(content)
     setOpen(!open);
   };
 
-  const setParent = (type:string, content:string, subTitle:string, pastYn:boolean) => {
-    props.controlType(type)
+  const setParent = (type:string, content:string, subTitle:string, title:string, pastYn:boolean, display:number) => {
+    props.setParent((parent:any)=>({
+      ...parent,
+      type:display == 2 ? "Q25" : type,
+      subType:display == 2 ? type : "",
+      subTitle:subTitle,
+      title:title,
+      pastYn:display == 2 ? false : pastYn,
+      subPastYn: display == 2 ? pastYn : false,
+      display:display,
+      subContent:content
+    }))
     props.editor.current.getInstance().setHTML(content)
-    props.controlSubTitle(subTitle)
-    props.controlPastYn(pastYn)
   }
 
   return (
     <List
       sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
       subheader={
-      <ListItemButton onClick={()=>props.controlContent(!props.controlContentValue)}>
+      <ListItemButton onClick={()=>props.setParent((parent:any)=>({
+        ...parent,
+        callPassage:!props.parent.callPassage
+      }))}>
         <ListSubheader sx={{width:'100%'}} component="div" id="nested-list-subheader">
           지문
         </ListSubheader>
@@ -64,7 +82,7 @@ export default function NestedList(props:callParent) {
                 }
               >
                 <ListItemButton
-                  onClick={handleClick}
+                  onClick={()=>handleClick(value1.questionContent,value1.questionTitle)}
                   style={{ paddingRight: "0" }}
                 >
                   <ListItemText primary="복합유형" />
@@ -77,7 +95,7 @@ export default function NestedList(props:callParent) {
                     <ListItem
                         sx={{ paddingRight: "40px" }}
                       key={value2.questionId}
-                        onClick={()=>setParent(value2.questionType,value1.questionContent, value2.questionSubTitle,value2.pastYn)}
+                        onClick={()=>setParent(value2.questionType,value1.questionContent, value1.questionTitle, value2.questionSubTitle,value2.pastYn,2)}
                       secondaryAction={
                         <IconButton
                           aria-label="comment"
@@ -101,7 +119,7 @@ export default function NestedList(props:callParent) {
             <ListItem
               key={value1.question[0].questionId}
               sx={{ paddingRight: "40px" }}
-              onClick={()=>setParent(value1.question[0].questionType, value1.questionContent, value1.question[0].questionSubTitle,value1.question[0].pastYn)}
+              onClick={()=>setParent(value1.question[0].questionType, value1.questionContent, "", value1.question[0].questionSubTitle, value1.question[0].pastYn,3)}
               secondaryAction={
                 <IconButton aria-label="comment" style={{ padding: "0" }}>
                   <CancelPresentationIcon />

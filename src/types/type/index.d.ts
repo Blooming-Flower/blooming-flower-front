@@ -28,3 +28,19 @@ type Transition = {
 	time?: number
 }
 
+type popupProps = {
+	display : number,
+	callPassage : boolean,
+	check : boolean,
+	open : boolean,
+	type : string,
+	subType : string,
+	pastYn : boolean,
+	subPastYn : boolean,
+	title : string,
+	subTitle : string,
+	content : string,
+	subContent : string
+}
+
+type setPopupProps = Dispatch<SetStateAction<{ display: number; callPassage: boolean; check: boolean; open: boolean; type: string; subType: string; pastYn: boolean; subPastYn: boolean; title: string; subTitle: string; content: string; subContent: string; }>>
