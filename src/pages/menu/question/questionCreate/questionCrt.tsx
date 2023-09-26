@@ -53,14 +53,39 @@ const QuestionCrt = (params: any) => {
     }
   };
 
+  // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
+  const changePage = async (page: number) => {
+    setPage(page)
+
+    try {
+      const passageType = convertPassageType(searchPassage);
+
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page -1}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const res: any = await axios.get(API_URL);
+      console.log("url", API_URL)
+      console.log("data:::", res.data)
+      if (res.data.length != 0) {
+        for (let i = 0; i < res.data.length; i++) {
+          res.data[i].id = i;
+        }
+      }
+      console.log("checked:::", checked)
+
+      
+      setRowData(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // [문제 출제] 강, 지문 번호 조회
   const handlePassageName = async (event: SelectChangeEvent) => {
     try {
+      setPage(0);
       const passageName = event.target.value;
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `${_url}/api/v1/question/search/passage-numbers?
-      page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
       setPassageName(event.target.value);
 
@@ -123,7 +148,7 @@ const QuestionCrt = (params: any) => {
   //지문 체크박스 이벤트 (선택&취소)
   const handleToggle = (row: any) => () => {
     console.log("value::", row)
-    // debugger;
+    debugger;
     const currentIndex = checked.indexOf(row.passageId);
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
@@ -153,21 +178,28 @@ const QuestionCrt = (params: any) => {
       editable: false,
       align: "center",
       sortable: false,
+      headerAlign: "center"
     },
     {
       field: "passageInfo",
       headerName: "지문",
-      type: "actions",
       width: 300,
+      type: "actions",
       editable: false,
+      headerAlign: "center",
       getActions: (params) => [
         <>
           {params.row.passageInfo.map((row: any) => {
+            console.log("pppp:::", params)
             return (
               <div key={row.passageNumber} id="checkbox-list">
                 <Checkbox
                   value={row.passageId}
                   onClick={handleToggle(row)}
+                  inputProps={{
+                    // @ts-ignore
+                    'data-order': row.id,
+                  }}
                   checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
                 />
                 {row.passageNumber}
@@ -283,24 +315,25 @@ const QuestionCrt = (params: any) => {
               {/* 지문선택 */}
               <DataGrid
                 rows={rowData}
-                getRowId={(row) => row.id}
+                // getRowId={(row) => row.id}
                 columns={columns}
                 initialState={{
                   pagination: {
                     paginationModel: {
-                      pageSize: 10,
+                      pageSize: 5,
                     },
                   },
                 }}
                 checkboxSelection
-                disableRowSelectionOnClick
+                onRowSelectionModelChange={(newRowSelectionModel) => console.log("tt", newRowSelectionModel)}
+                // disableRowSelectionOnClick
                 hideFooterPagination={true}
                 sx={{ fontWeight: "500", fontSize: "15px" }}
               />
               <Pagination
                 count={parseInt((rowData.length / 5).toString()) + 1}
-                onChange={(event, value) => setPage(value - 1)}
-                page={page + 1}
+                onChange={(event, value) => changePage(value)}
+                page={page }
                 showFirstButton
                 showLastButton
                 shape="rounded"
