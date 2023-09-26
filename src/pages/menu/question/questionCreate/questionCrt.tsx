@@ -2,6 +2,7 @@ import Layout from "@components/layouts/layout";
 import * as React from "react";
 import {
   Box,
+  Checkbox,
   FormControl,
   Grid,
   InputLabel,
@@ -68,6 +69,7 @@ const QuestionCrt = (params: any) => {
           res.data[i].id = i;
         }
       }
+      console.log("checked:::", checked)
       setRowData(res.data);
     } catch (error) {
       console.log(error);
@@ -119,18 +121,20 @@ const QuestionCrt = (params: any) => {
   };
 
   //지문 체크박스 이벤트 (선택&취소)
-  const handleToggle = (value: any) => () => {
-    const currentIndex = checked.indexOf(value);
+  const handleToggle = (row: any) => () => {
+    console.log("value::", row)
+    // debugger;
+    const currentIndex = checked.indexOf(row.passageId);
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
 
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push(row.passageId);
       newRowDataList.push({
         passageYear: searchYear,
-        passageNumber: value.passageNumber,
-        passageId: value.passageId,
-        passageUnit: value.passageUnit,
+        passageNumber: row.passageNumber,
+        passageId: row.passageId,
+        passageUnit: row.passageUnit,
       });
     } else {
       newChecked.splice(currentIndex, 1);
@@ -140,15 +144,13 @@ const QuestionCrt = (params: any) => {
     setRowDataList(newRowDataList);
   };
 
-  //selectbox 재선택시 리스트 초기화
-  const onClearSelect = () => { };
   // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
     {
       field: "passageUnit",
       headerName: "강",
       width: 150,
-      editable: true,
+      editable: false,
       align: "center",
       sortable: false,
     },
@@ -157,22 +159,18 @@ const QuestionCrt = (params: any) => {
       headerName: "지문",
       type: "actions",
       width: 300,
-      editable: true,
+      editable: false,
       getActions: (params) => [
         <>
           {params.row.passageInfo.map((row: any) => {
             return (
               <div key={row.passageNumber} id="checkbox-list">
-                <input
-                  type="checkbox"
+                <Checkbox
                   value={row.passageId}
                   onClick={handleToggle(row)}
-                  onChange={(e) => {
-                    handleToggle(e.target.value);
-                  }}
-                  defaultChecked={checked.indexOf(row) !== -1}
+                  checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
                 />
-                {row.passageId}
+                {row.passageNumber}
               </div>
             );
           })}
@@ -311,10 +309,12 @@ const QuestionCrt = (params: any) => {
             </div>
             <QuestionList
               width={360}
-              height={300}
+              height={600}
               rowData={rowDataList}
               setRowData={setRowDataList}
               buttonName={params.Children}
+              checked={checked}
+              setChecked={setChecked}
             />
           </div>
         </div>

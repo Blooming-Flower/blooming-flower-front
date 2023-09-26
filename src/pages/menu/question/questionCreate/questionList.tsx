@@ -25,11 +25,14 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
   //문제유형 :  searchlecture
-  const { width, height, rowData, setRowData, buttonName } = props;
+  const { width, height, rowData, setRowData, checked, setChecked, buttonName } = props;
 
   //리스트업 목록 삭제 버튼
   const onRemove = (value: any) => {
     setRowData(rowData.filter((el: any) => el !== value));
+    if (checked && checked.indexOf(value.passageId) != -1) { // checked(지문 체크 배열) non-checked로 변경
+      setChecked(checked.filter((el: any) => el !== value.passageId))
+    }
   };
 
   return (
@@ -67,7 +70,6 @@ const QuestionList = (props: any) => {
                 <div>{row.passageYear}</div>
                 <div>{row.passageUnit}</div>
                 <div>{row.passageNumber}</div>
-                <div>{row.passageId}</div>
               </ListItem>
             </div>
           );
