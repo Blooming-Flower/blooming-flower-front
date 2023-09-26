@@ -43,7 +43,6 @@ const QuestionList = (props: any) => {
           maxHeight: height,
           "& ul": { padding: 0 },
         }}
-        subheader={<li />}
       >
         {rowData.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
 

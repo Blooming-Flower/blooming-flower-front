@@ -33,6 +33,10 @@ const QuestionCrt = (params: any) => {
   //selectbox 재선택시 리스트 초기화
   const [selectValue, setSelectValue] = React.useState("");
 
+  //datagrid 전체선택
+  // const [checkboxSelection, setCheckboxSelection] = React.useState(true);
+  // console.log("checkboxSelect;;;", checkboxSelection);
+
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -63,6 +67,9 @@ const QuestionCrt = (params: any) => {
       if (res.data.length != 0) {
         for (let i = 0; i < res.data.length; i++) {
           res.data[i].id = i;
+        }
+        for (let i = 0; i < res.data.length - 1; i--) {
+          res.data[i].id = null;
         }
       }
       setRowData(res.data);
@@ -124,8 +131,14 @@ const QuestionCrt = (params: any) => {
     setRowDataList(newRowDataList);
   };
 
-  //selectbox 재선택시 리스트 초기화
-  const onClearSelect = () => {};
+  //체크박스 전체 선택
+  const handleAllCheck = (value: any) => {
+    const currentIndex = checked.indexOf(value);
+    console.log("value;;;", value);
+    if (currentIndex) {
+    }
+  };
+
   // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
     {
@@ -199,7 +212,7 @@ const QuestionCrt = (params: any) => {
               <p className="table-text">지문유형</p>
             </Typography>
             <FormControl sx={{ marginLeft: "20px" }}>
-              <Select value={searchPassage} onChange={handlePassage}>
+              <Select value={searchPassage || ""} onChange={handlePassage}>
                 {PASSAGETYPE.map((text, id) => (
                   <MenuItem key={id} value={text}>
                     {text}
