@@ -33,10 +33,6 @@ const QuestionCrt = (params: any) => {
   //selectbox 재선택시 리스트 초기화
   const [selectValue, setSelectValue] = React.useState("");
 
-  //datagrid 전체선택
-  // const [checkboxSelection, setCheckboxSelection] = React.useState(true);
-  // console.log("checkboxSelect;;;", checkboxSelection);
-
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -67,9 +63,6 @@ const QuestionCrt = (params: any) => {
       if (res.data.length != 0) {
         for (let i = 0; i < res.data.length; i++) {
           res.data[i].id = i;
-        }
-        for (let i = 0; i < res.data.length - 1; i--) {
-          res.data[i].id = null;
         }
       }
       setRowData(res.data);
@@ -131,14 +124,8 @@ const QuestionCrt = (params: any) => {
     setRowDataList(newRowDataList);
   };
 
-  //체크박스 전체 선택
-  const handleAllCheck = (value: any) => {
-    const currentIndex = checked.indexOf(value);
-    console.log("value;;;", value);
-    if (currentIndex) {
-    }
-  };
-
+  //selectbox 재선택시 리스트 초기화
+  const onClearSelect = () => {};
   // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
     {
@@ -190,116 +177,119 @@ const QuestionCrt = (params: any) => {
           >
             문제 출제
           </Typography>
-          <Box
-            sx={{
-              maxWidth: "700px",
-              height: "100%",
-              borderBottom: "1px solid rgba(0, 0, 0, 0.23)",
-              borderTop: "1px solid rgba(0, 0, 0, 0.23)",
-              display: "flex",
-            }}
-          >
-            <Typography
-              sx={{
-                fontWeight: "700",
-                color: "#8A8683",
-                width: "70px",
-                backgroundColor: "#E8E7E7",
-                textAlign: "center",
-                padding: "16px 0",
-              }}
-            >
-              <p className="table-text">지문유형</p>
-            </Typography>
-            <FormControl sx={{ marginLeft: "20px" }}>
-              <Select value={searchPassage || ""} onChange={handlePassage}>
-                {PASSAGETYPE.map((text, id) => (
-                  <MenuItem key={id} value={text}>
-                    {text}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <div style={{ display: "flex", gap: 15 }}>
+            <div>
+              <Box
+                sx={{
+                  maxWidth: "700px",
+                  height: "100%",
+                  borderBottom: "1px solid rgba(0, 0, 0, 0.23)",
+                  borderTop: "1px solid rgba(0, 0, 0, 0.23)",
+                  display: "flex",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: "700",
+                    color: "#8A8683",
+                    width: "70px",
+                    backgroundColor: "#E8E7E7",
+                    textAlign: "center",
+                    padding: "16px 0",
+                  }}
+                >
+                  <p className="table-text">지문유형</p>
+                </Typography>
+                <FormControl sx={{ marginLeft: "20px" }}>
+                  <Select value={searchPassage} onChange={handlePassage}>
+                    {PASSAGETYPE.map((text, id) => (
+                      <MenuItem key={id} value={text}>
+                        {text}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-            <Typography
-              sx={{
-                fontWeight: "700",
-                color: "#8A8683",
-                width: "70px",
-                backgroundColor: "#E8E7E7",
-                textAlign: "center",
-                padding: "16px 0",
-              }}
-            >
-              <p className="table-text">연도</p>
-            </Typography>
-            <FormControl sx={{ marginLeft: "20px" }}>
-              <Select value={searchYear} onChange={handleYear}>
-                {YEAR.map((text, id) => (
-                  <MenuItem key={id} value={text}>
-                    {text}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <Typography
+                  sx={{
+                    fontWeight: "700",
+                    color: "#8A8683",
+                    width: "70px",
+                    backgroundColor: "#E8E7E7",
+                    textAlign: "center",
+                    padding: "16px 0",
+                  }}
+                >
+                  <p className="table-text">연도</p>
+                </Typography>
+                <FormControl sx={{ marginLeft: "20px" }}>
+                  <Select value={searchYear} onChange={handleYear}>
+                    {YEAR.map((text, id) => (
+                      <MenuItem key={id} value={text}>
+                        {text}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
 
-            <Typography
-              sx={{
-                fontWeight: "700",
-                color: "#8A8683",
-                width: "70px",
-                backgroundColor: "#E8E7E7",
-                textAlign: "center",
-                padding: "16px 0",
-              }}
-            >
-              <p className="table-text">교재</p>
-            </Typography>
-            <FormControl sx={{ marginLeft: "20px" }}>
-              <Select value={passageName} onChange={handlePassageName}>
-                {searchTextBook.map((text, id) => (
-                  <MenuItem key={id} value={text}>
-                    {text}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          {/* 지문선택 */}
-          <DataGrid
-            rows={rowData}
-            getRowId={(row) => row.id}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
-              },
-            }}
-            checkboxSelection
-            disableRowSelectionOnClick
-            hideFooterPagination={true}
-            sx={{ fontWeight: "500", fontSize: "15px" }}
-          />
-          <Pagination
-            count={parseInt((rowData.length / 5).toString()) + 1}
-            onChange={(event, value) => setPage(value - 1)}
-            page={page + 1}
-            showFirstButton
-            showLastButton
-            shape="rounded"
-            sx={{ display: "flex" }}
-          />
+                <Typography
+                  sx={{
+                    fontWeight: "700",
+                    color: "#8A8683",
+                    width: "70px",
+                    backgroundColor: "#E8E7E7",
+                    textAlign: "center",
+                    padding: "16px 0",
+                  }}
+                >
+                  <p className="table-text">교재</p>
+                </Typography>
+                <FormControl sx={{ marginLeft: "20px" }}>
+                  <Select value={passageName} onChange={handlePassageName}>
+                    {searchTextBook.map((text, id) => (
+                      <MenuItem key={id} value={text}>
+                        {text}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              {/* 지문선택 */}
+              <DataGrid
+                rows={rowData}
+                getRowId={(row) => row.id}
+                columns={columns}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 10,
+                    },
+                  },
+                }}
+                checkboxSelection
+                disableRowSelectionOnClick
+                hideFooterPagination={true}
+                sx={{ fontWeight: "500", fontSize: "15px" }}
+              />
+              <Pagination
+                count={parseInt((rowData.length / 5).toString()) + 1}
+                onChange={(event, value) => setPage(value - 1)}
+                page={page + 1}
+                showFirstButton
+                showLastButton
+                shape="rounded"
+                sx={{ display: "flex" }}
+              />
+            </div>
+            <QuestionList
+              width={360}
+              height={300}
+              rowData={rowDataList}
+              setRowData={setRowDataList}
+              buttonName={params.Children}
+            />
+          </div>
         </div>
-
-        <QuestionList
-          width={360}
-          height={300}
-          rowData={rowDataList}
-          setRowData={setRowDataList}
-          buttonName={params.Children}
-        />
       </Grid>
     </Layout>
   );
