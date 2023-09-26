@@ -125,7 +125,7 @@ const QuestionCrt = (params: any) => {
   };
 
   //selectbox 재선택시 리스트 초기화
-  const onClearSelect = () => {};
+  const onClearSelect = () => { };
   // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
     {
@@ -201,7 +201,11 @@ const QuestionCrt = (params: any) => {
                   <p className="table-text">지문유형</p>
                 </Typography>
                 <FormControl sx={{ marginLeft: "20px" }}>
-                  <Select value={searchPassage} onChange={handlePassage}>
+                  <InputLabel id="demo-simple-select-label">지문유형</InputLabel>
+                  <Select
+                    value={searchPassage}
+                    onChange={handlePassage}
+                    labelId="demo-simple-select-label">
                     {PASSAGETYPE.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -223,7 +227,11 @@ const QuestionCrt = (params: any) => {
                   <p className="table-text">연도</p>
                 </Typography>
                 <FormControl sx={{ marginLeft: "20px" }}>
-                  <Select value={searchYear} onChange={handleYear}>
+                  <InputLabel id="demo-simple-select-label">연도</InputLabel>
+                  <Select
+                    value={searchYear}
+                    onChange={handleYear}
+                    labelId="demo-simple-select-label">
                     {YEAR.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -245,7 +253,11 @@ const QuestionCrt = (params: any) => {
                   <p className="table-text">교재</p>
                 </Typography>
                 <FormControl sx={{ marginLeft: "20px" }}>
-                  <Select value={passageName} onChange={handlePassageName}>
+                  <InputLabel id="demo-simple-select-label">교재명</InputLabel>
+                  <Select
+                    value={passageName}
+                    onChange={handlePassageName}
+                    labelId="demo-simple-select-label">
                     {searchTextBook.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
