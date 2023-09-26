@@ -2,6 +2,7 @@ import Layout from "@components/layouts/layout";
 import * as React from "react";
 import {
   Box,
+  Checkbox,
   FormControl,
   Grid,
   InputLabel,
@@ -11,8 +12,8 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
-import { PASSAGETYPE, YEAR } from "@common/const";
+import { GridColDef, DataGrid, GridRowSelectionModel, GridCallbackDetails } from "@mui/x-data-grid";
+import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
 
 //css
@@ -30,8 +31,9 @@ const QuestionCrt = (params: any) => {
   const [checked, setChecked] = React.useState([] as any);
   //questionList 에 넘겨줄 rowData
   const [rowDataList, setRowDataList] = React.useState([] as any);
-  //selectbox 재선택시 리스트 초기화
-  const [selectValue, setSelectValue] = React.useState("");
+
+
+  const _url: string = URL.SERVER_URL;
 
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
@@ -40,23 +42,81 @@ const QuestionCrt = (params: any) => {
         return "P1";
       case "모의고사":
         return "P2";
-      case "EBS":
+      case "EBS(고3) (1)":
         return "P3";
-      case "부교재":
+      case "EBS(고3) (2)":
         return "P4";
-      default:
+      case "부교재":
         return "P5";
+      default:
+        return "P6";
     }
   };
+
+  const checkAll = (rowNum: GridRowSelectionModel, details: GridCallbackDetails) => {
+    console.log("ttt", rowNum)
+    console.log("detail::", details)
+    if (rowNum.length === 0) {
+      // [0, 1, 2, 3, 4].forEach(num => {
+      //   let nodes = document.querySelectorAll(`input[type=checkbox][value="${num}"]`) as NodeListOf<HTMLInputElement>;
+      //   // debugger;
+      //   for (let i = 0; i < nodes.length; i++) {
+      //     // console.log(document.getElementById(nodes[i].id));
+      //     document.getElementById(nodes[i].id)?.click();  
+      //     // break;
+      //   }
+      // });
+    } else {
+      // rowNum.forEach(num => {
+      //   let nodes = document.querySelectorAll(`input[type=checkbox][value="${num}"]`) as NodeListOf<HTMLInputElement>;
+      //   // debugger;
+      //   for (let i = 0; i < nodes.length; i++) {
+      //     // console.log(document.getElementById(nodes[i].id));
+      //     console.log("type::",typeof nodes[i].id)
+      //     // if (checked.indexOf(parseInt(nodes[i].id)) == -1) {
+      //     //   checked.push(parseInt(nodes[i].id));
+      //     // }
+      //     document.getElementById(nodes[i].id)?.click();
+      //     // break;
+      //   }
+      // });
+    }
+
+  }
+
+  // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
+  const changePage = async (page: number) => {
+    setPage(page)
+
+    try {
+      const passageType = convertPassageType(searchPassage);
+
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page - 1}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const res: any = await axios.get(API_URL);
+      console.log("url", API_URL)
+      console.log("data:::", res.data)
+      if (res.data.length != 0) {
+        for (let i = 0; i < res.data.length; i++) {
+          res.data[i].id = i;
+        }
+      }
+      console.log("checked:::", checked)
+
+
+      setRowData(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // [문제 출제] 강, 지문 번호 조회
   const handlePassageName = async (event: SelectChangeEvent) => {
     try {
+      setPage(0);
       const passageName = event.target.value;
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-numbers?
-      page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
       setPassageName(event.target.value);
 
@@ -65,6 +125,7 @@ const QuestionCrt = (params: any) => {
           res.data[i].id = i;
         }
       }
+      console.log("checked:::", checked)
       setRowData(res.data);
     } catch (error) {
       console.log(error);
@@ -74,13 +135,20 @@ const QuestionCrt = (params: any) => {
   //연도 이벤트
   const handleYear = async (event: SelectChangeEvent) => {
     try {
-      const passageType = convertPassageType(searchPassage);
-      const year = event.target.value;
+      setSearchTextBook([]);  // 교재명 리스트부터 초기화
+      setPassageName("");
 
-      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
-      const res = await axios.get(API_URL);
-      setSearchTextBook(res.data);
+      const year = event.target.value;
+      if (searchPassage) {
+        const passageType = convertPassageType(searchPassage);
+
+        const API_URL = `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
+        const res = await axios.get(API_URL);
+        setSearchTextBook(res.data);
+      }
+
       setSearchYear(event.target.value);
+      setRowData([]);
     } catch (error) {
       console.log(error);
     }
@@ -89,32 +157,41 @@ const QuestionCrt = (params: any) => {
   // // 지문 유형 , 연도에 해당되는 교재명 api
   const handlePassage = async (event: SelectChangeEvent) => {
     try {
+      setSearchTextBook([]); // 교재명 리스트부터 초기화
+      setPassageName("");
+
       const lecture = event.target.value;
       if (searchYear) {
         const passageType = convertPassageType(lecture);
 
-        const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
+        const API_URL = `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
         const res = await axios.get(API_URL);
         setSearchTextBook(res.data);
       }
+
       setSearchPassage(lecture);
+      setRowData([]);
     } catch (error) {
       console.log(error);
     }
   };
 
   //지문 체크박스 이벤트 (선택&취소)
-  const handleToggle = (value: any) => () => {
-    const currentIndex = checked.indexOf(value);
+  const handleToggle = (row: any) => () => {
+    const currentIndex = checked.indexOf(row.passageId);
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
+
+    console.log("value::", row)
+    console.log("currentIndex::", currentIndex)
+    console.log("checked:::", checked)
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push(row.passageId);
       newRowDataList.push({
         passageYear: searchYear,
-        passageNumber: value.passageNumber,
-        passageId: value.passageId,
-        passageUnit: value.passageUnit,
+        passageNumber: row.passageNumber,
+        passageId: row.passageId,
+        passageUnit: row.passageUnit,
       });
     } else {
       newChecked.splice(currentIndex, 1);
@@ -124,39 +201,40 @@ const QuestionCrt = (params: any) => {
     setRowDataList(newRowDataList);
   };
 
-  //selectbox 재선택시 리스트 초기화
-  const onClearSelect = () => {};
   // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
     {
       field: "passageUnit",
       headerName: "강",
       width: 150,
-      editable: true,
+      editable: false,
       align: "center",
       sortable: false,
+      headerAlign: "center"
     },
     {
       field: "passageInfo",
       headerName: "지문",
-      type: "actions",
       width: 300,
-      editable: true,
+      type: "actions",
+      editable: false,
+      headerAlign: "center",
       getActions: (params) => [
         <>
           {params.row.passageInfo.map((row: any) => {
             return (
               <div key={row.passageNumber} id="checkbox-list">
-                <input
-                  type="checkbox"
-                  value={row.passageId}
+                <Checkbox
+                  id={row.passageId}
+                  value={params.id}
                   onClick={handleToggle(row)}
-                  onChange={(e) => {
-                    handleToggle(e.target.value);
+                  inputProps={{
+                    // @ts-ignore
+                    'data-order': row.id,
                   }}
-                  defaultChecked={checked.indexOf(row) !== -1}
+                  checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
                 />
-                {row.passageId}
+                {row.passageNumber}
               </div>
             );
           })}
@@ -201,7 +279,11 @@ const QuestionCrt = (params: any) => {
                   <p className="table-text">지문유형</p>
                 </Typography>
                 <FormControl sx={{ marginLeft: "20px" }}>
-                  <Select value={searchPassage} onChange={handlePassage}>
+                  <InputLabel id="demo-simple-select-label">지문유형</InputLabel>
+                  <Select
+                    value={searchPassage}
+                    onChange={handlePassage}
+                    labelId="demo-simple-select-label">
                     {PASSAGETYPE.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -223,7 +305,11 @@ const QuestionCrt = (params: any) => {
                   <p className="table-text">연도</p>
                 </Typography>
                 <FormControl sx={{ marginLeft: "20px" }}>
-                  <Select value={searchYear} onChange={handleYear}>
+                  <InputLabel id="demo-simple-select-label">연도</InputLabel>
+                  <Select
+                    value={searchYear}
+                    onChange={handleYear}
+                    labelId="demo-simple-select-label">
                     {YEAR.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -245,7 +331,11 @@ const QuestionCrt = (params: any) => {
                   <p className="table-text">교재</p>
                 </Typography>
                 <FormControl sx={{ marginLeft: "20px" }}>
-                  <Select value={passageName} onChange={handlePassageName}>
+                  <InputLabel id="demo-simple-select-label">교재명</InputLabel>
+                  <Select
+                    value={passageName}
+                    onChange={handlePassageName}
+                    labelId="demo-simple-select-label">
                     {searchTextBook.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -257,24 +347,26 @@ const QuestionCrt = (params: any) => {
               {/* 지문선택 */}
               <DataGrid
                 rows={rowData}
-                getRowId={(row) => row.id}
+                // getRowId={(row) => row.id}
                 columns={columns}
                 initialState={{
                   pagination: {
                     paginationModel: {
-                      pageSize: 10,
+                      pageSize: 5,
                     },
                   },
                 }}
                 checkboxSelection
-                disableRowSelectionOnClick
+                onRowSelectionModelChange={(newRowSelectionModel, details) => checkAll(newRowSelectionModel, details)}
+                // disableRowSelectionOnClick
+
                 hideFooterPagination={true}
                 sx={{ fontWeight: "500", fontSize: "15px" }}
               />
               <Pagination
                 count={parseInt((rowData.length / 5).toString()) + 1}
-                onChange={(event, value) => setPage(value - 1)}
-                page={page + 1}
+                onChange={(event, value) => changePage(value)}
+                page={page}
                 showFirstButton
                 showLastButton
                 shape="rounded"
@@ -283,10 +375,12 @@ const QuestionCrt = (params: any) => {
             </div>
             <QuestionList
               width={360}
-              height={300}
+              height={600}
               rowData={rowDataList}
               setRowData={setRowDataList}
               buttonName={params.Children}
+              checked={checked}
+              setChecked={setChecked}
             />
           </div>
         </div>
