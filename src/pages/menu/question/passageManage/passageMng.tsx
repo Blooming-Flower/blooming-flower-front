@@ -51,7 +51,7 @@ const PassageMng = () => {
     $GET(
       "/api/v1/passage/search/list?page=" +
         page.toString() +
-        "&size=10&passageYear=" +
+        "&size=100&passageYear=" +
         yearData,
       (res: any) => {
         setData(addId(res, yearData));
@@ -64,7 +64,7 @@ const PassageMng = () => {
       $GET(
         "/api/v1/passage/search/list?page=" +
           page.toString() +
-          "&size=10&passageYear=" +
+          "&size=100&passageYear=" +
           year +
           "&passageName=" +
           e.target.value,

@@ -13,13 +13,14 @@ import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import {Dispatch, MutableRefObject, SetStateAction} from "react";
 import { QUESTIONTYPE } from "@common/const";
 import {GridApiCommunity} from "@mui/x-data-grid/internals";
+import {$DELETE, $DELETEPARAM} from "@utils/request";
 interface callParent {
   data: { question: [] }[],
   parent : popupProps
   setParent :setPopupProps
-  editor:any,
-  answerRef:any,
-  chooseRef:any
+  editor:React.MutableRefObject<any>,
+  answerRef:React.MutableRefObject<GridApiCommunity>,
+  chooseRef:React.MutableRefObject<GridApiCommunity>
 }
 export default function NestedList(props:callParent) {
   const [open, setOpen] = React.useState(false);
@@ -30,9 +31,9 @@ export default function NestedList(props:callParent) {
       display:1,
       type:"Q25",
       title:title,
-      subContent:content
+      subContent:content,
+      pastYn:false
     }))
-    props.editor.current.getInstance().setHTML(content)
     setOpen(!open);
   };
 
@@ -49,6 +50,26 @@ export default function NestedList(props:callParent) {
       subContent:content
     }))
     props.editor.current.getInstance().setHTML(content)
+  }
+
+  const deleteHandle = (param:string,buttonType:number) => {
+    if(buttonType == 1 || buttonType == 3){
+      $DELETEPARAM("/api/v1/question/delete",{questionCode:param},(res:any)=>{
+        console.log(param)
+        props.setParent((parent:any)=>({
+          ...parent,
+          check:!parent.check
+        }))
+      })
+    }else{
+      $DELETE("/api/v1/question/delete/"+param,(res:any)=>{
+        console.log(param)
+        props.setParent((parent:any)=>({
+          ...parent,
+          check:!parent.check
+        }))
+      })
+    }
   }
 
   return (
@@ -76,7 +97,7 @@ export default function NestedList(props:callParent) {
               <ListItem
                 sx={{ paddingRight: "40px" }}
                 secondaryAction={
-                  <IconButton aria-label="comment" style={{ padding: "0" }}>
+                  <IconButton aria-label="comment" style={{ padding: "0" }} onClick={()=>deleteHandle(value1.questionCode,1)}>
                     <CancelPresentationIcon />
                   </IconButton>
                 }
@@ -100,6 +121,7 @@ export default function NestedList(props:callParent) {
                         <IconButton
                           aria-label="comment"
                           style={{ padding: "0" }}
+                          onClick={()=>deleteHandle(value2.questionId,2)}
                         >
                           <CancelPresentationIcon />
                         </IconButton>
@@ -121,7 +143,7 @@ export default function NestedList(props:callParent) {
               sx={{ paddingRight: "40px" }}
               onClick={()=>setParent(value1.question[0].questionType, value1.questionContent, "", value1.question[0].questionSubTitle, value1.question[0].pastYn,3)}
               secondaryAction={
-                <IconButton aria-label="comment" style={{ padding: "0" }}>
+                <IconButton aria-label="comment" style={{ padding: "0" }} onClick={()=>deleteHandle(value1.questionCode,3)}>
                   <CancelPresentationIcon />
                 </IconButton>
               }
