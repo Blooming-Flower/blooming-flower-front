@@ -1,10 +1,10 @@
 import * as React from "react";
-import SettingsIcon from '@mui/icons-material/Settings';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import ArticleIcon from '@mui/icons-material/Article';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import FileOpenIcon from '@mui/icons-material/FileOpen';
-import PlagiarismIcon from '@mui/icons-material/Plagiarism';
+import SettingsIcon from "@mui/icons-material/Settings";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import ArticleIcon from "@mui/icons-material/Article";
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import FileOpenIcon from "@mui/icons-material/FileOpen";
+import PlagiarismIcon from "@mui/icons-material/Plagiarism";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -12,7 +12,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
 import { useEffect, useState } from "react";
-import {Divider} from "@mui/material";
+import { Divider } from "@mui/material";
 
 const NestedList = () => {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="지문관리" />
       </ListItemButton>
-      <Divider/>
+      <Divider />
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION1)}
         className="nav2"
@@ -80,7 +80,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="지문저장" />
       </ListItemButton>
-      <Divider/>
+      <Divider />
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION2)}
         className="nav3"
@@ -90,7 +90,7 @@ const NestedList = () => {
         </ListItemIcon>
         <ListItemText primary="문제출제" />
       </ListItemButton>
-      <Divider/>
+      <Divider />
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION3)}
         className="nav4"
@@ -98,9 +98,9 @@ const NestedList = () => {
         <ListItemIcon>
           <NoteAddIcon />
         </ListItemIcon>
-        <ListItemText primary="시험지제작" />
+        <ListItemText primary="시험지 제작" />
       </ListItemButton>
-      <Divider/>
+      <Divider />
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION4)}
         className="nav5"
@@ -108,9 +108,9 @@ const NestedList = () => {
         <ListItemIcon>
           <FileOpenIcon />
         </ListItemIcon>
-        <ListItemText primary="시험지보기" />
+        <ListItemText primary="시험지 보기" />
       </ListItemButton>
-      <Divider/>
+      <Divider />
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION5)}
         className="nav6"
@@ -118,9 +118,9 @@ const NestedList = () => {
         <ListItemIcon>
           <PlagiarismIcon />
         </ListItemIcon>
-        <ListItemText primary="시험지관리" />
+        <ListItemText primary="시험지 관리" />
       </ListItemButton>
-      <Divider/>
+      <Divider />
     </List>
   );
 };

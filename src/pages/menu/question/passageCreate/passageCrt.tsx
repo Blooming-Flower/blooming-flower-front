@@ -15,21 +15,20 @@ import {
   ThemeProvider,
   useTheme,
 } from "@mui/material";
-import { ALERT, TXTBOOK, TXTNUM, TXTUNIT } from "@common/const";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import {ALERT, TXTBOOK, TXTNUM, TXTUNIT} from "@common/const";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import CustomButton from "@components/ui/button/custeomButton";
 import { PASSAGETYPE } from "@common/const";
 import { YEAR } from "@common/const";
 import { StyledTextarea } from "@components/ui/text/textarea";
-import { $DELETE, $GET, $POST, $PUT } from "@utils/request";
+import {$DELETE, $GET, $POST, $PUT} from "@utils/request";
 import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
 import { debounce } from "@utils/useDebounce";
 import { checkPassage, savePassage } from "@utils/callApi";
 import SimpleBackdrop from "@components/ui/progress/progress";
-import { copyNodeList } from "ag-grid-community/dist/lib/utils/dom";
-import { alert } from "@utils/alert";
-import { coerceBooleanProperty } from "swiper/angular/angular/src/utils/utils";
-
+import {copyNodeList} from "ag-grid-community/dist/lib/utils/dom";
+import {alert} from "@utils/alert";
+import {coerceBooleanProperty} from "swiper/angular/angular/src/utils/utils";
 interface filterOptionType {
   passageId: number;
   passageName: string;
@@ -41,7 +40,7 @@ const filterOptions = createFilterOptions({
 const PassageCrt = () => {
   const outerTheme = useTheme();
   const Ref = useRef<any>();
-  const [check, setCheck] = React.useState("");
+  const [check, setCheck] = React.useState("")
   const [txtUnit, setTxtUnit] = React.useState<string[]>(TXTUNIT.P1);
   const [txtNum, setTxtNum] = React.useState<string[]>(TXTNUM.P1);
   const [clear, setClear] = React.useState("");
@@ -54,8 +53,8 @@ const PassageCrt = () => {
   const [passageType, setPassageType] = React.useState("P1");
   const [able, setAble] = useState("교과서");
   const handleClick = (type: string) => {
-    setUnit("");
-    setNumber("");
+    setUnit("")
+    setNumber("")
     switch (type) {
       case "교과서":
         setPassageType("P1");
@@ -91,70 +90,72 @@ const PassageCrt = () => {
   };
   //지문저장
   const save = () => {
-    if (check == "") {
+    if(check == ""){
       $POST(
-        "api/v1/passage/save",
-        {
-          passageType: passageType,
-          passageYear: year,
-          passageName: name,
-          passageUnit: unit,
-          passageNumber: num,
-          passageContent: content,
-        },
-        (res: any) => {
-          console.log("지문 insert");
-        }
+          "api/v1/passage/save",
+          {
+            passageType: passageType,
+            passageYear: year,
+            passageName: name,
+            passageUnit: unit,
+            passageNumber: num,
+            passageContent: content,
+          },
+          (res: any) => {
+            console.log("지문 insert")
+          }
       );
-    } else {
+    }else{
       $PUT(
-        "/api/v1/passage/update",
-        {
-          passageId: check,
-          passageType: passageType,
-          passageYear: year,
-          passageName: name,
-          passageUnit: unit,
-          passageNumber: num,
-          passageContent: content,
-        },
-        (res: any) => {
-          console.log("지문 update");
-        }
-      );
+          "/api/v1/passage/update",
+          {
+            passageId: check,
+            passageType: passageType,
+            passageYear: year,
+            passageName: name,
+            passageUnit: unit,
+            passageNumber: num,
+            passageContent: content,
+          },
+          (res:any) => {
+            console.log("지문 update")
+          }
+      )
     }
   };
   //지문 중복체크
-  useEffect(() => {
+  useEffect(()=>{
     if (num != "")
-      $GET(
+    $GET(
         "/api/v1/passage/check/exist/passage?passageType=" +
-          passageType +
-          "&passageYear=" +
-          year +
-          "&passageName=" +
-          name +
-          "&passageUnit=" +
-          unit +
-          "&passageNumber=" +
-          num,
+        passageType +
+        "&passageYear=" +
+        year +
+        "&passageName=" +
+        name +
+        "&passageUnit=" +
+        unit +
+        "&passageNumber=" +
+        num,
         (res: any) => {
-          console.log(res);
-          if (res.data.passageContent != "" && res.data != "") {
-            Ref.current.value = res.data.passageContent;
-            setContent(res.data.passageContent);
-            setCheck(res.data.passageId);
-            console.log(content);
-          } else {
-            Ref.current.value = "";
-            setContent("");
-            setCheck("");
+          console.log(res)
+          if(res.data.passageContent != "" && res.data != ""){
+            Ref.current.value = res.data.passageContent
+            setContent(res.data.passageContent)
+            setCheck(res.data.passageId)
+            console.log(content)
+          }else {
+            Ref.current.value = ""
+            setContent("")
+            setCheck("")
           }
         }
-      );
-  }, [num]);
+    );
+  },[num])
   //지문타입별 교재 SELECT
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value)
+    if(e.target.value != "")
     $GET(
       "/api/v1/passage/search/name?passageType=" +
         passageType +
@@ -188,7 +189,7 @@ const PassageCrt = () => {
               onClick={() => handleClick(text)}
               className="button-label"
             >
-              <CustomButton label={text} type={able} borderType={"round"} />
+              <CustomButton label={text} type={able} borderType={"round"}/>
             </div>
           ))}
         </Box>
@@ -207,7 +208,7 @@ const PassageCrt = () => {
                     inputProps={{ "aria-label": "Without label" }}
                   >
                     {YEAR.map((text, id) => (
-                      <MenuItem key={id} value={text}>
+                      <MenuItem key={id} value={text} >
                         {text}
                       </MenuItem>
                     ))}
@@ -223,26 +224,26 @@ const PassageCrt = () => {
                 <FormControl className="table-input-select">
                   <ThemeProvider theme={customTheme(outerTheme)}>
                     <Autocomplete
-                      onChange={(e, v: any) => setName(v.passageName)}
+                        onChange={(e,v:any)=>setName(v)}
                       key={clear}
                       disablePortal
                       id="combo-box-demo"
-                      filterOptions={filterOptions}
+                        freeSolo
                       getOptionLabel={(option) =>
-                        option.passageName ? option.passageName : ""
+                        option ? option : ""
                       }
                       isOptionEqualToValue={(option, value) =>
-                        option.passageId !== value.passageId
+                        option === value
                       }
                       options={dataName}
                       renderOption={(props, option) => {
                         return (
                           <li
                             {...props}
-                            key={option.passageId}
+                            key={option}
                             style={{ backgroundColor: "white" }}
                           >
-                            {option.passageName}
+                            {option}
                           </li>
                         );
                       }}
@@ -265,7 +266,7 @@ const PassageCrt = () => {
               <div className="table-content">
                 <FormControl className="table-select">
                   <Select
-                    defaultValue={""}
+                      defaultValue={""}
                     value={unit || ""}
                     onChange={(e) => setUnit(e.target.value as string)}
                     displayEmpty
@@ -287,9 +288,9 @@ const PassageCrt = () => {
               <div className="table-content">
                 <FormControl className="table-select">
                   <Select
-                    defaultValue={""}
+                      defaultValue={""}
                     value={num || ""}
-                    onChange={(e) => setNumber(e.target.value)}
+                    onChange={(e)=>setNumber(e.target.value)}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                   >
@@ -322,7 +323,7 @@ const PassageCrt = () => {
           Reset
         </Button>
         <StyledTextarea
-          ref={Ref}
+            ref={Ref}
           minRows={10}
           maxRows={20}
           aria-label="maximum height"
