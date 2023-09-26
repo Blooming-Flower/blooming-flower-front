@@ -1,9 +1,7 @@
-﻿import { DataGrid, GridColDef } from "@mui/x-data-grid";
+﻿import { ABC_TYPES, AB_TYPES, ARROW_TYPES, WRITE_TYPES } from "@common/const";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { GridApiCommunity } from "@mui/x-data-grid/internals";
-
-const ARROW_TYPES = ["Q4"];
-const ABC_TYPES = ["Q12", "Q14"];
-const AB_TYPES = ["Q18", "Q19"];
+import * as React from "react";
 
 const defaultChooseRows = [
   {
@@ -253,40 +251,75 @@ const abColunms: GridColDef[] = [
   },
 ];
 
-const ChooseDataGrid = (props: {
-  chooseRef: React.MutableRefObject<GridApiCommunity>;
-  questionType: string;
-}) => {
-  const { chooseRef, questionType } = props;
+const ChooseDataGrid = React.forwardRef(
+  (
+    props: {
+      chooseRef: React.MutableRefObject<GridApiCommunity>;
+      questionType: string;
+    },
+    ref
+  ) => {
+    const { chooseRef, questionType } = props;
 
-  return questionType ? (
-    <DataGrid
-      apiRef={chooseRef}
-      rows={
-        ARROW_TYPES.includes(questionType)
-          ? arrowChooseRows
-          : ABC_TYPES.includes(questionType)
-          ? abcChooseRows
-          : AB_TYPES.includes(questionType)
-          ? abChooseRows
-          : defaultChooseRows
-      }
-      columns={
-        ARROW_TYPES.includes(questionType)
-          ? arrowColunms
-          : ABC_TYPES.includes(questionType)
-          ? abcColunms
-          : AB_TYPES.includes(questionType)
-          ? abColunms
-          : defaultColumns
-      }
-      slots={{ columnHeaders: () => null }}
-      hideFooter={true}
-      hideFooterPagination={true}
-      hideFooterSelectedRowCount={true}
-    />
-  ) : (
-    <></>
-  );
-};
+    React.useImperativeHandle(ref, () => ({
+      getChooseList() {
+        if (WRITE_TYPES.includes(questionType)) {
+          return [];
+        } else if (
+          ARROW_TYPES.includes(questionType) ||
+          ABC_TYPES.includes(questionType) ||
+          AB_TYPES.includes(questionType)
+        ) {
+          return chooseRef.current.getAllRowIds().map((id) => {
+            const row = chooseRef.current.getRow(id);
+            const chooseContents = [];
+
+            for (const key in row) {
+              if (key.includes("chooseContent")) {
+                chooseContents.push(row[key]);
+              }
+            }
+            return { chooseSeq: id, chooseContent: chooseContents.join("|") };
+          });
+        }
+        return chooseRef.current
+          .getAllRowIds()
+          .map((id) => chooseRef.current.getRow(id))
+          .map(({ id: chooseSeq, chooseContent }) => {
+            return { chooseSeq, chooseContent };
+          });
+      },
+    }));
+
+    return !questionType || WRITE_TYPES.includes(questionType) ? (
+      <></>
+    ) : (
+      <DataGrid
+        apiRef={chooseRef}
+        rows={
+          ARROW_TYPES.includes(questionType)
+            ? arrowChooseRows
+            : ABC_TYPES.includes(questionType)
+            ? abcChooseRows
+            : AB_TYPES.includes(questionType)
+            ? abChooseRows
+            : defaultChooseRows
+        }
+        columns={
+          ARROW_TYPES.includes(questionType)
+            ? arrowColunms
+            : ABC_TYPES.includes(questionType)
+            ? abcColunms
+            : AB_TYPES.includes(questionType)
+            ? abColunms
+            : defaultColumns
+        }
+        slots={{ columnHeaders: () => null }}
+        hideFooter={true}
+        hideFooterPagination={true}
+        hideFooterSelectedRowCount={true}
+      />
+    );
+  }
+);
 export default ChooseDataGrid;

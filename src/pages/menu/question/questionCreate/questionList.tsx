@@ -36,11 +36,13 @@ const QuestionList = (props: any) => {
     <div className="questionList-item">
       <List
         sx={{
-          maxWidth: width,
+          // maxWidth: width,
+          width: width,
           bgcolor: "background.paper",
           position: "relative",
           overflow: "auto",
-          maxHeight: height,
+          // maxHeight: height,
+          height: height,
           "& ul": { padding: 0 },
         }}
         subheader={<li />}
@@ -63,16 +65,21 @@ const QuestionList = (props: any) => {
                   </IconButton>
                 }
               >
-                {row.passageYear}
-                {row.passageUnit}
-                {row.passageNumber}
-                {row.passageId}
+                <div>{row.passageYear}</div>
+                <div>{row.passageUnit}</div>
+                <div>{row.passageNumber}</div>
+                <div>{row.passageId}</div>
               </ListItem>
             </div>
           );
         })}
 
-        <CustomButton domain={PATH.QUESTION6} label={"GO!"} type={"true"}>
+        <CustomButton
+          domain={PATH.QUESTION6}
+          label={"GO!"}
+          type={"true"}
+          params={rowData}
+        >
           {buttonName}
         </CustomButton>
       </List>
