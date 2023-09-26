@@ -12,7 +12,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import { GridColDef, DataGrid, GridRowSelectionModel, GridCallbackDetails } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
 
@@ -53,6 +53,37 @@ const QuestionCrt = (params: any) => {
     }
   };
 
+  const checkAll = (rowNum: GridRowSelectionModel, details: GridCallbackDetails) => {
+    console.log("ttt", rowNum)
+    console.log("detail::", details)
+    if (rowNum.length === 0) {
+      // [0, 1, 2, 3, 4].forEach(num => {
+      //   let nodes = document.querySelectorAll(`input[type=checkbox][value="${num}"]`) as NodeListOf<HTMLInputElement>;
+      //   // debugger;
+      //   for (let i = 0; i < nodes.length; i++) {
+      //     // console.log(document.getElementById(nodes[i].id));
+      //     document.getElementById(nodes[i].id)?.click();  
+      //     // break;
+      //   }
+      // });
+    } else {
+      // rowNum.forEach(num => {
+      //   let nodes = document.querySelectorAll(`input[type=checkbox][value="${num}"]`) as NodeListOf<HTMLInputElement>;
+      //   // debugger;
+      //   for (let i = 0; i < nodes.length; i++) {
+      //     // console.log(document.getElementById(nodes[i].id));
+      //     console.log("type::",typeof nodes[i].id)
+      //     // if (checked.indexOf(parseInt(nodes[i].id)) == -1) {
+      //     //   checked.push(parseInt(nodes[i].id));
+      //     // }
+      //     document.getElementById(nodes[i].id)?.click();
+      //     // break;
+      //   }
+      // });
+    }
+
+  }
+
   // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
   const changePage = async (page: number) => {
     setPage(page)
@@ -60,7 +91,7 @@ const QuestionCrt = (params: any) => {
     try {
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page -1}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page - 1}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
       console.log("url", API_URL)
       console.log("data:::", res.data)
@@ -71,7 +102,7 @@ const QuestionCrt = (params: any) => {
       }
       console.log("checked:::", checked)
 
-      
+
       setRowData(res.data);
     } catch (error) {
       console.log(error);
@@ -147,12 +178,13 @@ const QuestionCrt = (params: any) => {
 
   //지문 체크박스 이벤트 (선택&취소)
   const handleToggle = (row: any) => () => {
-    console.log("value::", row)
-    debugger;
     const currentIndex = checked.indexOf(row.passageId);
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
 
+    console.log("value::", row)
+    console.log("currentIndex::", currentIndex)
+    console.log("checked:::", checked)
     if (currentIndex === -1) {
       newChecked.push(row.passageId);
       newRowDataList.push({
@@ -190,11 +222,11 @@ const QuestionCrt = (params: any) => {
       getActions: (params) => [
         <>
           {params.row.passageInfo.map((row: any) => {
-            console.log("pppp:::", params)
             return (
               <div key={row.passageNumber} id="checkbox-list">
                 <Checkbox
-                  value={row.passageId}
+                  id={row.passageId}
+                  value={params.id}
                   onClick={handleToggle(row)}
                   inputProps={{
                     // @ts-ignore
@@ -325,15 +357,16 @@ const QuestionCrt = (params: any) => {
                   },
                 }}
                 checkboxSelection
-                onRowSelectionModelChange={(newRowSelectionModel) => console.log("tt", newRowSelectionModel)}
+                onRowSelectionModelChange={(newRowSelectionModel, details) => checkAll(newRowSelectionModel, details)}
                 // disableRowSelectionOnClick
+
                 hideFooterPagination={true}
                 sx={{ fontWeight: "500", fontSize: "15px" }}
               />
               <Pagination
                 count={parseInt((rowData.length / 5).toString()) + 1}
                 onChange={(event, value) => changePage(value)}
-                page={page }
+                page={page}
                 showFirstButton
                 showLastButton
                 shape="rounded"
