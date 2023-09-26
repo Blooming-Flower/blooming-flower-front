@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { GridColDef, DataGrid } from "@mui/x-data-grid";
-import { PASSAGETYPE, YEAR } from "@common/const";
+import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
 
 //css
@@ -30,8 +30,9 @@ const QuestionCrt = (params: any) => {
   const [checked, setChecked] = React.useState([] as any);
   //questionList 에 넘겨줄 rowData
   const [rowDataList, setRowDataList] = React.useState([] as any);
-  //selectbox 재선택시 리스트 초기화
-  const [selectValue, setSelectValue] = React.useState("");
+
+
+  const _url: string = URL.SERVER_URL;
 
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
@@ -40,12 +41,14 @@ const QuestionCrt = (params: any) => {
         return "P1";
       case "모의고사":
         return "P2";
-      case "EBS":
+      case "EBS(고3) (1)":
         return "P3";
-      case "부교재":
+      case "EBS(고3) (2)":
         return "P4";
-      default:
+      case "부교재":
         return "P5";
+      default:
+        return "P6";
     }
   };
 
@@ -55,7 +58,7 @@ const QuestionCrt = (params: any) => {
       const passageName = event.target.value;
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-numbers?
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?
       page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
       setPassageName(event.target.value);
@@ -74,13 +77,20 @@ const QuestionCrt = (params: any) => {
   //연도 이벤트
   const handleYear = async (event: SelectChangeEvent) => {
     try {
-      const passageType = convertPassageType(searchPassage);
-      const year = event.target.value;
+      setSearchTextBook([]);  // 교재명 리스트부터 초기화
+      setPassageName("");
 
-      const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
-      const res = await axios.get(API_URL);
-      setSearchTextBook(res.data);
+      const year = event.target.value;
+      if (searchPassage) {
+        const passageType = convertPassageType(searchPassage);
+
+        const API_URL = `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
+        const res = await axios.get(API_URL);
+        setSearchTextBook(res.data);
+      }
+
       setSearchYear(event.target.value);
+      setRowData([]);
     } catch (error) {
       console.log(error);
     }
@@ -89,15 +99,20 @@ const QuestionCrt = (params: any) => {
   // // 지문 유형 , 연도에 해당되는 교재명 api
   const handlePassage = async (event: SelectChangeEvent) => {
     try {
+      setSearchTextBook([]); // 교재명 리스트부터 초기화
+      setPassageName("");
+
       const lecture = event.target.value;
       if (searchYear) {
         const passageType = convertPassageType(lecture);
 
-        const API_URL = `http://43.201.142.170:29091/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
+        const API_URL = `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
         const res = await axios.get(API_URL);
         setSearchTextBook(res.data);
       }
+
       setSearchPassage(lecture);
+      setRowData([]);
     } catch (error) {
       console.log(error);
     }
@@ -108,6 +123,7 @@ const QuestionCrt = (params: any) => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
+
     if (currentIndex === -1) {
       newChecked.push(value);
       newRowDataList.push({
