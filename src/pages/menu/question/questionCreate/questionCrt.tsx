@@ -295,7 +295,7 @@ const QuestionCrt = (params: any) => {
                 </FormControl>
 
 
-                <FormControl sx={{ width: "180px", marginLeft: "20px" }}>
+                <FormControl sx={{ width: "380px", marginLeft: "20px" }}>
                   <InputLabel id="demo-simple-select-label">교재명</InputLabel>
                   <Select
                     value={passageName}
