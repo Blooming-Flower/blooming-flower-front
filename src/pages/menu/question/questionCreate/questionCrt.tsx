@@ -12,7 +12,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { GridColDef, DataGrid, GridRowSelectionModel, GridCallbackDetails } from "@mui/x-data-grid";
+import { GridColDef, DataGrid, GridRowSelectionModel, GridCallbackDetails, GridRowParams } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
 
@@ -22,7 +22,6 @@ import "@css/questionCreate/questionCrt.scss";
 import QuestionList from "./questionList";
 import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
 import CustomPagination from "@components/ui/grid/customPage";
-import { display } from "html2canvas/dist/types/css/property-descriptors/display";
 
 const QuestionCrt = (params: any) => {
   const [searchPassage, setSearchPassage] = React.useState("");
@@ -30,11 +29,14 @@ const QuestionCrt = (params: any) => {
   const [searchTextBook, setSearchTextBook] = React.useState([]);
   const [passageName, setPassageName] = React.useState("");
   const [page, setPage] = React.useState(0);
+  const [totalPageSize, setTotalPageSize] = React.useState(0);
   const [rowData, setRowData] = React.useState([] as any);
   const [checked, setChecked] = React.useState([] as any);
   //questionList 에 넘겨줄 rowData
   const [rowDataList, setRowDataList] = React.useState([] as any);
 
+  // 전체 체크 했을 때 어떤 값들이 들어가 있었는지
+  const [unitCheckAll, setUnitCheckAll] = React.useState([] as any);
 
   const _url: string = URL.SERVER_URL;
 
@@ -56,34 +58,41 @@ const QuestionCrt = (params: any) => {
     }
   };
 
-  const checkAll = (rowNum: GridRowSelectionModel, details: GridCallbackDetails) => {
-    console.log("ttt", rowNum)
-    console.log("detail::", details)
-    if (rowNum.length === 0) {
-      // [0, 1, 2, 3, 4].forEach(num => {
-      //   let nodes = document.querySelectorAll(`input[type=checkbox][value="${num}"]`) as NodeListOf<HTMLInputElement>;
-      //   // debugger;
-      //   for (let i = 0; i < nodes.length; i++) {
-      //     // console.log(document.getElementById(nodes[i].id));
-      //     document.getElementById(nodes[i].id)?.click();  
-      //     // break;
-      //   }
-      // });
+  const checkAll = (unitNum: GridRowSelectionModel, details: GridCallbackDetails) => {
+    console.log("ttt", unitNum)
+    console.log("unitCheckAll::", unitCheckAll)
+
+
+debugger;
+
+
+    if (unitNum.length === 0) {
+      // 전체 체크 해제
+      // checked.
     } else {
-      rowNum.forEach(num => {
-        let nodes = document.querySelectorAll(`input[type=checkbox][value="${num}"]`) as NodeListOf<HTMLInputElement>;
+      for (let i = 0; i < unitNum.length; i++) {
+        if (unitCheckAll.indexOf(unitNum[i]) !== -1) {
+          // 이미 체크된 상태
+          continue;
+        }
+
+        // 새로 체크
+        let nodes = document.querySelectorAll(`input[type=checkbox][value="${unitNum[i]}"]`) as NodeListOf<HTMLInputElement>;
         // debugger;
-        for (let i = 0; i < nodes.length; i++) {
+        for (let j = 0; j < nodes.length; j++) {
           // console.log(document.getElementById(nodes[i].id));
-          console.log("type::", typeof nodes[i].id)
-          if (checked.indexOf(parseInt(nodes[i].id)) == -1) {
-            checked.push(parseInt(nodes[i].id));
-          }
-          document.getElementById(nodes[i].id.toString())?.click();
+          // if (checked.indexOf(parseInt(nodes[i].id)) == -1) {
+          //   checked.push(parseInt(nodes[i].id));
+          // }
+          console.log("nodes[j].id.:::",nodes[j].id)
+          console.log("checked:::", checked);
+          document.getElementById(nodes[j].id.toString())?.click();
           // break;
         }
-      });
+      }
     }
+
+    setUnitCheckAll(unitNum);
 
   }
 
@@ -98,15 +107,14 @@ const QuestionCrt = (params: any) => {
       const res: any = await axios.get(API_URL);
       console.log("url", API_URL)
       console.log("data:::", res.data)
-      if (res.data.length != 0) {
-        for (let i = 0; i < res.data.length; i++) {
-          res.data[i].id = i;
-        }
+
+      for (let i = 0; i < res.data.list.length; i++) {
+        res.data.list[i].id = i;
       }
       console.log("checked:::", checked)
 
-
-      setRowData(res.data);
+      setRowData(res.data.list);
+      setTotalPageSize(res.data.pageSize)
     } catch (error) {
       console.log(error);
     }
@@ -121,15 +129,18 @@ const QuestionCrt = (params: any) => {
 
       const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
-      setPassageName(event.target.value);
-
-      if (res.data.length != 0) {
-        for (let i = 0; i < res.data.length; i++) {
-          res.data[i].id = i;
-        }
+      
+      for (let i = 0; i < res.data.list.length; i++) {
+        res.data.list[i].id = i;
       }
+
+      console.log("res.data", res.data)
       console.log("checked:::", checked)
-      setRowData(res.data);
+
+      setPassageName(passageName);
+      setRowData(res.data.list);
+      setTotalPageSize(res.data.pageSize)
+
     } catch (error) {
       console.log(error);
     }
@@ -186,9 +197,9 @@ const QuestionCrt = (params: any) => {
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
 
-    console.log("value::", row)
-    console.log("currentIndex::", currentIndex)
-    console.log("checked:::", checked)
+    // console.log("value::", row)
+    // console.log("currentIndex::", currentIndex)
+    // console.log("checked:::", checked)
     if (currentIndex === -1) {
       newChecked.push(row.passageId);
       newRowDataList.push({
@@ -202,7 +213,7 @@ const QuestionCrt = (params: any) => {
       newChecked.splice(currentIndex, 1);
       newRowDataList.splice(currentIndex, 1);
     }
-    console.log("newChecked:::", newChecked)
+    // console.log("newChecked:::", newChecked)
     setChecked(newChecked);
     setRowDataList(newRowDataList);
   };
@@ -312,7 +323,6 @@ const QuestionCrt = (params: any) => {
               {/* 지문선택 */}
               <DataGrid
                 rows={rowData}
-                // getRowId={(row) => row.id}
                 columns={columns}
                 slots={{
                   noRowsOverlay: CustomNoRowsOverlay,
@@ -327,15 +337,14 @@ const QuestionCrt = (params: any) => {
                 }}
                 checkboxSelection
                 onRowSelectionModelChange={(newRowSelectionModel, details) => checkAll(newRowSelectionModel, details)}
-                // disableRowSelectionOnClick
+                disableRowSelectionOnClick={true}
                 hideFooter={true}
-
                 hideFooterPagination={true}
                 sx={rowData.length > 0 ? { fontWeight: "500", fontSize: "15px", height: '100%' } : { fontWeight: "500", fontSize: "15px", height: '400px' }}
               />
             </Box>
             <Pagination
-              count={parseInt((rowData.length / 5).toString()) + 1}
+              count={totalPageSize}
               onChange={(event, value) => changePage(value)}
               page={page}
               showFirstButton
