@@ -1,40 +1,49 @@
 // questionCrt
 
 .contents {
-  margin: -12px auto !important ;
+  margin: -12px auto !important;
 }
+
 .grid-template {
   margin-top: 0px !important;
- margin-left: 0px !important;
+  margin-left: 0px !important;
   flex-wrap: nowrap !important;
 }
+
 .mainCont2 {
   float: left;
   max-height: 521px;
   width: 100%;
+
   .MuiOutlinedInput-notchedOutline {
     height: 35px;
     right: 5px !important;
     left: -10px !important;
     top: 9px !important;
   }
+
   .MuiDataGrid-root {
     // max-width: 780px !important;
     border-radius: 0 !important;
   }
+
   .MuiDataGrid-columnHeaderTitle {
     font-size: 1rem;
   }
+
   .MuiTypography-root {
     display: flex;
-   
+
   }
+
   .table-text {
     padding-left: 4px;
   }
+
   .MuiList-root {
     border: 1px solid #dddddd !important;
   }
+
   .css-146q31f {
     float: right;
     width: 20%;
@@ -59,18 +68,28 @@
     width: 20%;
     padding: 168px 0 0 0;
   }
+
   .css-oiblgr {
     height: auto !important;
     max-width: 100% !important;
-   
+
   }
 
   .MuiFormControl-root {
     width: 300px !important;
   }
-  
+
 
 }
 
+.grid-flex {
+  display: flex;
+}
 
+.css-with80 {
+  width: 80%;
+}
 
+.css-margin-left100 {
+  margin-left: 60px;
+}

@@ -38,10 +38,10 @@ const NestedList = () => {
         const check4 = document.querySelector(".nav4");
         check4!.classList.add("active");
         break;
-      case PATH.QUESTION4:
-        const check5 = document.querySelector(".nav5");
-        check5!.classList.add("active");
-        break;
+      // case PATH.QUESTION4:
+      //   const check5 = document.querySelector(".nav5");
+      //   check5!.classList.add("active");
+      //   break;
       case PATH.QUESTION5:
         const check6 = document.querySelector(".nav6");
         check6!.classList.add("active");
@@ -101,7 +101,7 @@ const NestedList = () => {
         <ListItemText primary="시험지 제작" />
       </ListItemButton>
       <Divider />
-      <ListItemButton
+      {/* <ListItemButton
         onClick={() => handleClick(PATH.QUESTION4)}
         className="nav5"
       >
@@ -109,7 +109,7 @@ const NestedList = () => {
           <FileOpenIcon />
         </ListItemIcon>
         <ListItemText primary="시험지 보기" />
-      </ListItemButton>
+      </ListItemButton> */}
       <Divider />
       <ListItemButton
         onClick={() => handleClick(PATH.QUESTION5)}
