@@ -265,8 +265,7 @@ const PassageMng = () => {
             apiRef={apiRef}
             checkboxSelection
             // disableRowSelectionOnClick
-            hideFooter={true}
-            hideFooterPagination={true}
+            hideFooterPagination={false}
             sx={data.length > 0 ?{ fontWeight: "500", fontSize: "15px", height:'100%' } : {fontWeight: "500", fontSize: "15px", height:'400px' }}
           />
         </Box>
