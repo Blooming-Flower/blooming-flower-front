@@ -1,5 +1,5 @@
 import Layout from "@components/layouts/layout";
-import * as React from "react";
+import React, { useReducer } from "react";
 import {
   Box,
   Checkbox,
@@ -12,7 +12,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { GridColDef, DataGrid, GridRowSelectionModel, GridCallbackDetails, GridRowParams } from "@mui/x-data-grid";
+import { GridColDef, DataGrid, GridRowSelectionModel, GridCallbackDetails, GridRowParams, GridRowsProp } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
 
@@ -22,6 +22,8 @@ import "@css/questionCreate/questionCrt.scss";
 import QuestionList from "./questionList";
 import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
 import CustomPagination from "@components/ui/grid/customPage";
+
+
 
 const QuestionCrt = (params: any) => {
   const [searchPassage, setSearchPassage] = React.useState("");
@@ -37,6 +39,8 @@ const QuestionCrt = (params: any) => {
 
   // 전체 체크 했을 때 어떤 값들이 들어가 있었는지
   const [unitCheckAll, setUnitCheckAll] = React.useState([] as any);
+
+  const [any, forceUpdate] = useReducer(num => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
   const _url: string = URL.SERVER_URL;
 
@@ -61,33 +65,17 @@ const QuestionCrt = (params: any) => {
   const checkAll = (unitNum: GridRowSelectionModel, details: GridCallbackDetails) => {
     console.log("ttt", unitNum)
     console.log("unitCheckAll::", unitCheckAll)
-
-
-debugger;
-
-
     if (unitNum.length === 0) {
       // 전체 체크 해제
-      // checked.
     } else {
       for (let i = 0; i < unitNum.length; i++) {
-        if (unitCheckAll.indexOf(unitNum[i]) !== -1) {
-          // 이미 체크된 상태
-          continue;
-        }
-
         // 새로 체크
         let nodes = document.querySelectorAll(`input[type=checkbox][value="${unitNum[i]}"]`) as NodeListOf<HTMLInputElement>;
-        // debugger;
         for (let j = 0; j < nodes.length; j++) {
-          // console.log(document.getElementById(nodes[i].id));
-          // if (checked.indexOf(parseInt(nodes[i].id)) == -1) {
-          //   checked.push(parseInt(nodes[i].id));
-          // }
-          console.log("nodes[j].id.:::",nodes[j].id)
-          console.log("checked:::", checked);
-          document.getElementById(nodes[j].id.toString())?.click();
-          // break;
+          let checkBoxInput = document.getElementById(nodes[j].id.toString()) as HTMLInputElement;
+          if (!checkBoxInput.checked) {
+            document.getElementById(nodes[j].id.toString())?.click();
+          }
         }
       }
     }
@@ -98,6 +86,15 @@ debugger;
 
   // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
   const changePage = async (page: number) => {
+    // 전체 체크 박스 해제
+    let nodes = document.querySelectorAll(`input[type=checkbox][aria-label]`) as NodeListOf<HTMLInputElement>;;
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].checked) {
+        nodes[i].click();
+      }
+    }
+
+
     setPage(page)
 
     try {
@@ -129,7 +126,7 @@ debugger;
 
       const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
-      
+
       for (let i = 0; i < res.data.list.length; i++) {
         res.data.list[i].id = i;
       }
@@ -192,31 +189,37 @@ debugger;
 
   //지문 체크박스 이벤트 (선택&취소)
   const handleToggle = (row: any) => () => {
-    console.log("row.passageId", row.passageId)
+    console.log("row.passageId 시작", row.passageId)
     const currentIndex = checked.indexOf(row.passageId);
-    const newChecked = [...checked];
-    const newRowDataList = [...rowDataList];
-
-    // console.log("value::", row)
-    // console.log("currentIndex::", currentIndex)
-    // console.log("checked:::", checked)
     if (currentIndex === -1) {
-      newChecked.push(row.passageId);
-      newRowDataList.push({
-        passageYear: searchYear,
-        passageNumber: row.passageNumber,
-        passageId: row.passageId,
-        passageUnit: row.passageUnit,
+      setChecked((checked: any) => {
+        checked.push(row.passageId)
+        return checked;
+      });
+      setRowDataList((rowDataList: any) => {
+        rowDataList.push({
+          passageYear: searchYear,
+          passageNumber: row.passageNumber,
+          passageId: row.passageId,
+          passageUnit: row.passageUnit,
+        })
+        return rowDataList;
       });
     } else {
-      console.log("splice됨")
-      newChecked.splice(currentIndex, 1);
-      newRowDataList.splice(currentIndex, 1);
+      setChecked((checked: any) => {
+        checked.splice(currentIndex, 1)
+        return checked;
+      });
+      setRowDataList((rowDataList: any) => {
+        rowDataList.splice(currentIndex, 1)
+        return rowDataList;
+      });
     }
-    // console.log("newChecked:::", newChecked)
-    setChecked(newChecked);
-    setRowDataList(newRowDataList);
+
+    forceUpdate(); // 컴포넌트 재 랜더링
   };
+
+
 
   // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
@@ -242,13 +245,9 @@ debugger;
             return (
               <div key={row.passageNumber} id="checkbox-list">
                 <Checkbox
-                  id={row.passageId}
+                  id={row.passageId.toString()}
                   value={params.id}
                   onClick={handleToggle(row)}
-                  inputProps={{
-                    // @ts-ignore
-                    'data-order': row.id,
-                  }}
                   checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
                 />
                 {row.passageNumber}
@@ -324,20 +323,8 @@ debugger;
               <DataGrid
                 rows={rowData}
                 columns={columns}
-                slots={{
-                  noRowsOverlay: CustomNoRowsOverlay,
-                  pagination: CustomPagination,
-                }}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 5,
-                    },
-                  },
-                }}
                 checkboxSelection
                 onRowSelectionModelChange={(newRowSelectionModel, details) => checkAll(newRowSelectionModel, details)}
-                disableRowSelectionOnClick={true}
                 hideFooter={true}
                 hideFooterPagination={true}
                 sx={rowData.length > 0 ? { fontWeight: "500", fontSize: "15px", height: '100%' } : { fontWeight: "500", fontSize: "15px", height: '400px' }}
