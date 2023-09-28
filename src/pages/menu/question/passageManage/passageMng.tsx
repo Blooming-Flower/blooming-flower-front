@@ -29,9 +29,16 @@ import { debounce } from "@utils/useDebounce";
 import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
 import { addId } from "@utils/functions";
 import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
-import CustomPagination from "@components/ui/grid/customPage";
+import customPagination from "@components/ui/grid/customPage";
 import {alert} from "@utils/alert";
-
+declare module '@mui/x-data-grid' {
+  interface PaginationPropsOverrides {
+    pageCount: number;
+    page:number;
+    type:string;
+    year:string;
+  }
+}
 const PassageMng = () => {
   const apiRef = useGridApiRef();
   const [delCheck, setDelCheck] = React.useState(false);
@@ -40,6 +47,7 @@ const PassageMng = () => {
   const [popupParam, setPopupParam] = React.useState<number>();
   const [year, setYear] = React.useState("");
   const [page, setPage] = React.useState(0);
+  const [count,setCount] = React.useState(0)
   const [data, setData] = React.useState([]);
   const popupRef: any = useRef();
 
@@ -55,6 +63,7 @@ const PassageMng = () => {
         yearData,
       (res: any) => {
         setData(addId(res, yearData));
+        setCount(res.data.totalPages)
       }
     );
   };
@@ -73,6 +82,7 @@ const PassageMng = () => {
             for (let i = 0; i < res.data.content.length; i++) {
               console.log(year);
               setData(addId(res, year));
+              setCount(res.data.totalPages)
             }
           } else setData([]);
         }
@@ -234,21 +244,28 @@ const PassageMng = () => {
             rows={data}
             slots={{
               noRowsOverlay: CustomNoRowsOverlay,
-              pagination: CustomPagination,
+              pagination: customPagination,
+            }}
+            slotProps={{
+              pagination:{
+                pageCount:count,
+                page:page,
+                year:year,
+                type:"passageMng"
+              }
             }}
             columns={columns}
             initialState={{
               pagination: {
                 paginationModel:{
-                  pageSize: 5
-                },
+                  pageSize: 5,
+                }
               },
             }}
             apiRef={apiRef}
             checkboxSelection
             // disableRowSelectionOnClick
-            hideFooter={true}
-            hideFooterPagination={true}
+            hideFooterPagination={false}
             sx={data.length > 0 ?{ fontWeight: "500", fontSize: "15px", height:'100%' } : {fontWeight: "500", fontSize: "15px", height:'400px' }}
           />
         </Box>

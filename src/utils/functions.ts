@@ -131,7 +131,7 @@ export const isNone = (value: string | number) => {
  * 3. Author    : JSH
  * <PRE>
  */
-export const addId = (res: any, yearData: string) => {
+export const addId = (res: any, yearData: string | undefined) => {
   for (let i = 0; i < res.data.content.length; i++) {
     res.data.content[i].id = i;
     res.data.content[i].year = yearData;

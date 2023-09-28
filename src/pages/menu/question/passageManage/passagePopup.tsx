@@ -281,10 +281,10 @@ const PassagePopup = forwardRef(
                                                         <TextField
                                                             onChange={(e) => setParent((parent)=>({
                                                                 ...parent,
-                                                                title:e.target.value
+                                                                subTitle:e.target.value
                                                             }))}
                                                             label="발문"
-                                                            value={parent.title}
+                                                            value={parent.subTitle}
                                                         />
                                                     </FormControl>
                                                 </div>
@@ -342,10 +342,10 @@ const PassagePopup = forwardRef(
                                                         <TextField
                                                             onChange={(e) => setParent((parent)=>({
                                                                 ...parent,
-                                                                subTitle:e.target.value
+                                                                title:e.target.value
                                                             }))}
                                                             label="발문"
-                                                            value={parent.subTitle}
+                                                            value={parent.title}
                                                         />
                                                     </FormControl>
                                                 </div>

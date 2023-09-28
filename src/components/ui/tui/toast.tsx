@@ -23,7 +23,7 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
             {editorRef && (
                 <Editor
                     initialValue={content || ' '} // 글 수정 시 사용
-                    height="500px"
+                    height="400px"
                     theme={''} // '' & 'dark'
                     ref={editorRef}
                     placeholder="내용을 입력해주세요."

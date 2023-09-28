@@ -169,6 +169,28 @@ export const $DELETE = (url: string, success: Callback) => {
 
 /**
  * <PRE>
+ * 1. Name : $DELETEPARAM
+ * 2. Comment   : AXIOS DELETEPARAM 방식요청
+ * 3. Author    : JSH
+ * <PRE>
+ */
+export const $DELETEPARAM = (url: string, params:{}, success: Callback) => {
+    if (_customAxios !== undefined) {
+        _customAxios
+            .delete(url, params)
+            .then((response) => {
+                success(response);
+            })
+            .catch((error) => {
+                callError(error);
+            });
+    } else {
+        alert("AXIOS 인스턴스가 생성되지않음(DELETE)");
+    }
+};
+
+/**
+ * <PRE>
  * 1. Name : $FileDownLoad
  * 2. Comment   : 파일다운로드
  * 3. Author    : JSH

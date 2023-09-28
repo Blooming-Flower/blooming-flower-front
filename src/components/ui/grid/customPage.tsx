@@ -1,38 +1,46 @@
 import * as React from 'react';
 import {
-    gridPageCountSelector,
-    GridPagination,
+    GridSlotsComponentsProps,
     useGridApiContext,
-    useGridSelector,
 } from '@mui/x-data-grid';
 import MuiPagination from '@mui/material/Pagination';
-import { TablePaginationProps } from '@mui/material/TablePagination';
+import {useEffect} from "react";
+import {$GET} from "@utils/request";
+import {addId} from "@utils/functions";
 
-const Pagination = ({
-                        page,
-                        onPageChange,
-                        className,
-                    }: Pick<TablePaginationProps, 'page' | 'onPageChange' | 'className'>) => {
+const customPagination = (props: NonNullable<GridSlotsComponentsProps['pagination']>) => {
     const apiRef = useGridApiContext();
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
+    const [page, setPage] = React.useState(0)
+useEffect(()=>{
+    //타입별 재호출 => set그리드
+    if(props.type == "passageMng"){
+        $GET(
+            "/api/v1/passage/search/list?page=" +
+            page.toString() +
+            "&size=5&passageYear=" +
+            props.year,
+            (res: any) => {
+                apiRef.current.setRows(addId(res,props.year))
+            }
+        );
+    }
+},[page])
     return (
         <MuiPagination
             color="standard"
-            className={className}
-            count={pageCount}
+            className="MuiTablePagination-root"
+            count={props.pageCount}
             showFirstButton
             showLastButton
             shape="rounded"
             sx={{ display: "flex" }}
             page={page + 1}
             onChange={(event, newPage) => {
-                onPageChange(event as any, newPage - 1);
+                setPage(newPage-1)
+                apiRef.current.setPage(newPage-1)
             }}
         />
     );
 }
-const CustomPagination = (props: any) => {
-    return <GridPagination ActionsComponent={Pagination} {...props} />;
-}
-export default CustomPagination
+
+export default customPagination
