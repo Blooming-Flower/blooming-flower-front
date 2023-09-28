@@ -7,7 +7,7 @@ import {
   Button,
   createFilterOptions,
   FormControl,
-  Grid,
+  Grid, InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -201,11 +201,13 @@ const PassageCrt = () => {
             <Grid xs={4} item={true}>
               <div className="table-content table-top">
                 <FormControl className="table-select">
+                  <InputLabel id="demo-simple-select-label">연도</InputLabel>
                   <Select
                     value={year}
                     onChange={(e) => setYear(e.target.value as string)}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
+                    label="연도"
                   >
                     {YEAR.map((text, id) => (
                       <MenuItem key={id} value={text} >
@@ -265,12 +267,13 @@ const PassageCrt = () => {
             <Grid xs={4} item={true}>
               <div className="table-content">
                 <FormControl className="table-select">
+                  <InputLabel id="demo-simple-select-label">강</InputLabel>
                   <Select
                       defaultValue={""}
                     value={unit || ""}
                     onChange={(e) => setUnit(e.target.value as string)}
                     displayEmpty
-                    inputProps={{ "aria-label": "Without label" }}
+                      label="강"
                   >
                     {txtUnit.map((text, id) => (
                       <MenuItem key={id} value={text}>
@@ -287,12 +290,13 @@ const PassageCrt = () => {
             <Grid xs={4} item={true}>
               <div className="table-content">
                 <FormControl className="table-select">
+                  <InputLabel id="demo-simple-select-label">번호</InputLabel>
                   <Select
                       defaultValue={""}
                     value={num || ""}
                     onChange={(e)=>setNumber(e.target.value)}
                     displayEmpty
-                    inputProps={{ "aria-label": "Without label" }}
+                      label="번호"
                   >
                     {txtNum.map((text, id) => (
                       <MenuItem key={id} value={text}>
