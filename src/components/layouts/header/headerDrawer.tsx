@@ -26,7 +26,7 @@ const HeaderDrawer = ({ toggleDrawer }: any) => {
     PATH.QUESTION1,
     PATH.QUESTION2,
     PATH.QUESTION3,
-    PATH.QUESTION4,
+    // PATH.QUESTION4,
     PATH.QUESTION5,
   ];
   return (
@@ -45,11 +45,11 @@ const HeaderDrawer = ({ toggleDrawer }: any) => {
         }
       >
         {[
-          "지문저장",
           "지문관리",
+          "지문저장",
           "문제출제",
           "시험지제작",
-          "시험지보기",
+          // "시험지보기",
           "시험지관리",
         ].map((text, index) => (
           <ListItem key={text} disablePadding>

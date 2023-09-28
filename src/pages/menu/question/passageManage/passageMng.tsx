@@ -111,7 +111,7 @@ const PassageMng = () => {
       $GET(
           "/api/v1/passage/search/list?page=" +
           page.toString() +
-          "&size=10&passageYear=" +
+          "&size=5&passageYear=" +
           year,
           (res: any) => {
             setData(addId(res, year));
@@ -265,7 +265,8 @@ const PassageMng = () => {
             apiRef={apiRef}
             checkboxSelection
             // disableRowSelectionOnClick
-            hideFooterPagination={false}
+            hideFooter={true}
+            hideFooterPagination={true}
             sx={data.length > 0 ?{ fontWeight: "500", fontSize: "15px", height:'100%' } : {fontWeight: "500", fontSize: "15px", height:'400px' }}
           />
         </Box>

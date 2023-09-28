@@ -18,7 +18,7 @@ export const enum PATH {
   QUESTION1 = "/question/passageCrt",
   QUESTION2 = "/question/questionCrt",
   QUESTION3 = "/question/examCrt",
-  QUESTION4 = "/question/examView",
+  // QUESTION4 = "/question/examView",
   QUESTION5 = "/question/examMng",
   QUESTION6 = "/question/questionTab",
 
@@ -60,7 +60,7 @@ export const enum QUESTION {
   PASSAGEMNG, //지문관리
   QUESTIONCRT, //문제출제
   EXAMCRT, //시험지제작
-  EXAMVIEW, //시험지보기
+  // EXAMVIEW, //시험지보기
   EXAMMNG, //시험지관리
 }
 export const enum MENU1 {
