@@ -1,5 +1,5 @@
 import Layout from "@components/layouts/layout";
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import {
   Box,
   Checkbox,
@@ -44,6 +44,22 @@ const QuestionCrt = (params: any) => {
 
   const _url: string = URL.SERVER_URL;
 
+
+  useEffect(() => {
+    console.log('checked 변경::', checked)
+    // 전체 체크 박스 해제
+    const nodes = document.querySelectorAll(`input[type=checkbox][aria-label]`) as NodeListOf<HTMLInputElement>;
+    const masterNode = nodes[0];
+
+
+    for (let i = 0; i < nodes.length; i++) {
+      if (nodes[i].checked) {
+        // nodes[i].click();
+      }
+    }
+
+  })
+
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -65,36 +81,41 @@ const QuestionCrt = (params: any) => {
   const checkAll = (unitNum: GridRowSelectionModel, details: GridCallbackDetails) => {
     console.log("ttt", unitNum)
     console.log("unitCheckAll::", unitCheckAll)
-    if (unitNum.length === 0) {
-      // 전체 체크 해제
-    } else {
+
+    // 체크 했을 때 (unitCheckAll.length < unitNum.length)
+    if (unitCheckAll.length < unitNum.length) {
       for (let i = 0; i < unitNum.length; i++) {
         // 새로 체크
         let nodes = document.querySelectorAll(`input[type=checkbox][value="${unitNum[i]}"]`) as NodeListOf<HTMLInputElement>;
         for (let j = 0; j < nodes.length; j++) {
           let checkBoxInput = document.getElementById(nodes[j].id.toString()) as HTMLInputElement;
           if (!checkBoxInput.checked) {
-            document.getElementById(nodes[j].id.toString())?.click();
+            checkBoxInput?.click();
+          }
+        }
+      }
+    }
+    // 체크 해제 했을 떄 (unitCheckAll.length > unitNum.length)
+    else {
+      for (let i = 0; i < unitCheckAll.length; i++) {
+        if (unitNum.indexOf(unitCheckAll[i]) === -1) {
+          // 체크 해제 됨
+          let nodes = document.querySelectorAll(`input[type=checkbox][value="${unitCheckAll[i]}"]`) as NodeListOf<HTMLInputElement>;
+          for (let j = 0; j < nodes.length; j++) {
+            let checkBoxInput = document.getElementById(nodes[j].id.toString()) as HTMLInputElement;
+            if (checkBoxInput.checked) {
+              checkBoxInput?.click();
+            }
           }
         }
       }
     }
 
     setUnitCheckAll(unitNum);
-
   }
 
   // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
   const changePage = async (page: number) => {
-    // 전체 체크 박스 해제
-    let nodes = document.querySelectorAll(`input[type=checkbox][aria-label]`) as NodeListOf<HTMLInputElement>;;
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].checked) {
-        nodes[i].click();
-      }
-    }
-
-
     setPage(page)
 
     try {
@@ -196,6 +217,7 @@ const QuestionCrt = (params: any) => {
         checked.push(row.passageId)
         return checked;
       });
+
       setRowDataList((rowDataList: any) => {
         rowDataList.push({
           passageYear: searchYear,
@@ -206,12 +228,13 @@ const QuestionCrt = (params: any) => {
         return rowDataList;
       });
     } else {
+      checked.splice(currentIndex, 1)
       setChecked((checked: any) => {
-        checked.splice(currentIndex, 1)
         return checked;
       });
+
+      rowDataList.splice(currentIndex, 1)
       setRowDataList((rowDataList: any) => {
-        rowDataList.splice(currentIndex, 1)
         return rowDataList;
       });
     }
@@ -327,6 +350,7 @@ const QuestionCrt = (params: any) => {
                 onRowSelectionModelChange={(newRowSelectionModel, details) => checkAll(newRowSelectionModel, details)}
                 hideFooter={true}
                 hideFooterPagination={true}
+                
                 sx={rowData.length > 0 ? { fontWeight: "500", fontSize: "15px", height: '100%' } : { fontWeight: "500", fontSize: "15px", height: '400px' }}
               />
             </Box>

@@ -35,6 +35,8 @@ const QuestionList = (props: any) => {
     }
   };
 
+  console.log(props)
+
   return (
     <div className="questionList-item">
       <List
@@ -49,42 +51,44 @@ const QuestionList = (props: any) => {
           "& ul": { padding: 0 },
         }}
       >
-        {rowData.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
+        {rowData.length === 0 ? <Alert>{"지문을 선택해 주세요."}</Alert> :
+          rowData.map((row: any) => {
+            return (
+              <div key={row.passageId}>
+                <ListItem
+                  className="checkbox-list"
+                  value={row}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => onRemove(row)}
+                    >
+                      <HighlightOffIcon />
+                    </IconButton>
+                  }
+                >
+                  <div>{row.passageYear}</div>
+                  <div>{row.passageUnit}</div>
+                  <div>{row.passageNumber}</div>
+                </ListItem>
+              </div>
+            );
+          })
+        }
 
-        {rowData.map((row: any) => {
-          return (
-            <div key={row.passageId}>
-              <ListItem
-                className="checkbox-list"
-                value={row}
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => onRemove(row)}
-                  >
-                    <HighlightOffIcon />
-                  </IconButton>
-                }
-              >
-                <div>{row.passageYear}</div>
-                <div>{row.passageUnit}</div>
-                <div>{row.passageNumber}</div>
-              </ListItem>
-            </div>
-          );
-        })}
+        {rowData.length !== 0 &&
+          < CustomButton
+            domain={PATH.QUESTION6}
+            label={"GO!"}
+            type={"true"}
+            params={rowData}
+          >
+            {buttonName}
+          </CustomButton>}
 
-        <CustomButton
-          domain={PATH.QUESTION6}
-          label={"GO!"}
-          type={"true"}
-          params={rowData}
-        >
-          {buttonName}
-        </CustomButton>
-      </List>
-    </div>
+      </List >
+    </div >
   );
 };
 
