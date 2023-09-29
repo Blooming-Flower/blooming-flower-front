@@ -42,23 +42,59 @@ const QuestionCrt = (params: any) => {
 
   const [any, forceUpdate] = useReducer(num => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
+  // const [effFlag, setFlag] = React.useState(true as boolean);
   const _url: string = URL.SERVER_URL;
 
 
-  useEffect(() => {
-    console.log('checked 변경::', checked)
-    // 전체 체크 박스 해제
-    const nodes = document.querySelectorAll(`input[type=checkbox][aria-label]`) as NodeListOf<HTMLInputElement>;
-    const masterNode = nodes[0];
+  // useEffect(() => {
+  //   // debugger;
+  //   if (!effFlag) return;
+  //   setFlag((effFlag) => {
+  //     effFlag = false;
+  //     return effFlag;
+  //   });
+  //   console.log('checked 변경::', checked)
+  //   const newChecked = [...checked];
+  //   const newRowDataList = [...rowDataList];
+  //   // 전체 체크 박스 해제
+  //   let multiIndex = 0;
+  //   const multiNodes = document.querySelectorAll(`input[type=checkbox][aria-label]`) as NodeListOf<HTMLInputElement>;
+  //   const masterNode = multiNodes[multiIndex++];
+
+  //   const nodes = document.querySelectorAll(`input[type=checkbox]`) as NodeListOf<HTMLInputElement>;
+
+  //   // debugger;
+  //   let multiFlag = true;
+  //   for (let i = 2; i < nodes.length; i++) {
+  //     if (nodes[i].ariaLabel || i === nodes.length - 1) {
+  //       // multi checkbox일 때 
+  //       if (multiFlag) {
+  //         if (!multiNodes[multiIndex].checked) {
+  //           multiNodes[multiIndex++].click();
+  //         }
+  //       } else {
+  //         if (multiNodes[multiIndex].checked) {
+  //           multiNodes[multiIndex++].click();
+  //         }
+  //       }
+  //       multiFlag = true;
+  //       continue;
+  //     }
+
+  //     if (!nodes[i].checked) {
+  //       // 하나라도 체크가 안되있다면 multi checkbox도 체크 안되야함
+  //       multiFlag = false;
+  //     }
+
+  //   }
 
 
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].checked) {
-        // nodes[i].click();
-      }
-    }
+  //   setFlag((effFlag) => {
+  //     effFlag = true;
+  //     return effFlag;
+  //   });
 
-  })
+  // })
 
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
@@ -82,6 +118,9 @@ const QuestionCrt = (params: any) => {
     console.log("ttt", unitNum)
     console.log("unitCheckAll::", unitCheckAll)
 
+
+
+    // debugger;
     // 체크 했을 때 (unitCheckAll.length < unitNum.length)
     if (unitCheckAll.length < unitNum.length) {
       for (let i = 0; i < unitNum.length; i++) {
@@ -90,8 +129,16 @@ const QuestionCrt = (params: any) => {
         for (let j = 0; j < nodes.length; j++) {
           let checkBoxInput = document.getElementById(nodes[j].id.toString()) as HTMLInputElement;
           if (!checkBoxInput.checked) {
-            checkBoxInput?.click();
+          checkBoxInput?.click();
           }
+
+          // let curIdx = checked.indexOf(parseInt(checkBoxInput.id));
+          // if (curIdx === -1) {
+          //   setChecked((checked: any) => {
+          //     checked.push(parseInt(checkBoxInput.id))
+          //     return checked;
+          //   });
+          // }
         }
       }
     }
@@ -106,11 +153,19 @@ const QuestionCrt = (params: any) => {
             if (checkBoxInput.checked) {
               checkBoxInput?.click();
             }
+
+            // let curIdx = checked.indexOf(parseInt(checkBoxInput.id));
+            // if (curIdx !== -1) {
+            //   checked.splice(curIdx, 1)
+            //   setChecked((checked: any) => {
+            //     return checked;
+            //   });
+            // }
           }
         }
       }
     }
-
+    console.log("checked::", checked)
     setUnitCheckAll(unitNum);
   }
 
@@ -250,6 +305,7 @@ const QuestionCrt = (params: any) => {
       field: "passageUnit",
       headerName: "강",
       width: 150,
+
       editable: false,
       align: "center",
       sortable: false,
@@ -350,9 +406,42 @@ const QuestionCrt = (params: any) => {
                 onRowSelectionModelChange={(newRowSelectionModel, details) => checkAll(newRowSelectionModel, details)}
                 hideFooter={true}
                 hideFooterPagination={true}
-                
+
                 sx={rowData.length > 0 ? { fontWeight: "500", fontSize: "15px", height: '100%' } : { fontWeight: "500", fontSize: "15px", height: '400px' }}
               />
+
+              {/* <table>
+                <thead>
+                  <tr>
+                    <td><input type="checkbox" /></td>
+                    <td> 강</td>
+                    <td>지문</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rowData.map((row: any) => {
+                    console.log(row)
+                    return (
+                      <tr>
+                        <td><input type="checkbox" /></td>
+                        <td>{row.passageUnit}</td>
+                        <td>
+                          {row.passageInfo.map((passage: any) => {
+                            return (
+                              <>
+                                < input type="checkbox" />
+                                {passage.passageNumber}
+                              </>
+
+                            )
+                          })}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+
+              </table> */}
             </Box>
             <Pagination
               count={totalPageSize}
