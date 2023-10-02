@@ -1,10 +1,11 @@
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 import * as React from "react";
+import {useEffect} from "react";
 
 
 interface Props {
-    content: string;
+    content?: string;
     editorRef: React.MutableRefObject<any>;
 }
 
@@ -14,12 +15,14 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
         if(type == "U"){
             editorRef.current.getInstance().replaceSelection("<ins>"+cont+"</ins>",editorRef.current.getInstance().getSelection()[0],editorRef.current.getInstance().getSelection()[1])
         }else{
-            editorRef.current.getInstance().replaceSelection("<div style='border:1px solid black'>"+cont+"</div>",editorRef.current.getInstance().getSelection()[0],editorRef.current.getInstance().getSelection()[1])
+            editorRef.current.getInstance().replaceSelection("<div style='border:1px solid black' contenteditable='true'>"+cont+"</div>",editorRef.current.getInstance().getSelection()[0],editorRef.current.getInstance().getSelection()[1])
         }
-        const markDown:string = editorRef.current.getInstance().getMarkdown()
-        const check1 = markDown.replace(/\\/,"")
-        const check2 = check1.replace(/\\/,"")
-        editorRef.current.getInstance().setMarkdown(check2)
+        let markDown:string = editorRef.current.getInstance().getMarkdown()
+        const count = markDown.split(/\\/).length - 1
+        for(let i = 0; i < count; i++){
+            markDown = markDown.replace(/\\/,"")
+        }
+        editorRef.current.getInstance().setMarkdown(markDown)
     }
     const createCustomButton = (param:string) => {
         const button = document.createElement('button');
@@ -141,6 +144,7 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
                     initialEditType="wysiwyg" // 초기 입력모드 설정(디폴트 markdown)
                     toolbarItems={toolbarItems}
                     hideModeSwitch={true}
+                    useCommandShortcut={true}
                     customHTMLRenderer={{
                         htmlBlock:{
                             div(node:any){
@@ -155,7 +159,7 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
                                     { type: 'html', content: node.childrenHTML },
                                     { type: 'closeTag', tagName: 'div', outerNewLine: true }
                                 ]
-                            }
+                            },
                         },
                         htmlInline: {
                             ins(node, { entering }) {

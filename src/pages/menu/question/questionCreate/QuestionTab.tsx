@@ -26,6 +26,7 @@ import { $POST } from "@utils/request";
 import ChooseDataGrid from "./chooseDataGrid";
 import { useLocation } from "react-router-dom";
 import AnswerDataGrid from "./answerDataGrid";
+import TuiEditor from "@components/ui/tui/toast";
 
 const QuestionTab = () => {
   const [questionType, setQuestionType] = React.useState("");
@@ -185,21 +186,22 @@ const QuestionTab = () => {
               </Grid>
             </Grid>
             <div>
-              <Editor
-                ref={editorRef}
-                placeholder="내용을 입력해주세요."
-                previewStyle="vertical" // 미리보기 스타일 지정
-                height="300px" // 에디터 창 높이
-                initialEditType="wysiwyg" // 초기 입력모드 설정(디폴트 markdown)
-                toolbarItems={[
-                  // 툴바 옵션 설정
-                  ["heading", "bold", "italic", "strike"],
-                  // ["hr", "quote"],
-                  ["ul", "ol", "task", "indent", "outdent"],
-                  ["table", "image", "link"],
-                  // ["code", "codeblock"],
-                ]}
-              ></Editor>
+              {/*<Editor*/}
+              {/*  ref={editorRef}*/}
+              {/*  placeholder="내용을 입력해주세요."*/}
+              {/*  previewStyle="vertical" // 미리보기 스타일 지정*/}
+              {/*  height="300px" // 에디터 창 높이*/}
+              {/*  initialEditType="wysiwyg" // 초기 입력모드 설정(디폴트 markdown)*/}
+              {/*  toolbarItems={[*/}
+              {/*    // 툴바 옵션 설정*/}
+              {/*    ["heading", "bold", "italic", "strike"],*/}
+              {/*    // ["hr", "quote"],*/}
+              {/*    ["ul", "ol", "task", "indent", "outdent"],*/}
+              {/*    ["table", "image", "link"],*/}
+              {/*    // ["code", "codeblock"],*/}
+              {/*  ]}*/}
+              {/*></Editor>*/}
+              <TuiEditor editorRef={editorRef}/>
             </div>
             <div style={{ display: "flex", gap: 30, marginTop: 10 }}>
               {questionType && !WRITE_TYPES.includes(questionType) ? (
