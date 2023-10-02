@@ -20,6 +20,7 @@ import axios from "axios";
 import "@css/questionCreate/questionList.scss";
 import "@css/questionCreate/questionCrt.scss";
 import QuestionList from "./questionList";
+import { debug } from "console";
 
 
 
@@ -112,6 +113,7 @@ const QuestionCrt = (params: any) => {
       for (let i = 0; i < nodes.length; i++) {
         if (nodes[i] !== multiCheckbox) {
           if (nodes[i].checked) {
+            console.log("nodes[i]:: click!!!!", nodes[i])
             nodes[i]?.click();
           }
         }
@@ -126,31 +128,27 @@ const QuestionCrt = (params: any) => {
       for (let i = 0; i < nodes.length; i++) {
         if (nodes[i] !== multiCheckbox) {
           if (!nodes[i].checked) {
+            console.log("nodes[i]:: click!!!!", nodes[i])
             nodes[i]?.click();
           }
         }
       }
     }
 
-
     console.log("checked:::", checked)
     console.log("multiChecked:::", multiChecked)
   }
 
-  // const checkAll = (unitNum: any) => {
-  //   console.log("ttt", unitNum)
-  //   console.log("unitCheckAll::", unitCheckAll)
-
-
 
   // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
   const changePage = async (page: number) => {
+    console.log("page::", page);
     setPage(page)
 
     try {
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page - 1}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
       console.log("url", API_URL)
       console.log("data:::", res.data)
@@ -159,6 +157,7 @@ const QuestionCrt = (params: any) => {
         res.data.list[i].id = i;
       }
       console.log("checked:::", checked)
+      console.log("multicheck::", multiChecked)
 
       setRowData(res.data.list);
       setTotalPageSize(res.data.pageSize)
@@ -239,14 +238,19 @@ const QuestionCrt = (params: any) => {
 
   //지문 체크박스 이벤트 (선택&취소)
   const handleToggle = (row: any) => () => {
-    console.log("row.passageId 시작", row.passageId)
+    console.log("handleToggle :: row 시작", row)
+
     const currentIndex = checked.indexOf(row.passageId);
     if (currentIndex === -1) {
+      console.log("푸시::", row.passageId)
+      console.log("푸시전 checked::", checked)
       setChecked((checked: any) => {
+        console.log("푸시 언제 타나")
         checked.push(row.passageId)
         return checked;
       });
 
+      console.log("푸시후 checked::", checked)
       setRowDataList((rowDataList: any) => {
         rowDataList.push({
           passageYear: searchYear,
@@ -257,10 +261,13 @@ const QuestionCrt = (params: any) => {
         return rowDataList;
       });
     } else {
+      console.log("슬라이스::", row.passageId)
+      console.log("슬라이스 전 checked::", checked)
       checked.splice(currentIndex, 1)
       setChecked((checked: any) => {
         return checked;
       });
+      console.log("슬라이스 후 checked::", checked)
 
       rowDataList.splice(currentIndex, 1)
       setRowDataList((rowDataList: any) => {
@@ -269,49 +276,124 @@ const QuestionCrt = (params: any) => {
     }
 
     forceUpdate(); // 컴포넌트 재 랜더링
+    checkMultiBox(row.passageId);
   };
+
+  // 단일 버튼 체크 시, 멀티 체크 박스 해제/체크
+  const checkMultiBox = (passageId: number) => {
+    console.log("passageId", passageId)
+    console.log("checked::", checked)
+    const target = document.getElementById(passageId.toString()) as HTMLInputElement;
+    const multiCheckbox = document.querySelector(`input[type=checkbox][value="${target.value}"][data-type="multi-check"]`) as HTMLInputElement;
+    let nodes = document.querySelectorAll(`input[type=checkbox][value="${target.value}"]`) as NodeListOf<HTMLInputElement>;
+
+    let flag = true;
+    // debugger;
+    for (let i = 1; i < nodes.length; i++) {
+      if (checked.indexOf(parseInt(nodes[i].id)) === -1) {
+        console.log("false~~")
+        flag = false;
+        break;
+      }
+    }
+
+
+    let curIdx = multiChecked.indexOf(multiCheckbox.id);
+    if (flag) {
+      // 멀티 체크 박스 체크
+      if (curIdx === -1) {
+        setMultiChecked((multiChecked: any) => {
+          multiChecked.push(multiCheckbox.id);
+          return multiChecked;
+        })
+      }
+    } else {
+      // 멀티 체크 박스 해제
+      if (curIdx !== -1) {
+        multiChecked.splice(curIdx, 1)
+        setMultiChecked((multiChecked: any) => {
+          return multiChecked;
+        });
+      }
+    }
+
+    // getMasterCheckboxFlag();
+  }
+
+  // 전체 multi check box 체크/해제
+  const getMasterCheckboxFlag = () => {
+   
+    const multiCheckboxAll = document.querySelectorAll(`input[type=checkbox][data-type="multi-check"]`) as NodeListOf<HTMLInputElement>;
+
+    const master = multiCheckboxAll[0];
+    const curIdx = multiChecked.indexOf(master.id);
+
+    for (let i = 1; i < multiCheckboxAll.length; i++) {
+      console.log("multiCheckboxAll[i].id:::",multiCheckboxAll[i].id);
+      console.log("multiChecked::::",multiChecked)
+      if (multiChecked.indexOf(multiCheckboxAll[i].id) === -1) {
+        // splice
+        if (curIdx !== -1) {
+          multiChecked.splice(curIdx, 1)
+          setMultiChecked((multiChecked: any) => {
+            return multiChecked;
+          });
+        }
+        return;
+      }
+    }
+
+    // push
+    debugger;
+    if (curIdx === -1) {
+      setMultiChecked((multiChecked: any) => {
+        multiChecked.push(master.id);
+        return multiChecked;
+      })
+    }
+  }
 
 
 
   // selectbox 선택시 출력되는 그리드
-  const columns: GridColDef[] = [
-    {
-      field: "passageUnit",
-      headerName: "강",
-      width: 150,
+  // const columns: GridColDef[] = [
+  //   {
+  //     field: "passageUnit",
+  //     headerName: "강",
+  //     width: 150,
 
-      editable: false,
-      align: "center",
-      sortable: false,
-      headerAlign: "center"
-    },
-    {
-      field: "passageInfo",
-      headerName: "지문",
-      width: 300,
-      type: "actions",
-      editable: false,
-      headerAlign: "center",
-      getActions: (params) => [
-        <>
-          {params.row.passageInfo.map((row: any) => {
-            return (
-              <div key={row.passageNumber} id="checkbox-list">
-                <Checkbox
-                  id={row.passageId.toString()}
-                  value={params.id}
-                  onClick={handleToggle(row)}
-                  checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
-                />
-                {row.passageNumber}
-              </div>
-            );
-          })}
-        </>,
-      ],
-      align: "center",
-    },
-  ];
+  //     editable: false,
+  //     align: "center",
+  //     sortable: false,
+  //     headerAlign: "center"
+  //   },
+  //   {
+  //     field: "passageInfo",
+  //     headerName: "지문",
+  //     width: 300,
+  //     type: "actions",
+  //     editable: false,
+  //     headerAlign: "center",
+  //     getActions: (params) => [
+  //       <>
+  //         {params.row.passageInfo.map((row: any) => {
+  //           return (
+  //             <div key={row.passageNumber} id="checkbox-list">
+  //               <Checkbox
+  //                 id={row.passageId.toString()}
+  //                 value={params.id}
+  //                 onClick={handleToggle(row)}
+  //                 checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
+  //               />
+  //               {row.passageNumber}
+  //             </div>
+  //           );
+  //         })}
+  //       </>,
+  //     ],
+  //     align: "center",
+  //   },
+  // ];
 
   return (
     <Layout>
@@ -335,7 +417,8 @@ const QuestionCrt = (params: any) => {
                     value={searchPassage}
                     onChange={handlePassage}
                     labelId="demo-simple-select-label">
-                    {PASSAGETYPE.map((text, id) => (
+                    {PASSAGETYPE.map((text, id) =>
+                    (
                       <MenuItem key={id} value={text}>
                         {text}
                       </MenuItem>
@@ -400,7 +483,6 @@ const QuestionCrt = (params: any) => {
                 </thead>
                 <tbody>
                   {rowData.map((row: any) => {
-                    console.log(row)
                     return (
                       <tr>
                         <td><input type="checkbox"
@@ -436,8 +518,8 @@ const QuestionCrt = (params: any) => {
             </Box>
             <Pagination
               count={totalPageSize}
-              onChange={(event, value) => changePage(value)}
-              page={page}
+              onChange={(event, value) => changePage(value - 1)}
+              page={page + 1}
               showFirstButton
               showLastButton
               shape="rounded"
