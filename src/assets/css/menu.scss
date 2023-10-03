@@ -45,9 +45,15 @@
 		display: none;
 	}
 }
-
-.toastui-editor-mode-switch{
-	display: none !important;
+.toastui-editor-contents {
+	text-align: left;
+	div{
+		text-align: center;
+	}
+}
+.del{
+	text-decoration: underline;
+	color: black !important;
 }
 .MuiPagination-ul {
 	margin: 10px auto !important;
