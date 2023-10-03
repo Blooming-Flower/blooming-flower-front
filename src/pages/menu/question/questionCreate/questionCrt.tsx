@@ -1,5 +1,5 @@
 import Layout from "@components/layouts/layout";
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useEffect, ChangeEvent } from "react";
 import {
   Box,
   Checkbox,
@@ -21,6 +21,9 @@ import "@css/questionCreate/questionList.scss";
 import "@css/questionCreate/questionCrt.scss";
 import QuestionList from "./questionList";
 import { debug } from "console";
+import { MultilineChart } from "@mui/icons-material";
+import { CheckboxChangedEvent } from "ag-grid-community";
+import { multiply } from "ol/transform";
 
 
 
@@ -37,6 +40,7 @@ const QuestionCrt = (params: any) => {
   //questionList 에 넘겨줄 rowData
   const [rowDataList, setRowDataList] = React.useState([] as any);
 
+  const test = [] as any;
   // 전체 체크 했을 때 어떤 값들이 들어가 있었는지
 
   const [any, forceUpdate] = useReducer(num => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
@@ -65,78 +69,116 @@ const QuestionCrt = (params: any) => {
   // all row multi check box
   const checkMultiAll = (rowLength: number) => {
     let curIdx = multiChecked.indexOf(searchPassage + searchYear + passageName + page + "all");
+
     if (curIdx !== -1) {
-      // 전체 해제
-      multiChecked.splice(curIdx, 1)
-      setMultiChecked((multiChecked: any) => {
-        return multiChecked;
-      });
-
-      clickMultiOneRowModule(true, rowLength);
-
+      multiChecked.splice(curIdx, 1);
+      // setMultiChecked((multiChecked) => {
+      //   return multiChecked;
+      // })
+      setMultiChecked(multiChecked);
+      deleteRow(Array.from({ length: rowLength }, (num, idx) => idx));
     } else {
-      // 전체 체크
-      setMultiChecked((multiChecked: any) => {
-        multiChecked.push(searchPassage + searchYear + passageName + page + "all");
-        return multiChecked;
-      })
-
-      clickMultiOneRowModule(false, rowLength);
+      multiChecked.push(searchPassage + searchYear + passageName + page + "all");
+      setMultiChecked(multiChecked);
+      insertRow(Array.from({ length: rowLength }, (num, idx) => idx));
     }
   }
 
-  // 전체 체크 눌렀을 때, 1 row multi check box 반복하는 module
-  const clickMultiOneRowModule = (flag: boolean, rowLength: number) => {
-    for (let i = 0; i < rowLength; i++) {
-      const multiCheckbox = document.querySelector(`input[type=checkbox][value="${i}"][data-type="multi-check"]`) as HTMLInputElement;
-      if (multiCheckbox.checked === flag) {
-        checkMultiOneRow(i);
-      }
-    }
-  }
+  const insertRow = (rowIds: number[]) => {
+    // debugger;
+    const newChecked = [...checked];
+    const newDataList = [...rowDataList];
+    const newMultiChecked = [...multiChecked];
 
+    for (let j = 0; j < rowIds.length; j++) {
+      let rowId = rowIds[j];
+      const multiCheckbox = document.querySelector(`input[type=checkbox][value="${rowId}"][data-type="multi-check"]`) as HTMLInputElement;
 
-  // 1 row multi check box 
-  const checkMultiOneRow = (rowId: number) => {
-    console.log("rowId", rowId)
-    const multiCheckbox = document.querySelector(`input[type=checkbox][value="${rowId}"][data-type="multi-check"]`) as HTMLInputElement;
-
-    let nodes = document.querySelectorAll(`input[type=checkbox][value="${rowId}"]`) as NodeListOf<HTMLInputElement>;
-    let curIdx = multiChecked.indexOf(searchPassage + searchYear + passageName + page + rowId);
-    if (curIdx !== -1) {
-      // 체크 해제 해야함
-      multiChecked.splice(curIdx, 1)
-      setMultiChecked((multiChecked: any) => {
-        return multiChecked;
-      });
-
-      for (let i = 0; i < nodes.length; i++) {
-        if (nodes[i] !== multiCheckbox) {
-          if (nodes[i].checked) {
-            console.log("nodes[i]:: click!!!!", nodes[i])
-            nodes[i]?.click();
-          }
-        }
-      }
-    } else {
-      // 체크 해야함
-      setMultiChecked((multiChecked: any) => {
-        multiChecked.push(searchPassage + searchYear + passageName + page + rowId);
-        return multiChecked;
-      })
+      let nodes = document.querySelectorAll(`input[type=checkbox][value="${rowId}"]`) as NodeListOf<HTMLInputElement>;
 
       for (let i = 0; i < nodes.length; i++) {
         if (nodes[i] !== multiCheckbox) {
           if (!nodes[i].checked) {
             console.log("nodes[i]:: click!!!!", nodes[i])
-            nodes[i]?.click();
+            nodes[i].checked = true;
+            let curNodeId = parseInt(nodes[i].id);
+            let curIdx = newChecked.indexOf(curNodeId);
+            if (curIdx === -1) {
+              newChecked.push(parseInt(nodes[i].id));
+
+              let row = JSON.parse(nodes[i].dataset.passage as any);
+              newDataList.push({
+                passageYear: searchYear,
+                passageNumber: row.passageNumber,
+                passageId: row.passageId,
+                passageUnit: row.passageUnit,
+              })
+            }
+
+            let multiCurIdx = newMultiChecked.indexOf(multiCheckbox.id);
+            if (multiCurIdx === -1) {
+              newMultiChecked.push(multiCheckbox.id);
+            }
           }
         }
       }
     }
 
-    console.log("checked:::", checked)
-    console.log("multiChecked:::", multiChecked)
+    console.log("몇번타니", newChecked)
+    setChecked(() => newChecked);
+    setRowDataList(() => newDataList);
+    setMultiChecked(() => newMultiChecked);
+  }
+
+  const deleteRow = (rowIds: number[]) => {
+    const newChecked = [...checked];
+    const newDataList = [...rowDataList];
+    const newMultiChecked = [...multiChecked];
+
+    for (let j = 0; j < rowIds.length; j++) {
+      let rowId = rowIds[j];
+      const multiCheckbox = document.querySelector(`input[type=checkbox][value="${rowId}"][data-type="multi-check"]`) as HTMLInputElement;
+
+      let nodes = document.querySelectorAll(`input[type=checkbox][value="${rowId}"]`) as NodeListOf<HTMLInputElement>;
+
+      for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i] !== multiCheckbox) {
+          if (nodes[i].checked) {
+            console.log("nodes[i]:: click!!!!", nodes[i])
+            nodes[i].checked = false;
+            let curNodeId = parseInt(nodes[i].id);
+            let curIdx = newChecked.indexOf(curNodeId);
+            if (curIdx !== -1) {
+              newChecked.splice(curIdx, 1);
+              newDataList.splice(curIdx, 1);
+            }
+
+            let multiCurIdx = newMultiChecked.indexOf(multiCheckbox.id)
+            if (multiCurIdx !== -1) {
+              newMultiChecked.splice(multiCurIdx, 1);
+            }
+
+          }
+        }
+      }
+    }
+
+    setChecked(() => newChecked);
+    setRowDataList(() => newDataList);
+    setMultiChecked(() => newMultiChecked);
+  }
+
+  // 1 row multi check box 
+  const checkMultiOneRow = (rowId: number) => {
+    console.log("rowId", rowId)
+    let curIdx = multiChecked.indexOf(searchPassage + searchYear + passageName + page + rowId);
+    if (curIdx !== -1) {
+      // 체크 해제 해야함
+      deleteRow([rowId]);
+    } else {
+      // 체크 해야함
+      insertRow([rowId]);
+    }
   }
 
 
@@ -236,61 +278,19 @@ const QuestionCrt = (params: any) => {
     }
   };
 
-  //지문 체크박스 이벤트 (선택&취소)
-  const handleToggle = (row: any) => () => {
-    console.log("handleToggle :: row 시작", row)
-
-    const currentIndex = checked.indexOf(row.passageId);
-    if (currentIndex === -1) {
-      console.log("푸시::", row.passageId)
-      console.log("푸시전 checked::", checked)
-      setChecked((checked: any) => {
-        console.log("푸시 언제 타나")
-        checked.push(row.passageId)
-        return checked;
-      });
-
-      console.log("푸시후 checked::", checked)
-      setRowDataList((rowDataList: any) => {
-        rowDataList.push({
-          passageYear: searchYear,
-          passageNumber: row.passageNumber,
-          passageId: row.passageId,
-          passageUnit: row.passageUnit,
-        })
-        return rowDataList;
-      });
-    } else {
-      console.log("슬라이스::", row.passageId)
-      console.log("슬라이스 전 checked::", checked)
-      checked.splice(currentIndex, 1)
-      setChecked((checked: any) => {
-        return checked;
-      });
-      console.log("슬라이스 후 checked::", checked)
-
-      rowDataList.splice(currentIndex, 1)
-      setRowDataList((rowDataList: any) => {
-        return rowDataList;
-      });
-    }
-
-    forceUpdate(); // 컴포넌트 재 랜더링
-    checkMultiBox(row.passageId);
-  };
-
   // 단일 버튼 체크 시, 멀티 체크 박스 해제/체크
-  const checkMultiBox = (passageId: number) => {
+  const checkMultiBox = (passageId: number, newChecked: number[]) => {
     console.log("passageId", passageId)
-    console.log("checked::", checked)
+    console.log("new checked::", newChecked)
     const target = document.getElementById(passageId.toString()) as HTMLInputElement;
     const multiCheckbox = document.querySelector(`input[type=checkbox][value="${target.value}"][data-type="multi-check"]`) as HTMLInputElement;
     let nodes = document.querySelectorAll(`input[type=checkbox][value="${target.value}"]`) as NodeListOf<HTMLInputElement>;
+    let newMultiChecked = [...multiChecked];
 
     let flag = true;
     // debugger;
     for (let i = 1; i < nodes.length; i++) {
-      if (checked.indexOf(parseInt(nodes[i].id)) === -1) {
+      if (newChecked.indexOf(parseInt(nodes[i].id)) === -1) {
         console.log("false~~")
         flag = false;
         break;
@@ -302,98 +302,82 @@ const QuestionCrt = (params: any) => {
     if (flag) {
       // 멀티 체크 박스 체크
       if (curIdx === -1) {
-        setMultiChecked((multiChecked: any) => {
-          multiChecked.push(multiCheckbox.id);
-          return multiChecked;
-        })
+        newMultiChecked.push(multiCheckbox.id);
+        setMultiChecked(newMultiChecked)
       }
     } else {
       // 멀티 체크 박스 해제
       if (curIdx !== -1) {
-        multiChecked.splice(curIdx, 1)
-        setMultiChecked((multiChecked: any) => {
-          return multiChecked;
-        });
+        newMultiChecked.splice(curIdx, 1)
+        setMultiChecked(newMultiChecked)
       }
     }
 
-    // getMasterCheckboxFlag();
+    getMasterCheckboxFlag(newMultiChecked);
   }
 
   // 전체 multi check box 체크/해제
-  const getMasterCheckboxFlag = () => {
-   
+  const getMasterCheckboxFlag = (newMultiChecked: string[]) => {
     const multiCheckboxAll = document.querySelectorAll(`input[type=checkbox][data-type="multi-check"]`) as NodeListOf<HTMLInputElement>;
 
     const master = multiCheckboxAll[0];
-    const curIdx = multiChecked.indexOf(master.id);
+    const curIdx = newMultiChecked.indexOf(master.id);
 
     for (let i = 1; i < multiCheckboxAll.length; i++) {
-      console.log("multiCheckboxAll[i].id:::",multiCheckboxAll[i].id);
-      console.log("multiChecked::::",multiChecked)
-      if (multiChecked.indexOf(multiCheckboxAll[i].id) === -1) {
+      if (newMultiChecked.indexOf(multiCheckboxAll[i].id) === -1) {
         // splice
         if (curIdx !== -1) {
-          multiChecked.splice(curIdx, 1)
-          setMultiChecked((multiChecked: any) => {
-            return multiChecked;
-          });
+          newMultiChecked.splice(curIdx, 1)
+          setMultiChecked(newMultiChecked)
         }
         return;
       }
     }
 
-    // push
-    debugger;
     if (curIdx === -1) {
-      setMultiChecked((multiChecked: any) => {
-        multiChecked.push(master.id);
-        return multiChecked;
-      })
+      newMultiChecked.push(master.id);
+      setMultiChecked(newMultiChecked)
     }
   }
 
+  const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
+    // debugger;
+    let target = event.target;
+    let row = JSON.parse(target.dataset.passage as any);
+    let newChecked = [...checked];
 
+    console.log("체크 여부::", target.checked)
 
-  // selectbox 선택시 출력되는 그리드
-  // const columns: GridColDef[] = [
-  //   {
-  //     field: "passageUnit",
-  //     headerName: "강",
-  //     width: 150,
+    const currentIndex = newChecked.indexOf(row.passageId);
+    if (currentIndex === -1) {
+      console.log("푸시::", row.passageId)
+      newChecked.push(row.passageId);
+      setChecked(newChecked);
+      setRowDataList((rowDataList: any) => {
+        rowDataList.push({
+          passageYear: searchYear,
+          passageNumber: row.passageNumber,
+          passageId: row.passageId,
+          passageUnit: row.passageUnit,
+        })
+        return rowDataList;
+      });
 
-  //     editable: false,
-  //     align: "center",
-  //     sortable: false,
-  //     headerAlign: "center"
-  //   },
-  //   {
-  //     field: "passageInfo",
-  //     headerName: "지문",
-  //     width: 300,
-  //     type: "actions",
-  //     editable: false,
-  //     headerAlign: "center",
-  //     getActions: (params) => [
-  //       <>
-  //         {params.row.passageInfo.map((row: any) => {
-  //           return (
-  //             <div key={row.passageNumber} id="checkbox-list">
-  //               <Checkbox
-  //                 id={row.passageId.toString()}
-  //                 value={params.id}
-  //                 onClick={handleToggle(row)}
-  //                 checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
-  //               />
-  //               {row.passageNumber}
-  //             </div>
-  //           );
-  //         })}
-  //       </>,
-  //     ],
-  //     align: "center",
-  //   },
-  // ];
+    } else {
+      console.log("슬라이스::", row.passageId)
+
+      newChecked.splice(currentIndex, 1)
+      setChecked(newChecked);
+
+      rowDataList.splice(currentIndex, 1)
+      setRowDataList((rowDataList: any) => {
+        return rowDataList;
+      });
+    }
+
+    checkMultiBox(row.passageId, newChecked);
+    forceUpdate(); // 컴포넌트 재 랜더링
+  }
 
   return (
     <Layout>
@@ -500,8 +484,10 @@ const QuestionCrt = (params: any) => {
                                 < input type="checkbox"
                                   id={passage.passageId.toString()}
                                   value={row.id}
+                                  data-passage={JSON.stringify(passage)}
                                   checked={checked.indexOf(passage.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
-                                  onChange={handleToggle(passage)}
+                                  // onChange={handleToggle(passage)}
+                                  onChange={(event) => handleCheckBox(event)}
                                 />
                                 {passage.passageNumber}
                               </>

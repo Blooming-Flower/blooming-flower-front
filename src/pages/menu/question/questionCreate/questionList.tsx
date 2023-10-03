@@ -29,10 +29,13 @@ const QuestionList = (props: any) => {
 
   //리스트업 목록 삭제 버튼
   const onRemove = (value: any) => {
-    setRowData(rowData.filter((el: any) => el !== value));
-    if (checked && checked.indexOf(value.passageId) != -1) { // checked(지문 체크 배열) non-checked로 변경
-      setChecked(checked.filter((el: any) => el !== value.passageId))
-    }
+    console.log("리무브 벨류::",value)
+    let target = document.getElementById(value.passageId) as HTMLInputElement;
+    target.click();
+    // setRowData(rowData.filter((el: any) => el !== value));
+    // if (checked && checked.indexOf(value.passageId) != -1) { // checked(지문 체크 배열) non-checked로 변경
+    //   setChecked(checked.filter((el: any) => el !== value.passageId))
+    // }
   };
 
   console.log(props)
