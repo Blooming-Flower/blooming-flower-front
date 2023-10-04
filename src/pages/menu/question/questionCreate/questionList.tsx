@@ -17,6 +17,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CustomButton from "@components/ui/button/custeomButton";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
+import { $GET } from "@utils/request";
 
 const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
@@ -25,13 +26,23 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
   //문제유형 :  searchlecture
-  const { width, height, rowData, setRowData, checked, setChecked, buttonName } = props;
+  const {
+    width,
+    height,
+    rowData,
+    setRowData,
+    checked,
+    setChecked,
+    buttonName,
+    editorRef,
+  } = props;
 
   //리스트업 목록 삭제 버튼
   const onRemove = (value: any) => {
     setRowData(rowData.filter((el: any) => el !== value));
-    if (checked && checked.indexOf(value.passageId) != -1) { // checked(지문 체크 배열) non-checked로 변경
-      setChecked(checked.filter((el: any) => el !== value.passageId))
+    if (checked && checked.indexOf(value.passageId) != -1) {
+      // checked(지문 체크 배열) non-checked로 변경
+      setChecked(checked.filter((el: any) => el !== value.passageId));
     }
   };
 
@@ -57,6 +68,19 @@ const QuestionList = (props: any) => {
               <ListItem
                 className="checkbox-list"
                 value={row}
+                onClick={() => {
+                  if (!editorRef) {
+                    return;
+                  }
+                  $GET(
+                    `/api/v1/passage/search/${row.passageId}`,
+                    (result: any) => {
+                      editorRef.current
+                        .getInstance()
+                        .setMarkdown(result.passageContent);
+                    }
+                  );
+                }}
                 secondaryAction={
                   <IconButton
                     edge="end"

@@ -236,6 +236,7 @@ const QuestionTab = () => {
               height={300}
               rowData={passageDatas}
               setRowData={() => {}}
+              editorRef={editorRef}
             />
             <QuestionList
               width={250}
