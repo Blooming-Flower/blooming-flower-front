@@ -26,7 +26,7 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
   //문제유형 :  searchlecture
-  const { width, height, rowData, removeRow, buttonName } = props;
+  const { width, height, rowData, removeRow, buttonName, editorRef } = props;
 
   //리스트업 목록 삭제 버튼
   const onRemove = (row: any) => {
@@ -58,6 +58,21 @@ const QuestionList = (props: any) => {
                 <ListItem
                   className="checkbox-list"
                   value={row}
+                  onClick={(e) => {
+                    if (!editorRef) {
+                      return;
+                    }
+                    $GET(
+                      `/api/v1/passage/search/${row.passageId}`,
+                      (result: any) => {
+                        console.log(result);
+
+                        editorRef.current
+                          .getInstance()
+                          .setHTML(result.data.passageContent);
+                      }
+                    );
+                  }}
                   secondaryAction={
                     <IconButton
                       edge="end"
@@ -80,12 +95,10 @@ const QuestionList = (props: any) => {
         {rowData.length !== 0 && (
           <CustomButton
             domain={PATH.QUESTION6}
-            label={"GO!"}
+            label={buttonName ?? "GO!"}
             type={"true"}
             params={rowData}
-          >
-            {buttonName}
-          </CustomButton>
+          />
         )}
       </List>
     </div>

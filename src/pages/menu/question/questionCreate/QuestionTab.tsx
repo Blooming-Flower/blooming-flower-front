@@ -37,6 +37,8 @@ const QuestionTab = () => {
     })
   );
 
+  console.log(passageDatas);
+
   const changeType = (e: SelectChangeEvent<string>) => {
     const {
       target: { value },
@@ -153,7 +155,7 @@ const QuestionTab = () => {
                   <FormControl className="table-input-select">
                     <TextField
                       onChange={(e) => setQuestionTitle(e.target.value)}
-                      label="교재명"
+                      label="발문"
                       value={questionTitle}
                     />
                   </FormControl>
