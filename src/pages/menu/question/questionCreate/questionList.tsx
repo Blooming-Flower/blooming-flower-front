@@ -25,17 +25,11 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
   //문제유형 :  searchlecture
-  const { width, height, rowData, setRowData, checked, setChecked, buttonName } = props;
+  const { width, height, rowData, removeRow, buttonName } = props;
 
   //리스트업 목록 삭제 버튼
-  const onRemove = (value: any) => {
-    console.log("리무브 벨류::",value)
-    let target = document.getElementById(value.passageId) as HTMLInputElement;
-    target.click();
-    // setRowData(rowData.filter((el: any) => el !== value));
-    // if (checked && checked.indexOf(value.passageId) != -1) { // checked(지문 체크 배열) non-checked로 변경
-    //   setChecked(checked.filter((el: any) => el !== value.passageId))
-    // }
+  const onRemove = (row: any) => {
+    removeRow(row)
   };
 
   console.log(props)

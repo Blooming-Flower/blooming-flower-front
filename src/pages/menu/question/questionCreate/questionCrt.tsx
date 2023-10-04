@@ -34,19 +34,43 @@ const QuestionCrt = (params: any) => {
   const [passageName, setPassageName] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [totalPageSize, setTotalPageSize] = React.useState(0);
+
   const [rowData, setRowData] = React.useState([] as any);
   const [checked, setChecked] = React.useState([] as any);
   const [multiChecked, setMultiChecked] = React.useState([] as any);
   //questionList 에 넘겨줄 rowData
   const [rowDataList, setRowDataList] = React.useState([] as any);
-
-  const test = [] as any;
-  // 전체 체크 했을 때 어떤 값들이 들어가 있었는지
+  // 전체 체크박스 구조를 가지고 있는 state
+  const [treeBox, setTreeBox] = React.useState([] as any);
 
   const [any, forceUpdate] = useReducer(num => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
   const _url: string = URL.SERVER_URL;
 
+
+  useEffect(() => {
+    console.log("effect!!!!")
+    // debugger;
+    if (treeBox.filter((item: any) => item.masterId === getMasterCheckBox()).length === 0) {
+      const multiCheckboxAll = document.querySelectorAll(`input[type=checkbox][data-type="multi-check"]`) as NodeListOf<HTMLInputElement>;
+      for (let i = 1; i < multiCheckboxAll.length; i++) {
+        let rowNode = multiCheckboxAll[i] as HTMLInputElement;
+        let nodes = document.querySelectorAll(`input[type=checkbox][value="${rowNode.value}"]`) as NodeListOf<HTMLInputElement>;
+        for (let j = 1; j < nodes.length; j++) {
+          treeBox.push({
+            "masterId": getMasterCheckBox(),
+            "rowId": rowNode.id,
+            "nodeId": nodes[j].id,
+            "node": nodes[j],
+            "value": nodes[j].value
+          })
+        }
+      }
+
+    }
+    setTreeBox(treeBox)
+    console.log("treee:::::", treeBox);
+  }, [passageName, page]);
 
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
@@ -68,7 +92,7 @@ const QuestionCrt = (params: any) => {
 
   // all row multi check box
   const checkMultiAll = (rowLength: number) => {
-    let curIdx = multiChecked.indexOf(searchPassage + searchYear + passageName + page + "all");
+    let curIdx = multiChecked.indexOf(getMasterCheckBox());
 
     if (curIdx !== -1) {
       multiChecked.splice(curIdx, 1);
@@ -78,10 +102,15 @@ const QuestionCrt = (params: any) => {
       setMultiChecked(multiChecked);
       deleteRow(Array.from({ length: rowLength }, (num, idx) => idx));
     } else {
-      multiChecked.push(searchPassage + searchYear + passageName + page + "all");
+      multiChecked.push(getMasterCheckBox());
       setMultiChecked(multiChecked);
       insertRow(Array.from({ length: rowLength }, (num, idx) => idx));
     }
+  }
+
+  // 모두 체크하는 체크박스
+  const getMasterCheckBox = () => {
+    return searchPassage + searchYear + passageName + page + "all";
   }
 
   const insertRow = (rowIds: number[]) => {
@@ -128,6 +157,7 @@ const QuestionCrt = (params: any) => {
     setChecked(() => newChecked);
     setRowDataList(() => newDataList);
     setMultiChecked(() => newMultiChecked);
+    getMasterCheckboxFlag(newMultiChecked);
   }
 
   const deleteRow = (rowIds: number[]) => {
@@ -166,6 +196,7 @@ const QuestionCrt = (params: any) => {
     setChecked(() => newChecked);
     setRowDataList(() => newDataList);
     setMultiChecked(() => newMultiChecked);
+    getMasterCheckboxFlag(newMultiChecked);
   }
 
   // 1 row multi check box 
@@ -185,8 +216,6 @@ const QuestionCrt = (params: any) => {
   // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
   const changePage = async (page: number) => {
     console.log("page::", page);
-    setPage(page)
-
     try {
       const passageType = convertPassageType(searchPassage);
 
@@ -203,6 +232,7 @@ const QuestionCrt = (params: any) => {
 
       setRowData(res.data.list);
       setTotalPageSize(res.data.pageSize)
+      setPage(page)
     } catch (error) {
       console.log(error);
     }
@@ -228,7 +258,6 @@ const QuestionCrt = (params: any) => {
       setPassageName(passageName);
       setRowData(res.data.list);
       setTotalPageSize(res.data.pageSize)
-
     } catch (error) {
       console.log(error);
     }
@@ -278,31 +307,33 @@ const QuestionCrt = (params: any) => {
     }
   };
 
-  // 단일 버튼 체크 시, 멀티 체크 박스 해제/체크
+  // 단일 버튼 해제/체크 시, 멀티 체크 박스 해제/체크
   const checkMultiBox = (passageId: number, newChecked: number[]) => {
+    // debugger;
     console.log("passageId", passageId)
     console.log("new checked::", newChecked)
-    const target = document.getElementById(passageId.toString()) as HTMLInputElement;
-    const multiCheckbox = document.querySelector(`input[type=checkbox][value="${target.value}"][data-type="multi-check"]`) as HTMLInputElement;
-    let nodes = document.querySelectorAll(`input[type=checkbox][value="${target.value}"]`) as NodeListOf<HTMLInputElement>;
+
+    let treeRow = treeBox.filter((item: any) => parseInt(item.nodeId) === passageId)[0];
+    let masterId = treeRow.masterId;
+    let nodesIds = treeBox.filter((item: any) => item.masterId === masterId).filter((item: any) => item.value === treeRow.value).map((item: any) => item.nodeId) as [];
+
     let newMultiChecked = [...multiChecked];
 
     let flag = true;
-    // debugger;
-    for (let i = 1; i < nodes.length; i++) {
-      if (newChecked.indexOf(parseInt(nodes[i].id)) === -1) {
+    for (let i = 0; i < nodesIds.length; i++) {
+      if (newChecked.indexOf(parseInt(nodesIds[i])) === -1) {
         console.log("false~~")
         flag = false;
         break;
       }
     }
 
-
-    let curIdx = multiChecked.indexOf(multiCheckbox.id);
+    let multiCheckboxId = treeBox.filter((item: any) => parseInt(item.nodeId) === passageId).map((item: any) => item.rowId)[0];
+    let curIdx = multiChecked.indexOf(multiCheckboxId);
     if (flag) {
       // 멀티 체크 박스 체크
       if (curIdx === -1) {
-        newMultiChecked.push(multiCheckbox.id);
+        newMultiChecked.push(multiCheckboxId);
         setMultiChecked(newMultiChecked)
       }
     } else {
@@ -313,18 +344,30 @@ const QuestionCrt = (params: any) => {
       }
     }
 
-    getMasterCheckboxFlag(newMultiChecked);
+    getMasterCheckboxFlag(newMultiChecked, passageId);
   }
 
   // 전체 multi check box 체크/해제
-  const getMasterCheckboxFlag = (newMultiChecked: string[]) => {
-    const multiCheckboxAll = document.querySelectorAll(`input[type=checkbox][data-type="multi-check"]`) as NodeListOf<HTMLInputElement>;
+  const getMasterCheckboxFlag = (newMultiChecked: string[], passageId?: number) => {
+    let masterId = "";
+    let multiCheckIds = [] as any;
+    if (passageId) {
+      let treeRow = treeBox.filter((item: any) => parseInt(item.nodeId) === passageId)[0];
+      masterId = treeRow.masterId;
+      multiCheckIds = [...new Set(treeBox.filter((item: any) => item.masterId === masterId).map((item: any) => item.rowId))];
+    } else {
+      const multiCheckboxAll = document.querySelectorAll(`input[type=checkbox][data-type="multi-check"]`) as NodeListOf<HTMLInputElement>;
+      masterId = multiCheckboxAll[0].id;
+      for (let i = 1; i < multiCheckboxAll.length; i++) {
+        multiCheckIds.push(multiCheckboxAll[i].id);
+      }
 
-    const master = multiCheckboxAll[0];
-    const curIdx = newMultiChecked.indexOf(master.id);
+    }
 
-    for (let i = 1; i < multiCheckboxAll.length; i++) {
-      if (newMultiChecked.indexOf(multiCheckboxAll[i].id) === -1) {
+    const curIdx = newMultiChecked.indexOf(masterId);
+
+    for (let i = 1; i < multiCheckIds.length; i++) {
+      if (newMultiChecked.indexOf(multiCheckIds[i]) === -1) {
         // splice
         if (curIdx !== -1) {
           newMultiChecked.splice(curIdx, 1)
@@ -335,7 +378,7 @@ const QuestionCrt = (params: any) => {
     }
 
     if (curIdx === -1) {
-      newMultiChecked.push(master.id);
+      newMultiChecked.push(masterId);
       setMultiChecked(newMultiChecked)
     }
   }
@@ -374,6 +417,23 @@ const QuestionCrt = (params: any) => {
         return rowDataList;
       });
     }
+
+    checkMultiBox(row.passageId, newChecked);
+    forceUpdate(); // 컴포넌트 재 랜더링
+  }
+
+  /* 오른쪽 side box에서 remove하기위한 event */
+  const removeCheckBox = (row: any) => {
+    let newChecked = [...checked];
+    let curIdx = newChecked.indexOf(row.passageId);
+
+    newChecked.splice(curIdx, 1)
+    setChecked(newChecked);
+
+    rowDataList.splice(curIdx, 1)
+    setRowDataList((rowDataList: any) => {
+      return rowDataList;
+    });
 
     checkMultiBox(row.passageId, newChecked);
     forceUpdate(); // 컴포넌트 재 랜더링
@@ -456,9 +516,9 @@ const QuestionCrt = (params: any) => {
                   <tr>
                     <td><input type="checkbox"
                       data-type="multi-check"
-                      id={searchPassage + searchYear + passageName + page + "all"}
+                      id={getMasterCheckBox()}
                       value={rowData.length}
-                      checked={multiChecked.indexOf(searchPassage + searchYear + passageName + page + "all") != -1}
+                      checked={multiChecked.indexOf(getMasterCheckBox()) != -1}
                       onChange={() => checkMultiAll(rowData.length)}
                     /></td>
                     <td> 강</td>
@@ -468,7 +528,7 @@ const QuestionCrt = (params: any) => {
                 <tbody>
                   {rowData.map((row: any) => {
                     return (
-                      <tr>
+                      <tr key={row.id}>
                         <td><input type="checkbox"
                           data-type="multi-check"
                           id={searchPassage + searchYear + passageName + page + row.id}
@@ -482,6 +542,7 @@ const QuestionCrt = (params: any) => {
                             return (
                               <>
                                 < input type="checkbox"
+                                  key={passage.passageId.toString()}
                                   id={passage.passageId.toString()}
                                   value={row.id}
                                   data-passage={JSON.stringify(passage)}
@@ -521,6 +582,7 @@ const QuestionCrt = (params: any) => {
               buttonName={params.Children}
               checked={checked}
               setChecked={setChecked}
+              removeRow={removeCheckBox}
             />
           </div>
         </div>
