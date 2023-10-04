@@ -12,7 +12,13 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { GridColDef, DataGrid, GridRowSelectionModel, GridCallbackDetails, GridRowParams } from "@mui/x-data-grid";
+import {
+  GridColDef,
+  DataGrid,
+  GridRowSelectionModel,
+  GridCallbackDetails,
+  GridRowParams,
+} from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
 
@@ -58,13 +64,14 @@ const QuestionCrt = (params: any) => {
     }
   };
 
-  const checkAll = (unitNum: GridRowSelectionModel, details: GridCallbackDetails) => {
-    console.log("ttt", unitNum)
-    console.log("unitCheckAll::", unitCheckAll)
+  const checkAll = (
+    unitNum: GridRowSelectionModel,
+    details: GridCallbackDetails
+  ) => {
+    console.log("ttt", unitNum);
+    console.log("unitCheckAll::", unitCheckAll);
 
-
-debugger;
-
+    debugger;
 
     if (unitNum.length === 0) {
       // 전체 체크 해제
@@ -77,14 +84,16 @@ debugger;
         }
 
         // 새로 체크
-        let nodes = document.querySelectorAll(`input[type=checkbox][value="${unitNum[i]}"]`) as NodeListOf<HTMLInputElement>;
+        let nodes = document.querySelectorAll(
+          `input[type=checkbox][value="${unitNum[i]}"]`
+        ) as NodeListOf<HTMLInputElement>;
         // debugger;
         for (let j = 0; j < nodes.length; j++) {
           // console.log(document.getElementById(nodes[i].id));
           // if (checked.indexOf(parseInt(nodes[i].id)) == -1) {
           //   checked.push(parseInt(nodes[i].id));
           // }
-          console.log("nodes[j].id.:::",nodes[j].id)
+          console.log("nodes[j].id.:::", nodes[j].id);
           console.log("checked:::", checked);
           document.getElementById(nodes[j].id.toString())?.click();
           // break;
@@ -93,32 +102,33 @@ debugger;
     }
 
     setUnitCheckAll(unitNum);
-
-  }
+  };
 
   // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
   const changePage = async (page: number) => {
-    setPage(page)
+    setPage(page);
 
     try {
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page - 1}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
+      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${
+        page - 1
+      }&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
-      console.log("url", API_URL)
-      console.log("data:::", res.data)
+      console.log("url", API_URL);
+      console.log("data:::", res.data);
 
       for (let i = 0; i < res.data.list.length; i++) {
         res.data.list[i].id = i;
       }
-      console.log("checked:::", checked)
+      console.log("checked:::", checked);
 
       setRowData(res.data.list);
-      setTotalPageSize(res.data.pageSize)
+      setTotalPageSize(res.data.pageSize);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   // [문제 출제] 강, 지문 번호 조회
   const handlePassageName = async (event: SelectChangeEvent) => {
@@ -129,18 +139,17 @@ debugger;
 
       const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
       const res: any = await axios.get(API_URL);
-      
+
       for (let i = 0; i < res.data.list.length; i++) {
         res.data.list[i].id = i;
       }
 
-      console.log("res.data", res.data)
-      console.log("checked:::", checked)
+      console.log("res.data", res.data);
+      console.log("checked:::", checked);
 
       setPassageName(passageName);
       setRowData(res.data.list);
-      setTotalPageSize(res.data.pageSize)
-
+      setTotalPageSize(res.data.pageSize);
     } catch (error) {
       console.log(error);
     }
@@ -149,7 +158,7 @@ debugger;
   //연도 이벤트
   const handleYear = async (event: SelectChangeEvent) => {
     try {
-      setSearchTextBook([]);  // 교재명 리스트부터 초기화
+      setSearchTextBook([]); // 교재명 리스트부터 초기화
       setPassageName("");
 
       const year = event.target.value;
@@ -192,7 +201,7 @@ debugger;
 
   //지문 체크박스 이벤트 (선택&취소)
   const handleToggle = (row: any) => () => {
-    console.log("row.passageId", row.passageId)
+    console.log("row.passageId", row.passageId);
     const currentIndex = checked.indexOf(row.passageId);
     const newChecked = [...checked];
     const newRowDataList = [...rowDataList];
@@ -209,7 +218,7 @@ debugger;
         passageUnit: row.passageUnit,
       });
     } else {
-      console.log("splice됨")
+      console.log("splice됨");
       newChecked.splice(currentIndex, 1);
       newRowDataList.splice(currentIndex, 1);
     }
@@ -227,7 +236,7 @@ debugger;
       editable: false,
       align: "center",
       sortable: false,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "passageInfo",
@@ -247,7 +256,7 @@ debugger;
                   onClick={handleToggle(row)}
                   inputProps={{
                     // @ts-ignore
-                    'data-order': row.id,
+                    "data-order": row.id,
                   }}
                   checked={checked.indexOf(row.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
                 />
@@ -272,17 +281,18 @@ debugger;
           문제 출제
         </Typography>
         <div className="grid-flex">
-
           <div className="css-with80">
             <Box sx={{ width: "100%" }}>
               <Box sx={{ width: "100%", paddingBottom: "20px" }}>
-
                 <FormControl sx={{ width: "180px" }}>
-                  <InputLabel id="demo-simple-select-label">지문유형</InputLabel>
+                  <InputLabel id="demo-simple-select-label">
+                    지문유형
+                  </InputLabel>
                   <Select
                     value={searchPassage}
                     onChange={handlePassage}
-                    labelId="demo-simple-select-label">
+                    labelId="demo-simple-select-label"
+                  >
                     {PASSAGETYPE.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -296,7 +306,8 @@ debugger;
                   <Select
                     value={searchYear}
                     onChange={handleYear}
-                    labelId="demo-simple-select-label">
+                    labelId="demo-simple-select-label"
+                  >
                     {YEAR.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -305,13 +316,13 @@ debugger;
                   </Select>
                 </FormControl>
 
-
                 <FormControl sx={{ width: "380px", marginLeft: "20px" }}>
                   <InputLabel id="demo-simple-select-label">교재명</InputLabel>
                   <Select
                     value={passageName}
                     onChange={handlePassageName}
-                    labelId="demo-simple-select-label">
+                    labelId="demo-simple-select-label"
+                  >
                     {searchTextBook.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -336,11 +347,17 @@ debugger;
                   },
                 }}
                 checkboxSelection
-                onRowSelectionModelChange={(newRowSelectionModel, details) => checkAll(newRowSelectionModel, details)}
+                onRowSelectionModelChange={(newRowSelectionModel, details) =>
+                  checkAll(newRowSelectionModel, details)
+                }
                 disableRowSelectionOnClick={true}
                 hideFooter={true}
                 hideFooterPagination={true}
-                sx={rowData.length > 0 ? { fontWeight: "500", fontSize: "15px", height: '100%' } : { fontWeight: "500", fontSize: "15px", height: '400px' }}
+                sx={
+                  rowData.length > 0
+                    ? { fontWeight: "500", fontSize: "15px", height: "100%" }
+                    : { fontWeight: "500", fontSize: "15px", height: "400px" }
+                }
               />
             </Box>
             <Pagination
