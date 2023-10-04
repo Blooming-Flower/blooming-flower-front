@@ -150,8 +150,10 @@ const QuestionCrt = (params: any) => {
               newChecked.push(parseInt(nodes[i].id));
 
               let row = JSON.parse(nodes[i].dataset.passage as any);
+              debugger;
               newDataList.push({
                 passageYear: searchYear,
+                passageName: row.passageName,
                 passageNumber: row.passageNumber,
                 passageId: row.passageId,
                 passageUnit: row.passageUnit,
@@ -403,7 +405,7 @@ const QuestionCrt = (params: any) => {
 
     const curIdx = newMultiChecked.indexOf(masterId);
 
-    for (let i = 1; i < multiCheckIds.length; i++) {
+    for (let i = 0; i < multiCheckIds.length; i++) {
       if (newMultiChecked.indexOf(multiCheckIds[i]) === -1) {
         // splice
         if (curIdx !== -1) {
@@ -436,6 +438,7 @@ const QuestionCrt = (params: any) => {
       setRowDataList((rowDataList: any) => {
         rowDataList.push({
           passageYear: searchYear,
+          passageName: row.passageName,
           passageNumber: row.passageNumber,
           passageId: row.passageId,
           passageUnit: row.passageUnit,
@@ -486,19 +489,19 @@ const QuestionCrt = (params: any) => {
           문제 출제
         </Typography>
         <div className="grid-flex">
+
           <div className="css-with80">
             <Box sx={{ width: "100%" }}>
               <Box sx={{ width: "100%", paddingBottom: "20px" }}>
+
                 <FormControl sx={{ width: "180px" }}>
-                  <InputLabel id="demo-simple-select-label">
-                    지문유형
-                  </InputLabel>
+                  <InputLabel id="demo-simple-select-label">지문유형</InputLabel>
                   <Select
                     value={searchPassage}
                     onChange={handlePassage}
-                    labelId="demo-simple-select-label"
-                  >
-                    {PASSAGETYPE.map((text, id) => (
+                    labelId="demo-simple-select-label">
+                    {PASSAGETYPE.map((text, id) =>
+                    (
                       <MenuItem key={id} value={text}>
                         {text}
                       </MenuItem>
@@ -511,8 +514,7 @@ const QuestionCrt = (params: any) => {
                   <Select
                     value={searchYear}
                     onChange={handleYear}
-                    labelId="demo-simple-select-label"
-                  >
+                    labelId="demo-simple-select-label">
                     {YEAR.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -521,13 +523,13 @@ const QuestionCrt = (params: any) => {
                   </Select>
                 </FormControl>
 
+
                 <FormControl sx={{ width: "380px", marginLeft: "20px" }}>
                   <InputLabel id="demo-simple-select-label">교재명</InputLabel>
                   <Select
                     value={passageName}
                     onChange={handlePassageName}
-                    labelId="demo-simple-select-label"
-                  >
+                    labelId="demo-simple-select-label">
                     {searchTextBook.map((text, id) => (
                       <MenuItem key={id} value={text}>
                         {text}
@@ -551,18 +553,13 @@ const QuestionCrt = (params: any) => {
               <table>
                 <thead>
                   <tr>
-                    <td>
-                      <input
-                        type="checkbox"
-                        data-type="multi-check"
-                        id={getMasterCheckBox()}
-                        value={rowData.length}
-                        checked={
-                          multiChecked.indexOf(getMasterCheckBox()) != -1
-                        }
-                        onChange={() => checkMultiAll(rowData.length)}
-                      />
-                    </td>
+                    <td><input type="checkbox"
+                      data-type="multi-check"
+                      id={getMasterCheckBox()}
+                      value={rowData.length}
+                      checked={multiChecked.indexOf(getMasterCheckBox()) != -1}
+                      onChange={() => checkMultiAll(rowData.length)}
+                    /></td>
                     <td> 강</td>
                     <td>지문</td>
                   </tr>
@@ -571,56 +568,37 @@ const QuestionCrt = (params: any) => {
                   {rowData.map((row: any) => {
                     return (
                       <tr key={row.id}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            data-type="multi-check"
-                            id={
-                              searchPassage +
-                              searchYear +
-                              passageName +
-                              page +
-                              row.id
-                            }
-                            value={row.id}
-                            checked={
-                              multiChecked.indexOf(
-                                searchPassage +
-                                  searchYear +
-                                  passageName +
-                                  page +
-                                  row.id
-                              ) != -1
-                            }
-                            onChange={() => checkMultiOneRow(row.id)}
-                          />
-                        </td>
+                        <td><input type="checkbox"
+                          data-type="multi-check"
+                          id={searchPassage + searchYear + passageName + page + row.id}
+                          value={row.id}
+                          checked={multiChecked.indexOf(searchPassage + searchYear + passageName + page + row.id) != -1}
+                          onChange={() => checkMultiOneRow(row.id)}
+                        /></td>
                         <td>{row.passageUnit}</td>
                         <td>
                           {row.passageInfo.map((passage: any) => {
                             return (
-                              <>
-                                <input
-                                  type="checkbox"
-                                  key={passage.passageId.toString()}
+                              <span key={passage.passageId.toString()}>
+                                < input type="checkbox"
                                   id={passage.passageId.toString()}
                                   value={row.id}
                                   data-passage={JSON.stringify(passage)}
-                                  checked={
-                                    checked.indexOf(passage.passageId) != -1
-                                  } // 다른 화면 갓다와도 체크되게 함
+                                  checked={checked.indexOf(passage.passageId) != -1} // 다른 화면 갓다와도 체크되게 함
                                   // onChange={handleToggle(passage)}
                                   onChange={(event) => handleCheckBox(event)}
                                 />
                                 {passage.passageNumber}
-                              </>
-                            );
+                              </span>
+
+                            )
                           })}
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
+
               </table>
             </Box>
             <Pagination
