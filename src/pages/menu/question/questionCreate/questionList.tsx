@@ -17,6 +17,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CustomButton from "@components/ui/button/custeomButton";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
+import { $GET } from "@utils/request";
 
 const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
@@ -25,14 +26,14 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
   //문제유형 :  searchlecture
-  const { width, height, rowData, removeRow, buttonName } = props;
+  const { width, height, rowData, removeRow, buttonName, editorRef } = props;
 
   //리스트업 목록 삭제 버튼
   const onRemove = (row: any) => {
-    removeRow(row)
+    removeRow(row);
   };
 
-  console.log(props)
+  console.log(props);
 
   return (
     <div className="questionList-item">
@@ -48,13 +49,30 @@ const QuestionList = (props: any) => {
           "& ul": { padding: 0 },
         }}
       >
-        {rowData.length === 0 ? <Alert>{"지문을 선택해 주세요."}</Alert> :
+        {rowData.length === 0 ? (
+          <Alert>{"지문을 선택해 주세요."}</Alert>
+        ) : (
           rowData.map((row: any) => {
             return (
               <div key={row.passageId}>
                 <ListItem
                   className="checkbox-list"
                   value={row}
+                  onClick={(e) => {
+                    if (!editorRef) {
+                      return;
+                    }
+                    $GET(
+                      `/api/v1/passage/search/${row.passageId}`,
+                      (result: any) => {
+                        console.log(result);
+
+                        editorRef.current
+                          .getInstance()
+                          .setHTML(result.data.passageContent);
+                      }
+                    );
+                  }}
                   secondaryAction={
                     <IconButton
                       edge="end"
@@ -72,20 +90,18 @@ const QuestionList = (props: any) => {
               </div>
             );
           })
-        }
+        )}
 
-        {rowData.length !== 0 &&
-          < CustomButton
+        {rowData.length !== 0 && (
+          <CustomButton
             domain={PATH.QUESTION6}
-            label={"GO!"}
+            label={buttonName ?? "GO!"}
             type={"true"}
             params={rowData}
-          >
-            {buttonName}
-          </CustomButton>}
-
-      </List >
-    </div >
+          />
+        )}
+      </List>
+    </div>
   );
 };
 
