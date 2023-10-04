@@ -25,15 +25,14 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
   //문제유형 :  searchlecture
-  const { width, height, rowData, setRowData, checked, setChecked, buttonName } = props;
+  const { width, height, rowData, removeRow, buttonName } = props;
 
   //리스트업 목록 삭제 버튼
-  const onRemove = (value: any) => {
-    setRowData(rowData.filter((el: any) => el !== value));
-    if (checked && checked.indexOf(value.passageId) != -1) { // checked(지문 체크 배열) non-checked로 변경
-      setChecked(checked.filter((el: any) => el !== value.passageId))
-    }
+  const onRemove = (row: any) => {
+    removeRow(row)
   };
+
+  console.log(props)
 
   return (
     <div className="questionList-item">
@@ -49,42 +48,44 @@ const QuestionList = (props: any) => {
           "& ul": { padding: 0 },
         }}
       >
-        {rowData.length === 0 && <Alert>{"지문을 선택해 주세요."}</Alert>}
+        {rowData.length === 0 ? <Alert>{"지문을 선택해 주세요."}</Alert> :
+          rowData.map((row: any) => {
+            return (
+              <div key={row.passageId}>
+                <ListItem
+                  className="checkbox-list"
+                  value={row}
+                  secondaryAction={
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => onRemove(row)}
+                    >
+                      <HighlightOffIcon />
+                    </IconButton>
+                  }
+                >
+                  <div>{row.passageYear}</div>
+                  <div>{row.passageUnit}</div>
+                  <div>{row.passageNumber}</div>
+                </ListItem>
+              </div>
+            );
+          })
+        }
 
-        {rowData.map((row: any) => {
-          return (
-            <div key={row.passageId}>
-              <ListItem
-                className="checkbox-list"
-                value={row}
-                secondaryAction={
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => onRemove(row)}
-                  >
-                    <HighlightOffIcon />
-                  </IconButton>
-                }
-              >
-                <div>{row.passageYear}</div>
-                <div>{row.passageUnit}</div>
-                <div>{row.passageNumber}</div>
-              </ListItem>
-            </div>
-          );
-        })}
+        {rowData.length !== 0 &&
+          < CustomButton
+            domain={PATH.QUESTION6}
+            label={"GO!"}
+            type={"true"}
+            params={rowData}
+          >
+            {buttonName}
+          </CustomButton>}
 
-        <CustomButton
-          domain={PATH.QUESTION6}
-          label={"GO!"}
-          type={"true"}
-          params={rowData}
-        >
-          {buttonName}
-        </CustomButton>
-      </List>
-    </div>
+      </List >
+    </div >
   );
 };
 
