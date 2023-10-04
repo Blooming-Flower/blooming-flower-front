@@ -10,32 +10,20 @@ interface Props {
 }
 
 const TuiEditor = ({ content = '', editorRef }: Props) => {
-    const createCustomFunc = (type:string) => {
-        const cont = editorRef.current.getInstance().getSelectedText(editorRef.current.getInstance().getSelection()[0],editorRef.current.getInstance().getSelection()[1])
-        if(type == "U"){
-            editorRef.current.getInstance().replaceSelection("<ins>"+cont+"</ins>",editorRef.current.getInstance().getSelection()[0],editorRef.current.getInstance().getSelection()[1])
-        }else{
-            editorRef.current.getInstance().replaceSelection("<div style='border:1px solid black' contenteditable='true'>"+cont+"</div>",editorRef.current.getInstance().getSelection()[0],editorRef.current.getInstance().getSelection()[1])
-        }
-        let markDown:string = editorRef.current.getInstance().getMarkdown()
-        const count = markDown.split(/\\/).length - 1
-        for(let i = 0; i < count; i++){
-            markDown = markDown.replace(/\\/,"")
-        }
-        editorRef.current.getInstance().setMarkdown(markDown)
-    }
     const createCustomButton = (param:string) => {
         const button = document.createElement('button');
-
         button.className = 'toastui-editor-toolbar-icons last';
         button.style.backgroundImage = 'none';
         button.style.margin = '0';
-        button.innerHTML = param == "U"? "<ins style='font-size:18px'>"+param+"</ins>" : param == "B" ? "<div style='border: 1px solid black; height: 80%; width: 100%; border-radius: 5px'></div>" : "<span style='font-size: 18px'>"+param+"</span>";
+        button.innerHTML = param == "U"? "<ins style='font-size:18px'>"+param+"</ins>" : param == "빈칸" ? "<ins style='font-size: 15px'>"+param+"</ins>" : "<span style='font-size: 18px'>"+param+"</span>";
         button.addEventListener('click', () => {
             if(param == "U"){
-                createCustomFunc("U")
-            }else if(param == "B"){
-                createCustomFunc("B")
+                editorRef.current.getInstance().exec('strike')
+                console.log(editorRef.current.focus)
+            }else if(param == "빈칸"){
+                editorRef.current.getInstance().exec('strike')
+                editorRef.current.getInstance().insertText('    ')
+                console.log(editorRef.current.selectionStart)
             }
             else{
                 editorRef.current.getInstance().insertText(param)
@@ -56,7 +44,7 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
             {
                 name: 'customBox',
                 tooltip: 'Box',
-                el: createCustomButton("B")
+                el: createCustomButton("빈칸")
             }
         ],
         [
@@ -178,7 +166,7 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
                             editorRef.current.getInstance().exec("italic");
                         }else if(ev.code == "KeyM" && ev.ctrlKey){
                             console.log("밑줄호출")
-                            createCustomFunc("U")
+                            editorRef.current.getInstance().exec("strike");
                         }else if(ev.key == "1" && ev.altKey){
                             console.log('1번 호출')
                             editorRef.current.getInstance().insertText('①')
