@@ -84,6 +84,7 @@ const QuestionList = (props: any) => {
                   }
                 >
                   <div>{row.passageYear}</div>
+                  <div>{row.passageName}</div>
                   <div>{row.passageUnit}</div>
                   <div>{row.passageNumber}</div>
                 </ListItem>
