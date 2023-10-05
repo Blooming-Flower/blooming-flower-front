@@ -18,6 +18,7 @@ import CustomButton from "@components/ui/button/custeomButton";
 import { useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
 import { $GET } from "@utils/request";
+import { log } from "console";
 
 const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
@@ -26,14 +27,21 @@ const QuestionList = (props: any) => {
     setOpen(!open);
   };
   //문제유형 :  searchlecture
-  const { width, height, rowData, removeRow, buttonName, editorRef } = props;
+  const {
+    width,
+    height,
+    rowData,
+    removeRow,
+    buttonName,
+    editorRef,
+    setPassageData,
+    setIsTempSave,
+  } = props;
 
   //리스트업 목록 삭제 버튼
   const onRemove = (row: any) => {
     removeRow(row);
   };
-
-  console.log(props);
 
   return (
     <div className="questionList-item">
@@ -65,11 +73,11 @@ const QuestionList = (props: any) => {
                     $GET(
                       `/api/v1/passage/search/${row.passageId}`,
                       (result: any) => {
-                        console.log(result);
-
                         editorRef.current
                           .getInstance()
                           .setHTML(result.data.passageContent);
+                        setPassageData({ ...row });
+                        setIsTempSave(true);
                       }
                     );
                   }}
@@ -84,7 +92,8 @@ const QuestionList = (props: any) => {
                   }
                 >
                   <div>{row.passageYear}</div>
-                  <div className="passageName"
+                  <div
+                    className="passageName"
                     style={{
                       maxWidth: 65,
                       whiteSpace: "nowrap",

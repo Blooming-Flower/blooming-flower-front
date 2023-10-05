@@ -13,6 +13,7 @@ import {
   TextField,
   SelectChangeEvent,
 } from "@mui/material";
+import TuiEditor from "@components/ui/tui/toast";
 
 const Question = React.forwardRef((props: { questionType: string }, ref) => {
   const [questionType, setQuestionType] = React.useState(
@@ -46,9 +47,9 @@ const Question = React.forwardRef((props: { questionType: string }, ref) => {
   }));
 
   const [subBox, setSubBox] = React.useState("");
-  const subBoxRef = React.useRef<any>();
+  const subBoxRef: React.MutableRefObject<any> = React.useRef();
   const [subBox2, setSubBox2] = React.useState("");
-  const subBoxRef2 = React.useRef<any>();
+  const subBoxRef2: React.MutableRefObject<any> = React.useRef();
   const chooseRef = useGridApiRef();
   const chooseRef2 = React.useRef({
     getChooseList: () => [],
@@ -142,37 +143,49 @@ const Question = React.forwardRef((props: { questionType: string }, ref) => {
 
       <div style={{ display: "flex", flexDirection: "column" }}>
         {["Q16", "Q17", "Q18", "Q21", "Q22"].includes(questionType) ? (
-          <StyledTextarea
-            ref={subBoxRef}
-            minRows={5}
-            maxRows={20}
-            aria-label="maximum height"
-            style={{ resize: "none", marginBottom: 10 }}
+          <TuiEditor
+            editorRef={subBoxRef}
+            height="200px"
             placeholder={
               ["Q16", "Q17"].includes(questionType)
-                ? "주어진 문장"
+                ? "<주어진 문장>"
                 : ["Q21", "Q22"].includes(questionType)
                 ? "<보기>"
-                : "요약문"
+                : "<요약문>"
             }
-            className="passage-text"
-            onChange={(e) => setSubBox(e.target.value)}
           />
         ) : (
+          // <StyledTextarea
+          //   ref={subBoxRef}
+          //   minRows={5}
+          //   maxRows={20}
+          //   aria-label="maximum height"
+          //   style={{ resize: "none", marginBottom: 10 }}
+          //   placeholder={
+
+          //   }
+          //   className="passage-text"
+          //   onChange={(e) => setSubBox(e.target.value)}
+          // />
           <></>
         )}
         {questionType === "Q22" ? (
-          <StyledTextarea
-            ref={subBoxRef2}
-            minRows={5}
-            maxRows={20}
-            aria-label="maximum height"
-            style={{ resize: "none" }}
+          <TuiEditor
+            editorRef={subBoxRef2}
+            height="200px"
             placeholder={"<조건>"}
-            className="passage-text"
-            onChange={(e) => setSubBox2(e.target.value)}
           />
         ) : (
+          // <StyledTextarea
+          //   ref={subBoxRef2}
+          //   minRows={5}
+          //   maxRows={20}
+          //   aria-label="maximum height"
+          //   style={{ resize: "none" }}
+          //   placeholder={"<조건>"}
+          //   className="passage-text"
+          //   onChange={(e) => setSubBox2(e.target.value)}
+          // />
           <></>
         )}
       </div>
@@ -202,7 +215,7 @@ const Question = React.forwardRef((props: { questionType: string }, ref) => {
             <div
               className="answer-wrap"
               style={{
-                width: 950,
+                width: 900,
                 height: 262,
               }}
             >
