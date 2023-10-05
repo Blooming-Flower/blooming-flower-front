@@ -49,10 +49,12 @@ const QuestionTab = () => {
       defaultQuestionRefList[idx].current?.changeQuestionType(value)
     );
   };
+  const [tempSaveParams, setTempSaveParams] = React.useState<any>([]);
+  const tempSaveParamSetting = () => {};
 
   const editorRef: React.MutableRefObject<any> = React.useRef();
   const questionTempSave = () => {
-    const questionContent = editorRef.current.getInstance().getHTML();
+  const questionContent = editorRef.current.getInstance().getHTML();
 
     const newQuestion = {
       questionContent,
@@ -75,18 +77,6 @@ const QuestionTab = () => {
     setQuestionTitle("");
     setPastYn(false);
     editorRef.current.getInstance().setHTML("");
-
-    // $POST("/api/v1/question/save", newQuestion, () => {
-    //   setQuestionType("");
-    //   setQuestionTitle("");
-    //   setPastYn(false);
-    //   setSubBox("");
-    // subBoxRef.current.value = "";
-    // setSubBox2("");
-    // subBoxRef2.current.value = "";
-    //   editorRef.current.getInstance().setHTML("");
-    //   resetAnswerGrid();
-    // });
   };
 
   return (

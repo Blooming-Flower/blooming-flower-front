@@ -94,7 +94,7 @@ const AnswerDataGrid = React.forwardRef(
       {
         field: "answerContent",
         headerName: "정답란",
-        width: 820,
+        width: 790,
         align: "center",
         editable: true,
       },

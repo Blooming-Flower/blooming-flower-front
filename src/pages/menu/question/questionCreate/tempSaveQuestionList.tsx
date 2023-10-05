@@ -11,15 +11,8 @@ import { QUESTIONTYPE } from "@common/const";
 
 const TempSaveQuestionList = (props: any) => {
   //문제유형 :  searchlecture
-  const {
-    width,
-    height,
-    rowData,
-    setRowData,
-    buttonName,
-    editorRef,
-    setIsTempSave,
-  } = props;
+  const { width, height, rowData, setRowData, editorRef, setIsTempSave } =
+    props;
   const [viewDatas, setViewDatas] = React.useState(
     rowData.map((data: any) => ({
       ...data.passageData,
@@ -54,6 +47,18 @@ const TempSaveQuestionList = (props: any) => {
       }, [])
     );
   };
+
+  // $POST("/api/v1/question/save", newQuestion, () => {
+  //   setQuestionType("");
+  //   setQuestionTitle("");
+  //   setPastYn(false);
+  //   setSubBox("");
+  // subBoxRef.current.value = "";
+  // setSubBox2("");
+  // subBoxRef2.current.value = "";
+  //   editorRef.current.getInstance().setHTML("");
+  //   resetAnswerGrid();
+  // });
 
   return (
     <div className="tempSaveQuestionList-item">
