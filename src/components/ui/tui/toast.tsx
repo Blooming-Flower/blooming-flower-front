@@ -19,11 +19,14 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
         button.addEventListener('click', () => {
             if(param == "U"){
                 editorRef.current.getInstance().exec('strike')
-                console.log(editorRef.current.focus)
             }else if(param == "빈칸"){
-                editorRef.current.getInstance().exec('strike')
+                const start = window.getSelection()!.anchorOffset
+                console.log(start)
+                console.log(window.getSelection())
                 editorRef.current.getInstance().insertText('    ')
-                console.log(editorRef.current.selectionStart)
+                // editorRef.current.getInstance().setSelection(start+1,start+5)
+                // editorRef.current.getInstance().exec('strike')
+                // start!.removeAllRanges()
             }
             else{
                 editorRef.current.getInstance().insertText(param)
@@ -167,6 +170,8 @@ const TuiEditor = ({ content = '', editorRef }: Props) => {
                         }else if(ev.code == "KeyM" && ev.ctrlKey){
                             console.log("밑줄호출")
                             editorRef.current.getInstance().exec("strike");
+                        }else if(ev.code == "Space" && ev.ctrlKey){
+                            editorRef.current.getInstance().insertText('    ')
                         }else if(ev.key == "1" && ev.altKey){
                             console.log('1번 호출')
                             editorRef.current.getInstance().insertText('①')
