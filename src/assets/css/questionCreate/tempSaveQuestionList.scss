@@ -1,0 +1,72 @@
+﻿.tempSaveQuestionList-item {
+    width: 100%;
+    // max-width: 220px;
+    // min-width: 220px;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px 3px #dddddd;
+  
+    .css-1k9ek97 {
+      background-color: none !important;
+    }
+  
+    .contents {
+      margin: 0px auto !important;
+    }
+  
+    .MuiList-root {
+      border-radius: 10px !important;
+  
+      .MuiListItem-root{
+        justify-content: space-between;
+        cursor: pointer;
+      }
+    }
+  
+    .MuiListItemSecondaryAction-root {
+      top: 18px !important;
+    }
+  
+    .MuiList-root::-webkit-scrollbar{
+      width: 10px;
+    }
+    .MuiList-root::-webkit-scrollbar-thumb{
+      background-color: #8a8683;
+      border-radius: 5px;
+    }
+    .MuiList-root::-webkit-scrollbar-track{
+      background-color: lightgray;
+      border-radius: 5px;
+    }
+  
+    .MuiButtonBase-root.MuiButton-root {
+      width: 66px !important;
+      height: 35px !important;
+      bottom: 0;
+      right: 0;
+    }
+  
+    .MuiListItem-root {
+      font-size: 15px;
+    }
+  
+    .MuiList-root{
+      padding-top: 0px !important;
+    }
+    .passageName::before{
+      content: attr(data-tooltip); /*툴팁 표시 내용은 버튼의 "data-tooltip" 속성값으로 */
+      position: absolute;
+      background-color: rgba(0,0,0,0.5);
+      color: #fff;
+      padding: 10px 7px;
+      border-radius: 10px;
+      max-width: 300px;
+      left: 40%; /* 버튼 왼쪽에서 부터 버튼 너비 25% 이동한 위치에 툴팁 왼쪽이 오게 */
+      opacity: 0; /* 기본 상태는 안보이게 */
+      transition: all 0.5s linear; /* 나타났다 사라지는 애니메이션 */
+    }
+    .passageName:hover::before {
+      opacity: 1;
+    }
+  }
+  
