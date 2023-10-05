@@ -11,11 +11,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import {
-  GridColDef,
-  DataGrid,
-  GridRowSelectionModel,
-} from "@mui/x-data-grid";
+import { GridColDef, DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
 
@@ -63,15 +59,15 @@ const QuestionCrt = (params: any) => {
   };
 
   const checkAll = (unitNum: GridRowSelectionModel) => {
-    console.log("multiCheckAllFlag:::", multiCheckAllFlag)
+    console.log("multiCheckAllFlag:::", multiCheckAllFlag);
     if (!multiCheckAllFlag) {
       console.log("아무일도 안일어남 multiCheckAllFlag:::", multiCheckAllFlag);
       setUnitCheckAll(unitNum);
-      setMultiCheckAllFlag(true)
+      setMultiCheckAllFlag(true);
       return;
     }
-    console.log("ttt", unitNum)
-    console.log("unitCheckAll::", unitCheckAll)
+    console.log("ttt", unitNum);
+    console.log("unitCheckAll::", unitCheckAll);
 
     let newChecked = [...checked];
     const newDataList = [...rowDataList];
@@ -85,7 +81,9 @@ const QuestionCrt = (params: any) => {
     if (unitCheckAll.length < unitNum.length) {
       for (let i = 0; i < unitNum.length; i++) {
         // 새로 체크
-        let nodes = document.querySelectorAll(`input[type=checkbox][value="${unitNum[i]}"]`) as NodeListOf<HTMLInputElement>;
+        let nodes = document.querySelectorAll(
+          `input[type=checkbox][value="${unitNum[i]}"]`
+        ) as NodeListOf<HTMLInputElement>;
         for (let j = 0; j < nodes.length; j++) {
           let curNodeId = parseInt(nodes[j].id);
           let curIdx = newChecked.indexOf(curNodeId);
@@ -110,7 +108,9 @@ const QuestionCrt = (params: any) => {
       for (let i = 0; i < unitCheckAll.length; i++) {
         if (unitNum.indexOf(unitCheckAll[i]) === -1) {
           // 체크 해제 됨
-          let nodes = document.querySelectorAll(`input[type=checkbox][value="${unitCheckAll[i]}"]`) as NodeListOf<HTMLInputElement>;
+          let nodes = document.querySelectorAll(
+            `input[type=checkbox][value="${unitCheckAll[i]}"]`
+          ) as NodeListOf<HTMLInputElement>;
           for (let j = 0; j < nodes.length; j++) {
             let curNodeId = parseInt(nodes[j].id);
             let curIdx = newChecked.indexOf(curNodeId);
@@ -122,12 +122,11 @@ const QuestionCrt = (params: any) => {
         }
       }
     }
-    console.log("newChecked::", newChecked)
+    console.log("newChecked::", newChecked);
     setUnitCheckAll(unitNum);
     setChecked(() => newChecked);
     setRowDataList(() => newDataList);
-  }
-
+  };
 
   // 1 row multi check box
   // const checkMultiOneRow = (rowId: number) => {
@@ -239,20 +238,30 @@ const QuestionCrt = (params: any) => {
   };
 
   // 단일 버튼 해제/체크 시, 멀티 체크 박스 해제/체크
-  const checkMultiBox = (passageId: number, newChecked: number[], checkFlag: boolean) => {
+  const checkMultiBox = (
+    passageId: number,
+    newChecked: number[],
+    checkFlag: boolean
+  ) => {
     // debugger;
     console.log("passageId", passageId);
     console.log("new checked::", newChecked);
-    console.log("체쿠 여부::", checkFlag)
+    console.log("체쿠 여부::", checkFlag);
     console.log("unitCheckAll:::", unitCheckAll);
 
-    let target = document.getElementById(passageId.toString()) as HTMLInputElement;
+    let target = document.getElementById(
+      passageId.toString()
+    ) as HTMLInputElement;
     if (!target) return; // 다른 페이지에서 remove했을 경우
 
     let rowId = parseInt(target.value);
-    console.log("rowId:::", rowId)
-    const multiNodes = document.querySelectorAll(`input[type=checkbox][aria-label]`) as NodeListOf<HTMLInputElement>;
-    const nodes = document.querySelectorAll(`input[type=checkbox][value="${rowId}"]`) as NodeListOf<HTMLInputElement>;
+    console.log("rowId:::", rowId);
+    const multiNodes = document.querySelectorAll(
+      `input[type=checkbox][aria-label]`
+    ) as NodeListOf<HTMLInputElement>;
+    const nodes = document.querySelectorAll(
+      `input[type=checkbox][value="${rowId}"]`
+    ) as NodeListOf<HTMLInputElement>;
 
     if (checkFlag) {
       let flag = true;
@@ -279,9 +288,7 @@ const QuestionCrt = (params: any) => {
         setRowDataList(newRowDataList);
       }
     }
-
   };
-
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
     // debugger;
@@ -309,7 +316,6 @@ const QuestionCrt = (params: any) => {
         });
         return rowDataList;
       });
-
     } else {
       console.log("슬라이스::", row.passageId);
       checkFlag = false;
@@ -317,8 +323,8 @@ const QuestionCrt = (params: any) => {
       newChecked.splice(currentIndex, 1);
       checked.splice(currentIndex, 1);
       setChecked((checked: any) => {
-        return checked
-      })
+        return checked;
+      });
 
       rowDataList.splice(currentIndex, 1);
       setRowDataList((rowDataList: any) => {
@@ -349,7 +355,7 @@ const QuestionCrt = (params: any) => {
 
   function checkT(id: any) {
     // console.log("체크드체크:::", checked);
-    return checked.indexOf(id) !== -1
+    return checked.indexOf(id) !== -1;
   }
 
   // selectbox 선택시 출력되는 그리드
@@ -362,7 +368,7 @@ const QuestionCrt = (params: any) => {
       editable: false,
       align: "center",
       sortable: false,
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       field: "passageInfo",
@@ -379,9 +385,11 @@ const QuestionCrt = (params: any) => {
                 <Checkbox
                   id={row.passageId.toString()}
                   value={params.id}
-                  inputProps={{
-                    'data-passage': `${JSON.stringify(row)}`,
-                  } as any}
+                  inputProps={
+                    {
+                      "data-passage": `${JSON.stringify(row)}`,
+                    } as any
+                  }
                   onChange={(event) => handleCheckBox(event)}
                   // checked={checked.indexOf(row.passageId) !== -1} // 다른 화면 갓다와도 체크되게 함
                   checked={checkT(row.passageId)} // 다른 화면 갓다와도 체크되게 함
@@ -462,11 +470,16 @@ const QuestionCrt = (params: any) => {
                 rows={rowData}
                 columns={columns}
                 checkboxSelection
-                onRowSelectionModelChange={(newRowSelectionModel) => checkAll(newRowSelectionModel)}
+                onRowSelectionModelChange={(newRowSelectionModel) =>
+                  checkAll(newRowSelectionModel)
+                }
                 hideFooter={true}
                 hideFooterPagination={true}
-
-                sx={rowData.length > 0 ? { fontWeight: "500", fontSize: "15px", height: '100%' } : { fontWeight: "500", fontSize: "15px", height: '400px' }}
+                sx={
+                  rowData.length > 0
+                    ? { fontWeight: "500", fontSize: "15px", height: "100%" }
+                    : { fontWeight: "500", fontSize: "15px", height: "400px" }
+                }
               />
             </Box>
             <Pagination
@@ -481,7 +494,7 @@ const QuestionCrt = (params: any) => {
           </div>
           <div className="css-margin-left100 ">
             <QuestionList
-              width={360}
+              width={500}
               height={600}
               rowData={rowDataList}
               setRowData={setRowDataList}

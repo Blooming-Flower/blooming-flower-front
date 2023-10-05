@@ -1,15 +1,16 @@
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
+import "@toast-ui/editor/dist/toastui-editor.css";
+import { Editor } from "@toast-ui/react-editor";
 import * as React from "react";
-import {useEffect} from "react";
-
+import { useEffect } from "react";
 
 interface Props {
-    content?: string;
-    editorRef: React.MutableRefObject<any>;
+  content?: string;
+  editorRef: React.MutableRefObject<any>;
+  height?: string;
+  placeholder?: string;
 }
 
-const TuiEditor = ({ content = '', editorRef }: Props) => {
+const TuiEditor = ({ content = '', editorRef, height, placeholder }: Props) => {
     const createCustomButton = (param:string) => {
         const button = document.createElement('button');
         button.className = 'toastui-editor-toolbar-icons last';

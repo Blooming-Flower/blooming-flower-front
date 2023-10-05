@@ -15,19 +15,19 @@ import {
 } from "@mui/material";
 import { QUESTIONTYPE, DEFAULT_QUESTION } from "@common/const";
 import QuestionList from "./questionList";
-import { $POST } from "@utils/request";
 import { useLocation } from "react-router-dom";
 import TuiEditor from "@components/ui/tui/toast";
 import Question from "./question";
+import TempSaveQuestionList from "./tempSaveQuestionList";
 
 const QuestionTab = () => {
   const [questionType, setQuestionType] = React.useState("");
   const [questionTitle, setQuestionTitle] = React.useState("");
-  const [saveQuestions, setSaveQuestions] = React.useState([]);
   const [pastYn, setPastYn] = React.useState(false);
   const [questionParamList, setQuestionParamList] = React.useState([0]);
-  const [passageId, setPassageId] = React.useState(0);
+  const [passageData, setPassageData] = React.useState<any>({});
   const passageDatas = useLocation().state;
+  const [isTempSave, setIsTempSave] = React.useState(false);
   const defaultQuestionRefList = Array.from({ length: 5 }, (el) =>
     React.useRef({
       getQuestionParams: (): any => {
@@ -36,8 +36,7 @@ const QuestionTab = () => {
       changeQuestionType: (newType: string) => {},
     })
   );
-
-  console.log(passageDatas);
+  const [tempSaveList, setTempSaveList] = React.useState<any[]>([]);
 
   const changeType = (e: SelectChangeEvent<string>) => {
     const {
@@ -45,21 +44,20 @@ const QuestionTab = () => {
     } = e;
     setQuestionType(value as string);
     setQuestionTitle(DEFAULT_QUESTION[value]);
-    // answerRef2.current.resetWriteTypeRows();
     setQuestionParamList([0]);
     questionParamList.forEach((idx) =>
-      defaultQuestionRefList[idx].current.changeQuestionType(value)
+      defaultQuestionRefList[idx].current?.changeQuestionType(value)
     );
   };
 
   const editorRef: React.MutableRefObject<any> = React.useRef();
-  const questionSave = () => {
+  const questionTempSave = () => {
     const questionContent = editorRef.current.getInstance().getHTML();
 
     const newQuestion = {
-      passageId,
       questionContent,
       questionTitle,
+      passageData,
       questionParams: questionParamList.map((idx) =>
         defaultQuestionRefList[idx].current.getQuestionParams()
       ),
@@ -72,7 +70,11 @@ const QuestionTab = () => {
       questionParam.pastYn = pastYn;
     }
 
-    console.log(newQuestion);
+    setTempSaveList([...tempSaveList, newQuestion]);
+    setQuestionType("");
+    setQuestionTitle("");
+    setPastYn(false);
+    editorRef.current.getInstance().setHTML("");
 
     // $POST("/api/v1/question/save", newQuestion, () => {
     //   setQuestionType("");
@@ -224,7 +226,7 @@ const QuestionTab = () => {
                 size="large"
                 variant="contained"
                 // color="gray"
-                onClick={questionSave}
+                onClick={questionTempSave}
               >
                 저장
               </Button>
@@ -232,19 +234,30 @@ const QuestionTab = () => {
               <></>
             )}
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 30 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 30,
+              width: 300,
+            }}
+          >
             <QuestionList
               width={250}
               height={300}
               rowData={passageDatas}
               setRowData={() => {}}
               editorRef={editorRef}
+              setPassageData={setPassageData}
+              setIsTempSave={setIsTempSave}
             />
-            <QuestionList
-              width={250}
+            <TempSaveQuestionList
+              width={300}
               height={300}
-              rowData={saveQuestions}
-              setRowData={setSaveQuestions}
+              rowData={tempSaveList}
+              editorRef={editorRef}
+              setRowData={setTempSaveList}
+              setIsTempSave={setIsTempSave}
             />
           </div>
         </div>
