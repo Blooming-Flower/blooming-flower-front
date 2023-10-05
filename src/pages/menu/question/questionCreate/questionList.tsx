@@ -84,7 +84,17 @@ const QuestionList = (props: any) => {
                   }
                 >
                   <div>{row.passageYear}</div>
-                  <div>{row.passageName}</div>
+                  <div className="passageName"
+                    style={{
+                      maxWidth: 65,
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                    data-tooltip={row.passageName}
+                  >
+                    {row.passageName}
+                  </div>
                   <div>{row.passageUnit}</div>
                   <div>{row.passageNumber}</div>
                 </ListItem>
