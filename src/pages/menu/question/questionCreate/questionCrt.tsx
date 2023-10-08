@@ -86,13 +86,16 @@ const QuestionCrt = (params: any) => {
 
           if (curIdx === -1) {
             newChecked.push(parseInt(nodes[j].id));
-
+            console.log("row::", row);
             newDataList.push({
+              searchPassage: searchPassage,
               passageYear: searchYear,
               passageName: row.passageName,
               passageNumber: row.passageNumber,
               passageId: row.passageId,
               passageUnit: row.passageUnit,
+              page: page,
+              rowNum: row.rowNum,
             });
           }
 
@@ -239,9 +242,9 @@ const QuestionCrt = (params: any) => {
     newChecked: number[],
     checkFlag: boolean
   ) => {
-      // console.log("passageId", passageId);
-      // console.log("new checked::", newChecked);
-      // console.log("체쿠 여부::", checkFlag);
+    // console.log("passageId", passageId);
+    // console.log("new checked::", newChecked);
+    // console.log("체쿠 여부::", checkFlag);
 
     let target = document.getElementById(
       passageId.toString()
@@ -277,7 +280,7 @@ const QuestionCrt = (params: any) => {
             multiChecked.push(multiNodes[rowId].id);
           }
 
-          if(!prevRowId[getUniqueKey()]){
+          if (!prevRowId[getUniqueKey()]) {
             prevRowId[getUniqueKey()] = [];
           }
           let prevRowIdx = prevRowId[getUniqueKey()].indexOf(rowId);
@@ -297,7 +300,7 @@ const QuestionCrt = (params: any) => {
           multiChecked.splice(multiCheckedIdx, 1);
         }
 
-        if(!prevRowId[getUniqueKey()]){
+        if (!prevRowId[getUniqueKey()]) {
           prevRowId[getUniqueKey()] = [];
         }
         let prevRowIdx = prevRowId[getUniqueKey()].indexOf(rowId);
@@ -331,11 +334,14 @@ const QuestionCrt = (params: any) => {
 
       setRowDataList((rowDataList: any) => {
         rowDataList.push({
+          searchPassage: searchPassage,
           passageYear: searchYear,
           passageName: row.passageName,
           passageNumber: row.passageNumber,
           passageId: row.passageId,
           passageUnit: row.passageUnit,
+          page: page,
+          rowNum: row.rowNum,
         });
         return rowDataList;
       });
@@ -362,6 +368,7 @@ const QuestionCrt = (params: any) => {
   /* 오른쪽 side box에서 remove하기위한 event */
   const removeCheckBox = (row: any) => {
     let newChecked = [...checked];
+    let newMultiChecked = [...multiChecked];
     let curIdx = newChecked.indexOf(row.passageId);
 
     newChecked.splice(curIdx, 1);
@@ -372,7 +379,29 @@ const QuestionCrt = (params: any) => {
       return rowDataList;
     });
 
-    checkMultiBox(row.passageId, newChecked, false);
+    console.log(prevRowId);
+    console.log(row);
+
+    let uniqueKey =
+      row.searchPassage + row.passageYear + row.passageName + row.page;
+    let multiCheckboxIdx = newMultiChecked.indexOf(uniqueKey + row.passageUnit);
+
+    if (multiCheckboxIdx !== -1) {
+      newMultiChecked.splice(multiCheckboxIdx, 1);
+    }
+
+    let masterCheckboxId = newMultiChecked.indexOf(uniqueKey + "all");
+    if (masterCheckboxId !== -1) {
+      newMultiChecked.splice(masterCheckboxId, 1);
+    }
+
+    let prevRowIdx = prevRowId[uniqueKey].indexOf(row.rowNum);
+    if (prevRowIdx !== -1) {
+      prevRowId[uniqueKey].splice(prevRowIdx, 1);
+    }
+
+    setMultiChecked(newMultiChecked);
+
     forceUpdate(); // 컴포넌트 재 랜더링
   };
 
@@ -536,6 +565,7 @@ const QuestionCrt = (params: any) => {
       getActions: (params) => [
         <>
           {params.row.passageInfo.map((row: any) => {
+            row.rowNum = params.id;
             return (
               <div key={row.passageNumber} id="checkbox-list">
                 <Checkbox
