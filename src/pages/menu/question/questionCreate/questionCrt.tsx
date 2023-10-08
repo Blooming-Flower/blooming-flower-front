@@ -14,6 +14,7 @@ import {
 import { GridColDef, DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 import { PASSAGETYPE, YEAR, URL } from "@common/const";
 import axios from "axios";
+import { $GET } from "@utils/request";
 
 //css
 import "@css/questionCreate/questionList.scss";
@@ -60,10 +61,6 @@ const QuestionCrt = (params: any) => {
 
   const checkAll = (unitNum: number[]) => {
     let prevRowNums = prevRowId[getUniqueKey()];
-    // console.log("ttt", unitNum);
-    // console.log("현재 페이지의 prev checked row num ::", prevRowNums);
-    // console.log("checkAll- checked::", checked);
-    // console.log("checkAll- multichecked::", multiChecked);
 
     if (!prevRowNums) {
       prevRowNums = [];
@@ -145,23 +142,20 @@ const QuestionCrt = (params: any) => {
 
   // 페이지 변경 -> 강, 지문 번호 조회 api 다시 뿌려줌
   const changePage = async (page: number) => {
-    // console.log("page::", page);
     try {
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
-      const res: any = await axios.get(API_URL);
-      // console.log("url", API_URL);
-      // console.log("data:::", res.data);
+      $GET(
+        `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        (res: any) => {
+          for (let i = 0; i < res.data.list.length; i++) {
+            res.data.list[i].id = i;
+          }
 
-      for (let i = 0; i < res.data.list.length; i++) {
-        res.data.list[i].id = i;
-      }
-      // console.log("checked:::", checked);
-
-      setRowData(res.data.list);
-      // setTotalPageSize(res.data.pageSize);
-      setPage(page);
+          setRowData(res.data.list);
+          setPage(page);
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -174,19 +168,18 @@ const QuestionCrt = (params: any) => {
       const passageName = event.target.value;
       const passageType = convertPassageType(searchPassage);
 
-      const API_URL = `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`;
-      const res: any = await axios.get(API_URL);
+      $GET(
+        `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        (res: any) => {
+          for (let i = 0; i < res.data.list.length; i++) {
+            res.data.list[i].id = i;
+          }
 
-      for (let i = 0; i < res.data.list.length; i++) {
-        res.data.list[i].id = i;
-      }
-
-      // console.log("res.data", res.data);
-      // console.log("checked:::", checked);
-
-      setPassageName(passageName);
-      setRowData(res.data.list);
-      setTotalPageSize(res.data.pageSize);
+          setPassageName(passageName);
+          setRowData(res.data.list);
+          setTotalPageSize(res.data.pageSize);
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -202,9 +195,12 @@ const QuestionCrt = (params: any) => {
       if (searchPassage) {
         const passageType = convertPassageType(searchPassage);
 
-        const API_URL = `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`;
-        const res = await axios.get(API_URL);
-        setSearchTextBook(res.data);
+        $GET(
+          `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`,
+          (res: any) => {
+            setSearchTextBook(res.data);
+          }
+        );
       }
 
       setSearchYear(event.target.value);
@@ -224,9 +220,12 @@ const QuestionCrt = (params: any) => {
       if (searchYear) {
         const passageType = convertPassageType(lecture);
 
-        const API_URL = `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`;
-        const res = await axios.get(API_URL);
-        setSearchTextBook(res.data);
+        $GET(
+          `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`,
+          (res: any) => {
+            setSearchTextBook(res.data);
+          }
+        );
       }
 
       setSearchPassage(lecture);
@@ -242,17 +241,12 @@ const QuestionCrt = (params: any) => {
     newChecked: number[],
     checkFlag: boolean
   ) => {
-    // console.log("passageId", passageId);
-    // console.log("new checked::", newChecked);
-    // console.log("체쿠 여부::", checkFlag);
-
     let target = document.getElementById(
       passageId.toString()
     ) as HTMLInputElement;
     if (!target) return; // 다른 페이지에서 remove했을 경우
 
     let rowId = parseInt(target.value);
-    // console.log("rowId:::", rowId);
     const multiNodes = document.querySelectorAll(
       `input[type=checkbox][data-type=multi]`
     ) as NodeListOf<HTMLInputElement>;
@@ -317,7 +311,6 @@ const QuestionCrt = (params: any) => {
   };
 
   const handleCheckBox = (event: ChangeEvent<HTMLInputElement>) => {
-    // debugger;
     let target = event.target;
     let row = JSON.parse(target.dataset.passage as any);
     let newChecked = [...checked];
@@ -325,7 +318,6 @@ const QuestionCrt = (params: any) => {
 
     const currentIndex = newChecked.indexOf(row.passageId);
     if (currentIndex === -1) {
-      // console.log("푸시::", row.passageId);
       newChecked.push(row.passageId);
       checked.push(row.passageId);
       setChecked((checked: any) => {
@@ -346,7 +338,6 @@ const QuestionCrt = (params: any) => {
         return rowDataList;
       });
     } else {
-      // console.log("슬라이스::", row.passageId);
       checkFlag = false;
 
       newChecked.splice(currentIndex, 1);
