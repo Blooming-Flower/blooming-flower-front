@@ -36,6 +36,7 @@ const QuestionList = (props: any) => {
     editorRef,
     setPassageData,
     setIsTempSave,
+    isExam,
   } = props;
 
   //리스트업 목록 삭제 버튼
@@ -114,7 +115,7 @@ const QuestionList = (props: any) => {
 
         {rowData.length !== 0 && (
           <CustomButton
-            domain={PATH.QUESTION6}
+            domain={isExam?PATH.QUESTION4:PATH.QUESTION6}
             label={buttonName ?? "GO!"}
             type={"true"}
             params={rowData}

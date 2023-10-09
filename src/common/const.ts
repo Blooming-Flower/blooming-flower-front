@@ -460,3 +460,8 @@ export const ANSWERCOLUMNS: GridColDef[] = [
     width: 30,
   },
 ];
+
+export const EXAMTYPE = [
+    '시험지',
+    'Big Book'
+]
