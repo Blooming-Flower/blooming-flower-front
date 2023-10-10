@@ -1,4 +1,5 @@
 ﻿import { ABC_TYPES, AB_TYPES, ARROW_TYPES, WRITE_TYPES } from "@common/const";
+import { LeakAddTwoTone } from "@mui/icons-material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { GridApiCommunity } from "@mui/x-data-grid/internals";
 import * as React from "react";
@@ -256,10 +257,17 @@ const ChooseDataGrid = React.forwardRef(
     props: {
       chooseRef: React.MutableRefObject<GridApiCommunity>;
       questionType: string;
+      chooseList?: any[];
     },
     ref
   ) => {
-    const { chooseRef, questionType } = props;
+    let { chooseRef, questionType, chooseList } = props;
+    const [rowData, setRowData] = React.useState(
+      chooseList?.map((item, idx) => {
+        item.id = idx + 1;
+        return item;
+      })
+    );
 
     React.useImperativeHandle(ref, () => ({
       getChooseList() {
@@ -272,14 +280,15 @@ const ChooseDataGrid = React.forwardRef(
         ) {
           return chooseRef.current.getAllRowIds().map((id) => {
             const row = chooseRef.current.getRow(id);
-            const chooseContents = [];
+            // const chooseContents = [];
 
-            for (const key in row) {
-              if (key.includes("chooseContent")) {
-                chooseContents.push(row[key]);
-              }
-            }
-            return { chooseSeq: id, chooseContent: chooseContents.join("|") };
+            // for (const key in row) {
+            //   if (key.includes("chooseContent")) {
+            //     chooseContents.push(row[key]);
+            //   }
+            // }
+            // return { chooseSeq: id, chooseContent: chooseContents.join("") };
+            return { ...row, chooseSeq: id };
           });
         }
         return chooseRef.current
@@ -291,13 +300,65 @@ const ChooseDataGrid = React.forwardRef(
       },
     }));
 
+    React.useEffect(() => {
+      setRowData(
+        chooseList?.map((item, idx) => {
+          item.id = idx + 1;
+          if (ARROW_TYPES.includes(questionType)) {
+            item.arrow = "→";
+          }
+          return item;
+        })
+      );
+    }, [props.chooseList]);
+
+    if (chooseList?.length) {
+      let id = 1;
+      // chooseList = chooseList.map((item, idx) => {
+      //   item.id = id++;
+
+      // let contents = item.chooseContent;
+
+      // if (item.chooseContent) {
+      //   contents = contents.split("|");
+      // } else {
+      //   contents = "";
+      //   // item.chooseContent = '';
+      // }
+
+      // if (ARROW_TYPES.includes(questionType)) {
+      //   // delete item.chooseContent;
+      //   item.chooseContentA = contents[0];
+      //   item.chooseContentB = contents[1];
+      //   item.arrow = "→";
+      // } else if (ABC_TYPES.includes(questionType)) {
+      //   // delete item.chooseContent;
+      //   item.chooseContentA = contents[0];
+      //   item.chooseContentB = contents[1];
+      //   item.chooseContentC = contents[2];
+      // } else if (AB_TYPES.includes(questionType)) {
+      //   // delete item.chooseContent;
+      //   item.chooseContentA = contents[0];
+      //   item.chooseContentB = contents[1];
+      // } else {
+      //   // item.chooseContent = co;
+      // }
+
+      //   return item;
+      // });
+    }
+
     return !questionType || WRITE_TYPES.includes(questionType) ? (
       <></>
     ) : (
       <DataGrid
         apiRef={chooseRef}
         rows={
-          ARROW_TYPES.includes(questionType)
+          rowData?.length
+            ? rowData
+            : // chooseList?.length
+            //   ? chooseList
+            ARROW_TYPES.includes(questionType)
             ? arrowChooseRows
             : ABC_TYPES.includes(questionType)
             ? abcChooseRows

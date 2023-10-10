@@ -35,7 +35,7 @@ const QuestionList = (props: any) => {
     buttonName,
     editorRef,
     setPassageData,
-    setIsTempSave,
+    onClickListItem,
   } = props;
 
   //리스트업 목록 삭제 버튼
@@ -67,19 +67,7 @@ const QuestionList = (props: any) => {
                   className="checkbox-list"
                   value={row}
                   onClick={(e) => {
-                    if (!editorRef) {
-                      return;
-                    }
-                    $GET(
-                      `/api/v1/passage/search/${row.passageId}`,
-                      (result: any) => {
-                        editorRef.current
-                          .getInstance()
-                          .setHTML(result.data.passageContent);
-                        setPassageData({ ...row });
-                        setIsTempSave(true);
-                      }
-                    );
+                    onClickListItem(row);
                   }}
                   secondaryAction={
                     <IconButton

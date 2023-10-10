@@ -12,6 +12,7 @@ import {
   TextField,
   Button,
   Checkbox,
+  Alert,
 } from "@mui/material";
 import { QUESTIONTYPE, DEFAULT_QUESTION } from "@common/const";
 import QuestionList from "./questionList";
@@ -19,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import TuiEditor from "@components/ui/tui/toast";
 import Question from "./question";
 import TempSaveQuestionList from "./tempSaveQuestionList";
+import { $GET } from "@utils/request";
 
 const QuestionTab = () => {
   const [questionType, setQuestionType] = React.useState("");
@@ -27,7 +29,7 @@ const QuestionTab = () => {
   const [questionParamList, setQuestionParamList] = React.useState([0]);
   const [passageData, setPassageData] = React.useState<any>({});
   const passageDatas = useLocation().state;
-  const [isTempSave, setIsTempSave] = React.useState(false);
+  const [isModifyTempSave, setIsModifyTempSave] = React.useState(false);
   const defaultQuestionRefList = Array.from({ length: 5 }, (el) =>
     React.useRef({
       getQuestionParams: (): any => {
@@ -37,24 +39,30 @@ const QuestionTab = () => {
     })
   );
   const [tempSaveList, setTempSaveList] = React.useState<any[]>([]);
+  const [modifyingTempSaveIdx, setModifyingTempSaveIdx] = React.useState(0);
 
-  const changeType = (e: SelectChangeEvent<string>) => {
+  const changeType = (e: SelectChangeEvent<string>, isReset: boolean) => {
     const {
       target: { value },
     } = e;
     setQuestionType(value as string);
-    setQuestionTitle(DEFAULT_QUESTION[value]);
+    setQuestionTitle(DEFAULT_QUESTION[value] ?? "");
     setQuestionParamList([0]);
     questionParamList.forEach((idx) =>
       defaultQuestionRefList[idx].current?.changeQuestionType(value)
     );
+    if (isReset) {
+      editorRef.current.setHTML("");
+    }
   };
-  const [tempSaveParams, setTempSaveParams] = React.useState<any>([]);
-  const tempSaveParamSetting = () => {};
 
   const editorRef: React.MutableRefObject<any> = React.useRef();
   const questionTempSave = () => {
-  const questionContent = editorRef.current.getInstance().getHTML();
+    if (JSON.stringify(passageData) === "{}") {
+      alert("지문을 골라주세요.");
+      return;
+    }
+    const questionContent = editorRef.current.getInstance().getHTML();
 
     const newQuestion = {
       questionContent,
@@ -72,11 +80,54 @@ const QuestionTab = () => {
       questionParam.pastYn = pastYn;
     }
 
-    setTempSaveList([...tempSaveList, newQuestion]);
+    if (isModifyTempSave) {
+      tempSaveList[modifyingTempSaveIdx] = newQuestion;
+      setTempSaveList([...tempSaveList]);
+    } else {
+      setTempSaveList([...tempSaveList, newQuestion]);
+    }
+
     setQuestionType("");
     setQuestionTitle("");
     setPastYn(false);
     editorRef.current.getInstance().setHTML("");
+  };
+
+  console.log("tempSaveList", tempSaveList);
+
+  const onClinkPassageListItem = (_passageData: any) => {
+    $GET(`/api/v1/passage/search/${_passageData.passageId}`, (result: any) => {
+      editorRef.current.getInstance().setHTML(result.data.passageContent);
+      setPassageData({ ..._passageData });
+      if (isModifyTempSave) {
+        setIsModifyTempSave(false);
+        setQuestionTitle("");
+        setQuestionType("");
+        setPastYn(false);
+      }
+    });
+  };
+
+  const onClickTempSaveListItem = (rowData: any, idx: number) => {
+    const { questionContent, questionParams, questionTitle } =
+      tempSaveList[idx];
+    setModifyingTempSaveIdx(idx);
+    setIsModifyTempSave(true);
+    editorRef.current.getInstance().setHTML(questionContent);
+    if (questionParams.length > 1) {
+      setQuestionType("Q25");
+      // setQuestionParamList(
+      //   Array.from({ length: questionParams.length }, (acc, idx) => idx)
+      // );
+    } else {
+      setQuestionType(questionParams[0].questionType);
+      setPastYn(questionParams[0].pastYn);
+    }
+    setQuestionTitle(questionTitle);
+    setPassageData(rowData);
+    setQuestionParamList(
+      Array.from({ length: questionParams.length }, (cur, idx) => idx)
+    );
   };
 
   return (
@@ -100,7 +151,7 @@ const QuestionTab = () => {
                   <FormControl className="table-select">
                     <Select
                       value={questionType}
-                      onChange={changeType}
+                      onChange={(e) => changeType(e, false)}
                       displayEmpty
                       inputProps={{ "aria-label": "Without label" }}
                     >
@@ -197,14 +248,26 @@ const QuestionTab = () => {
                 <Question
                   questionType={questionType}
                   ref={defaultQuestionRefList[idx]}
-                  key={idx}
+                  id={idx}
+                  questionParam={
+                    isModifyTempSave
+                      ? tempSaveList[modifyingTempSaveIdx]?.questionParams[
+                          idx
+                        ] ?? null
+                      : null
+                  }
                 />
               ))
             ) : (
               <Question
                 questionType={questionType}
                 ref={defaultQuestionRefList[0]}
-                key={0}
+                id={0}
+                questionParam={
+                  isModifyTempSave
+                    ? tempSaveList[modifyingTempSaveIdx].questionParams[0]
+                    : null
+                }
               />
             )}
             {questionType ? (
@@ -238,8 +301,9 @@ const QuestionTab = () => {
               rowData={passageDatas}
               setRowData={() => {}}
               editorRef={editorRef}
+              onClickListItem={onClinkPassageListItem}
               setPassageData={setPassageData}
-              setIsTempSave={setIsTempSave}
+              setIsModifyTempSave={setIsModifyTempSave}
             />
             <TempSaveQuestionList
               width={300}
@@ -247,7 +311,8 @@ const QuestionTab = () => {
               rowData={tempSaveList}
               editorRef={editorRef}
               setRowData={setTempSaveList}
-              setIsTempSave={setIsTempSave}
+              onClickListItem={onClickTempSaveListItem}
+              changeType={changeType}
             />
           </div>
         </div>

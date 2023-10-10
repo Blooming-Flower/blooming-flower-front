@@ -8,11 +8,20 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { PATH } from "@common/domain";
 import { $POST } from "@utils/request";
 import { QUESTIONTYPE } from "@common/const";
+import { useNavigate } from "react-router-dom";
 
 const TempSaveQuestionList = (props: any) => {
   //문제유형 :  searchlecture
-  const { width, height, rowData, setRowData, editorRef, setIsTempSave } =
-    props;
+  const {
+    width,
+    height,
+    rowData,
+    setRowData,
+    editorRef,
+    setIsTempSave,
+    onClickListItem,
+    changeType,
+  } = props;
   const [viewDatas, setViewDatas] = React.useState(
     rowData.map((data: any) => ({
       ...data.passageData,
@@ -22,6 +31,7 @@ const TempSaveQuestionList = (props: any) => {
           : data.questionParams[0].questionType,
     }))
   );
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     setViewDatas(
@@ -36,7 +46,11 @@ const TempSaveQuestionList = (props: any) => {
   }, [rowData]);
 
   //리스트업 목록 삭제 버튼
-  const onRemove = (idx: number) => {
+  const onRemove = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    idx: number
+  ) => {
+    e.stopPropagation();
     setRowData(
       rowData.reduce((acc: any, cur: any, index: number) => {
         if (index === idx) {
@@ -46,7 +60,17 @@ const TempSaveQuestionList = (props: any) => {
         return acc;
       }, [])
     );
+    changeType({ target: { value: "" } }, true);
   };
+
+  // const onClickListItem = (row: any, idx: number) => {
+  //   console.log("row", row);
+  //   console.log("idx", idx);
+
+  //   setIsTempSave(false);
+  //   setModifyingTempSaveIdx(idx);
+  //   editorRef.current.getInstance().setHTML(rowData[idx].questionContent);
+  // };
 
   // $POST("/api/v1/question/save", newQuestion, () => {
   //   setQuestionType("");
@@ -77,23 +101,18 @@ const TempSaveQuestionList = (props: any) => {
         ) : (
           viewDatas.map((row: any, idx: number) => {
             return (
-              <div key={row.passageId}>
+              <div key={idx}>
                 <ListItem
                   className="checkbox-list"
                   value={row}
                   onClick={(e) => {
-                    setIsTempSave(false);
-                    console.log(rowData[idx]);
-
-                    editorRef.current
-                      .getInstance()
-                      .setHTML(rowData[idx].questionContent);
+                    onClickListItem(row, idx);
                   }}
                   secondaryAction={
                     <IconButton
                       edge="end"
                       aria-label="delete"
-                      onClick={() => onRemove(idx)}
+                      onClick={(e) => onRemove(e, idx)}
                     >
                       <HighlightOffIcon />
                     </IconButton>
