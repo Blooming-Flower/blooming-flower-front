@@ -37,6 +37,7 @@ const QuestionList = (props: any) => {
     setPassageData,
     setIsTempSave,
     isExam,
+    onClickListItem,
   } = props;
 
   //리스트업 목록 삭제 버튼
@@ -68,19 +69,7 @@ const QuestionList = (props: any) => {
                   className="checkbox-list"
                   value={row}
                   onClick={(e) => {
-                    if (!editorRef) {
-                      return;
-                    }
-                    $GET(
-                      `/api/v1/passage/search/${row.passageId}`,
-                      (result: any) => {
-                        editorRef.current
-                          .getInstance()
-                          .setHTML(result.data.passageContent);
-                        setPassageData({ ...row });
-                        setIsTempSave(true);
-                      }
-                    );
+                    onClickListItem(row);
                   }}
                   secondaryAction={
                     <IconButton
@@ -115,7 +104,7 @@ const QuestionList = (props: any) => {
 
         {rowData.length !== 0 && (
           <CustomButton
-            domain={isExam?PATH.QUESTION4:PATH.QUESTION6}
+            domain={isExam ? PATH.QUESTION4 : PATH.QUESTION6}
             label={buttonName ?? "GO!"}
             type={"true"}
             params={rowData}

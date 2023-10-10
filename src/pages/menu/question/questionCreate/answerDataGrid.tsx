@@ -15,6 +15,8 @@ const AnswerDataGrid = React.forwardRef(
     props: {
       answerRef: React.MutableRefObject<GridApiCommunity>;
       questionType: string;
+      answerList?: any;
+      id: any;
     },
     ref
   ) => {
@@ -94,7 +96,7 @@ const AnswerDataGrid = React.forwardRef(
       {
         field: "answerContent",
         headerName: "정답란",
-        width: 820,
+        width: 790,
         align: "center",
         editable: true,
       },
@@ -110,12 +112,14 @@ const AnswerDataGrid = React.forwardRef(
               icon={<DeleteIcon />}
               label="Delete"
               onClick={() => {
-                const seq = [..."ABCD"];
-                const newRows = writeTypeRows
-                  .filter((row) => row.id !== id)
-                  .map(({ id }) => answerRef.current.getRow(id));
+                let newRows = writeTypeRows
+                  .filter((row: any) => row.id !== id)
+                  .map(({ id }: any) => answerRef.current.getRow(id));
+                if (newRows.length === 0) {
+                  newRows = writeTypeDefaultRows;
+                }
                 let idx = 0;
-                newRows.forEach((row) => (row.chooseSeq = seq[idx++]));
+                newRows.forEach((row: any) => (row.chooseSeq = seq[idx++]));
                 setWriteTypeRows(newRows);
               }}
             />,
@@ -123,9 +127,22 @@ const AnswerDataGrid = React.forwardRef(
         },
       },
     ];
+    const seq = [..."ABCD"];
     const { answerRef, questionType } = props;
-    const [writeTypeRows, setWriteTypeRows] =
-      React.useState(writeTypeDefaultRows);
+
+    console.log("props.answerList", props.answerList);
+
+    const [writeTypeRows, setWriteTypeRows] = React.useState(
+      !props.answerList
+        ? writeTypeDefaultRows
+        : !isNaN(props.answerList[0].chooseSeq)
+        ? writeTypeDefaultRows
+        : props.answerList?.map((cur: any, idx: number) => {
+            cur.id = idx + 1;
+            cur.chooseSeq = seq[idx];
+            return cur;
+          })
+    );
 
     React.useImperativeHandle(ref, () => ({
       getAnswerList() {
@@ -133,8 +150,8 @@ const AnswerDataGrid = React.forwardRef(
           return [];
         } else if (WRITE_TYPES.includes(questionType)) {
           return writeTypeRows
-            .map(({ id }) => answerRef.current.getRow(id))
-            .map((row) => {
+            .map(({ id }: any) => answerRef.current.getRow(id))
+            .map((row: any) => {
               return { answerContent: row.answerContent };
             });
         }
@@ -146,10 +163,46 @@ const AnswerDataGrid = React.forwardRef(
         });
       },
       resetWriteTypeRows() {
+        // debugger;
         setWriteTypeRows(writeTypeDefaultRows);
       },
     }));
 
+    React.useEffect(() => {
+      setTimeout(() => {
+        if (props.answerList) {
+          const checkList = document.querySelectorAll<any>(
+            `.answer-wrap-${props.id} input.PrivateSwitchBase-input[type='checkbox']`
+          );
+          console.log("checkList", checkList);
+
+          checkList.forEach((el) => {
+            if (el?.checked) el?.click();
+          });
+          props?.answerList
+            ?.filter((el: any) => Number(el.answerContent))
+            .forEach((el: any) => {
+              if (!checkList[el.answerContent - 1]?.checked) {
+                checkList[el.answerContent - 1]?.click();
+              }
+            });
+        }
+      }, 50);
+    });
+
+    React.useEffect(() => {
+      setWriteTypeRows(
+        !props.answerList
+          ? writeTypeDefaultRows
+          : !isNaN(props.answerList[0].chooseSeq)
+          ? writeTypeDefaultRows
+          : props.answerList?.map((cur: any, idx: number) => {
+              cur.id = idx + 1;
+              cur.chooseSeq = seq[idx];
+              return cur;
+            })
+      );
+    }, [props.answerList]);
     return !questionType ? (
       <></>
     ) : WRITE_TYPES.includes(questionType) ? (
