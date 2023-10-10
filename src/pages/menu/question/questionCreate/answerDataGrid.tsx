@@ -130,8 +130,6 @@ const AnswerDataGrid = React.forwardRef(
     const seq = [..."ABCD"];
     const { answerRef, questionType } = props;
 
-    console.log("props.answerList", props.answerList);
-
     const [writeTypeRows, setWriteTypeRows] = React.useState(
       !props.answerList
         ? writeTypeDefaultRows
@@ -163,7 +161,6 @@ const AnswerDataGrid = React.forwardRef(
         });
       },
       resetWriteTypeRows() {
-        // debugger;
         setWriteTypeRows(writeTypeDefaultRows);
       },
     }));
@@ -174,7 +171,6 @@ const AnswerDataGrid = React.forwardRef(
           const checkList = document.querySelectorAll<any>(
             `.answer-wrap-${props.id} input.PrivateSwitchBase-input[type='checkbox']`
           );
-          console.log("checkList", checkList);
 
           checkList.forEach((el) => {
             if (el?.checked) el?.click();

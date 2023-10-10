@@ -63,27 +63,6 @@ const TempSaveQuestionList = (props: any) => {
     changeType({ target: { value: "" } }, true);
   };
 
-  // const onClickListItem = (row: any, idx: number) => {
-  //   console.log("row", row);
-  //   console.log("idx", idx);
-
-  //   setIsTempSave(false);
-  //   setModifyingTempSaveIdx(idx);
-  //   editorRef.current.getInstance().setHTML(rowData[idx].questionContent);
-  // };
-
-  // $POST("/api/v1/question/save", newQuestion, () => {
-  //   setQuestionType("");
-  //   setQuestionTitle("");
-  //   setPastYn(false);
-  //   setSubBox("");
-  // subBoxRef.current.value = "";
-  // setSubBox2("");
-  // subBoxRef2.current.value = "";
-  //   editorRef.current.getInstance().setHTML("");
-  //   resetAnswerGrid();
-  // });
-
   return (
     <div className="tempSaveQuestionList-item">
       <List
@@ -155,7 +134,47 @@ const TempSaveQuestionList = (props: any) => {
             color="warning"
             size="large"
             variant="contained"
-            onClick={() => {}}
+            onClick={() => {
+              const params = rowData.map((data: any) => {
+                const questionParams = data.questionParams.map((el: any) => {
+                  const answerList = el.answerList.map((answer: any) => {
+                    return { answerContent: answer.answerContent };
+                  });
+
+                  const chooseList = el.chooseList.map((choose: any) => {
+                    const chooseContents = [];
+                    for (const key in choose) {
+                      if (key.includes("chooseContent")) {
+                        chooseContents.push(choose[key]);
+                      }
+                    }
+                    return {
+                      chooseSeq: choose.chooseSeq,
+                      chooseContent: chooseContents.join("|"),
+                    };
+                  });
+
+                  return {
+                    questionSubTitle: el.questionSubTitle,
+                    pastYn: el.pastYn,
+                    questionType: el.questionType,
+                    subBox: el.subBox,
+                    answerList,
+                    chooseList,
+                  };
+                });
+                return {
+                  passageId: data.passageData.passageId,
+                  questionContent: data.questionContent,
+                  questionTitle: data.questionTitle,
+                  questionParams: questionParams,
+                };
+              });
+
+              $POST("/api/v1/question/save", params, () => {
+                navigate(PATH.QUESTION2);
+              });
+            }}
             sx={{
               height: "40px",
               borderRadius: "10px",

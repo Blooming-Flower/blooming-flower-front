@@ -93,8 +93,6 @@ const QuestionTab = () => {
     editorRef.current.getInstance().setHTML("");
   };
 
-  console.log("tempSaveList", tempSaveList);
-
   const onClinkPassageListItem = (_passageData: any) => {
     $GET(`/api/v1/passage/search/${_passageData.passageId}`, (result: any) => {
       editorRef.current.getInstance().setHTML(result.data.passageContent);
