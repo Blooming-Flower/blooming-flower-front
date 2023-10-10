@@ -79,7 +79,7 @@ const Question = React.forwardRef(
         };
       },
       changeQuestionType: (newType: string) => {
-        setQuestionType(newType);
+        changeType(newType);
       },
     }));
 
@@ -105,13 +105,18 @@ const Question = React.forwardRef(
       resetWriteTypeRows: () => {},
     });
 
-    const changeType = (e: SelectChangeEvent<string>) => {
+    const changeType = (e: SelectChangeEvent<string> | string) => {
+      answerRef2.current.resetWriteTypeRows();
+      if (typeof e === "string") {
+        setQuestionType(e);
+        setQuestionTitle(DEFAULT_QUESTION[e]);
+        return;
+      }
       const {
         target: { value },
       } = e;
       setQuestionType(value as string);
       setQuestionTitle(DEFAULT_QUESTION[value]);
-      answerRef2.current.resetWriteTypeRows();
     };
 
     return !questionType ? (

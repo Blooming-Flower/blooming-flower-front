@@ -163,6 +163,7 @@ const AnswerDataGrid = React.forwardRef(
         });
       },
       resetWriteTypeRows() {
+        // debugger;
         setWriteTypeRows(writeTypeDefaultRows);
       },
     }));
