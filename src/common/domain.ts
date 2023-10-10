@@ -18,7 +18,7 @@ export const enum PATH {
   QUESTION1 = "/question/passageCrt",
   QUESTION2 = "/question/questionCrt",
   QUESTION3 = "/question/examCrt",
-  // QUESTION4 = "/question/examView",
+  QUESTION4 = "/question/examView",
   QUESTION5 = "/question/examMng",
   QUESTION6 = "/question/questionTab",
 

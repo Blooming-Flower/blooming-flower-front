@@ -38,10 +38,10 @@ const NestedList = () => {
         const check4 = document.querySelector(".nav4");
         check4!.classList.add("active");
         break;
-      // case PATH.QUESTION4:
-      //   const check5 = document.querySelector(".nav5");
-      //   check5!.classList.add("active");
-      //   break;
+      case PATH.QUESTION4:
+        const check5 = document.querySelector(".nav4");
+        check5!.classList.add("active");
+        break;
       case PATH.QUESTION5:
         const check6 = document.querySelector(".nav6");
         check6!.classList.add("active");

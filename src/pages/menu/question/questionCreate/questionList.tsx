@@ -35,6 +35,8 @@ const QuestionList = (props: any) => {
     buttonName,
     editorRef,
     setPassageData,
+    setIsTempSave,
+    isExam,
     onClickListItem,
   } = props;
 
@@ -102,7 +104,7 @@ const QuestionList = (props: any) => {
 
         {rowData.length !== 0 && (
           <CustomButton
-            domain={PATH.QUESTION6}
+            domain={isExam ? PATH.QUESTION4 : PATH.QUESTION6}
             label={buttonName ?? "GO!"}
             type={"true"}
             params={rowData}
