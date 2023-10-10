@@ -181,8 +181,8 @@ const AnswerDataGrid = React.forwardRef(
           props?.answerList
             ?.filter((el: any) => Number(el.answerContent))
             .forEach((el: any) => {
-              if (!checkList[el.answerContent]?.checked) {
-                checkList[el.answerContent]?.click();
+              if (!checkList[el.answerContent - 1]?.checked) {
+                checkList[el.answerContent - 1]?.click();
               }
             });
         }
