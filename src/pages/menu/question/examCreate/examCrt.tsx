@@ -1,9 +1,9 @@
 import Layout from "@components/layouts/layout";
 import React, { useReducer, useEffect, ChangeEvent } from "react";
 import {
-  Box,
+  Box, Button,
   Checkbox,
-  FormControl,
+  FormControl, FormControlLabel, Grid,
   InputLabel,
   MenuItem,
   Pagination,
@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { GridColDef, DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
-import { PASSAGETYPE, YEAR, URL } from "@common/const";
+import {PASSAGETYPE, YEAR, URL, QUESTIONTYPE, TXTUNIT, TXTNUM} from "@common/const";
 import axios from "axios";
 import { $GET } from "@utils/request";
 
@@ -20,6 +20,7 @@ import { $GET } from "@utils/request";
 import "@css/questionCreate/questionList.scss";
 import "@css/questionCreate/questionCrt.scss";
 import QuestionList from "../questionCreate/questionList";
+import CustomButton from "@components/ui/button/custeomButton";
 
 const ExamCrt = (params: any) => {
   const [searchPassage, setSearchPassage] = React.useState("");
@@ -40,7 +41,7 @@ const ExamCrt = (params: any) => {
   const [any, forceUpdate] = useReducer((num) => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
   const _url: string = URL.SERVER_URL;
-
+  let temp = 0;
   //지문유형 name 적용
   const convertPassageType = (type: string) => {
     switch (type) {
@@ -150,8 +151,12 @@ const ExamCrt = (params: any) => {
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
+            res.data.list[i].questionCount = 0
+            for (let j = 0; j < res.data.list[i].passageInfo.length; j++){
+              res.data.list[i].questionCount = res.data.list[i].questionCount + res.data.list[i].passageInfo[j].questionCount
+            }
+            console.log(res.data.list[i].questionCount)
           }
-
           setRowData(res.data.list);
           setPage(page);
         }
@@ -173,6 +178,11 @@ const ExamCrt = (params: any) => {
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
+            res.data.list[i].questionCount = 0
+            for (let j = 0; j < res.data.list[i].passageInfo.length; j++){
+              res.data.list[i].questionCount = res.data.list[i].questionCount + res.data.list[i].passageInfo[j].questionCount
+            }
+            console.log(res.data.list[i].questionCount)
           }
 
           setPassageName(passageName);
@@ -549,7 +559,7 @@ const ExamCrt = (params: any) => {
     {
       field: "passageInfo",
       headerName: "지문",
-      width: 300,
+      width: 400,
       type: "actions",
       editable: false,
       headerAlign: "center",
@@ -578,6 +588,21 @@ const ExamCrt = (params: any) => {
       ],
       align: "center",
     },
+    {
+      field:"questionCount",
+      headerName:"문제수",
+      width:250,
+      editable: false,
+      align: "center",
+      sortable: false,
+      headerAlign: "center",
+      type: "actions",
+      getActions:(params)=>[
+          <>
+            {params.row.questionCount}
+          </>
+      ]
+    }
   ];
 
   return (
@@ -593,53 +618,99 @@ const ExamCrt = (params: any) => {
         <div className="grid-flex">
           <div className="css-with80">
             <Box sx={{ width: "100%" }}>
-              <Box sx={{ width: "100%", paddingBottom: "20px" }}>
-                <FormControl sx={{ width: "180px" }}>
-                  <InputLabel id="demo-simple-select-label">
-                    지문유형
-                  </InputLabel>
-                  <Select
-                    value={searchPassage}
-                    onChange={handlePassage}
-                    labelId="demo-simple-select-label"
+              <Box sx={{ width: "100%", paddingBottom: "40px" }}>
+                <Box>
+                  <Grid container spacing={0} className="table-container">
+                    <Grid xs={1.5} item={true}>
+                      <div className="table-title table-top">교재유형</div>
+                    </Grid>
+                    <Grid xs={2.5} item={true}>
+                      <div className="table-content table-top">
+                        <FormControl className="table-input-select">
+                          <InputLabel id="demo-simple-select-label">
+                            지문유형
+                          </InputLabel>
+                          <Select
+                            value={searchPassage}
+                            onChange={handlePassage}
+                            labelId="demo-simple-select-label"
+                          >
+                            {PASSAGETYPE.map((text, id) => (
+                              <MenuItem key={id} value={text}>
+                                {text}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </div>
+                    </Grid>
+                    <Grid xs={1} item={true}>
+                      <div className="table-title table-top">연도</div>
+                    </Grid>
+                    <Grid xs={2} item={true}>
+                      <div className="table-content table-top">
+                        <FormControl className="table-input-select">
+                          <InputLabel id="demo-simple-select-label">연도</InputLabel>
+                          <Select
+                              value={searchYear}
+                              onChange={handleYear}
+                              labelId="demo-simple-select-label"
+                          >
+                            {YEAR.map((text, id) => (
+                                <MenuItem key={id} value={text}>
+                                  {text}
+                                </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </div>
+                    </Grid>
+                    <Grid xs={1} item={true}>
+                      <div className="table-title table-top">교재</div>
+                    </Grid>
+                    <Grid xs={4} item={true}>
+                      <div className="table-content table-top">
+                        <FormControl className="table-input-select">
+                          <InputLabel id="demo-simple-select-label">교재명</InputLabel>
+                          <Select
+                              value={passageName}
+                              onChange={handlePassageName}
+                              labelId="demo-simple-select-label"
+                          >
+                            {searchTextBook.map((text, id) => (
+                                <MenuItem key={id} value={text}>
+                                  {text}
+                                </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </div>
+                    </Grid>
+                    <Grid xs={1.5} item={true}>
+                      <div className="table-title" style={{height:'160px'}}>유형</div>
+                    </Grid>
+                    <Grid xs={10.5} item={true}>
+                      <div className="table-content" style={{height:'160px'}}>
+                        {Object.entries(QUESTIONTYPE).map(([type, text]) => (
+                            <div key={type} style={{display:'inline-flex', width:'130px', paddingTop:'5px'}}>
+                              <FormControlLabel control={<Checkbox defaultChecked style={{padding:'0'}}/>} label={text} style={{margin:'0 5px'}}/>
+                            </div>
+                        ))}
+                      </div>
+                    </Grid>
+                  </Grid>
+                  <Button
+                      variant="text"
+                      sx={{ float: "right", color: "gray", display:'block' }}
+                      onClick={() => {
+                        setSearchYear("")
+                        setSearchPassage("")
+                        setSearchTextBook([])
+                      }}
                   >
-                    {PASSAGETYPE.map((text, id) => (
-                      <MenuItem key={id} value={text}>
-                        {text}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <FormControl sx={{ width: "180px", marginLeft: "20px" }}>
-                  <InputLabel id="demo-simple-select-label">연도</InputLabel>
-                  <Select
-                    value={searchYear}
-                    onChange={handleYear}
-                    labelId="demo-simple-select-label"
-                  >
-                    {YEAR.map((text, id) => (
-                      <MenuItem key={id} value={text}>
-                        {text}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-                <FormControl sx={{ width: "380px", marginLeft: "20px" }}>
-                  <InputLabel id="demo-simple-select-label">교재명</InputLabel>
-                  <Select
-                    value={passageName}
-                    onChange={handlePassageName}
-                    labelId="demo-simple-select-label"
-                  >
-                    {searchTextBook.map((text, id) => (
-                      <MenuItem key={id} value={text}>
-                        {text}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                    Reset
+                  </Button>
+                </Box>
               </Box>
               {/* 지문선택 */}
               <DataGrid
@@ -649,8 +720,8 @@ const ExamCrt = (params: any) => {
                 hideFooterPagination={true}
                 sx={
                   rowData.length > 0
-                    ? { fontWeight: "500", fontSize: "15px", height: "100%" }
-                    : { fontWeight: "500", fontSize: "15px", height: "400px" }
+                    ? { fontWeight: "500", fontSize: "15px", height: "100%", display:'block' }
+                    : { fontWeight: "500", fontSize: "15px", height: "400px", display:'block' }
                 }
               />
             </Box>
@@ -663,6 +734,9 @@ const ExamCrt = (params: any) => {
               shape="rounded"
               sx={{ display: "flex" }}
             />
+            <div onClick={()=>{}}>
+              <CustomButton label={"담기"} type={"true"} />
+            </div>
           </div>
           <div className="css-margin-left100 ">
             <QuestionList
@@ -674,6 +748,7 @@ const ExamCrt = (params: any) => {
               checked={checked}
               setChecked={setChecked}
               removeRow={removeCheckBox}
+              isExam={true}
             />
           </div>
         </div>
