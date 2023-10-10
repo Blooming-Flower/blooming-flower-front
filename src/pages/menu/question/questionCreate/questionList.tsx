@@ -38,6 +38,7 @@ const QuestionList = (props: any) => {
     setIsTempSave,
     isExam,
     onClickListItem,
+    totalCnt,
   } = props;
 
   //리스트업 목록 삭제 버튼
@@ -102,14 +103,18 @@ const QuestionList = (props: any) => {
           })
         )}
 
-        {rowData.length !== 0 && (
-          <CustomButton
-            domain={isExam ? PATH.QUESTION4 : PATH.QUESTION6}
-            label={buttonName ?? "GO!"}
-            type={"true"}
-            params={rowData}
-          />
-        )}
+        <div>
+          {totalCnt && <p>Total. {totalCnt}</p>}
+
+          {rowData.length !== 0 && (
+            <CustomButton
+              domain={isExam ? PATH.QUESTION4 : PATH.QUESTION6}
+              label={buttonName ?? "GO!"}
+              type={"true"}
+              params={rowData}
+            />
+          )}
+        </div>
       </List>
     </div>
   );
