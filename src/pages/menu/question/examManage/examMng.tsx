@@ -79,7 +79,7 @@ const ExamMng = () => {
       headerAlign: "center",
       renderCell: () => (
         <img
-          src="/src/assets/svg/pdfSvg.svg"
+          src="/assets/svg/pdfSvg.svg"
           width={30}
           height={30}
           onClick={downPdf}
