@@ -150,6 +150,14 @@ const QuestionCrt = (params: any) => {
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
+
+            if(!res.data.list[i].passageUnit){
+              res.data.list[i].passageUnit = '-';
+              let passageInfoList = res.data.list[i].passageInfo;
+              for(let j = 0;j<passageInfoList.length;j++){
+                res.data.list[i].passageInfo[j].passageUnit = '-';
+              }
+            }
           }
 
           setRowData(res.data.list);
@@ -173,6 +181,14 @@ const QuestionCrt = (params: any) => {
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
+            
+            if(!res.data.list[i].passageUnit){
+              res.data.list[i].passageUnit = '-';
+              let passageInfoList = res.data.list[i].passageInfo;
+              for(let j = 0;j<passageInfoList.length;j++){
+                res.data.list[i].passageInfo[j].passageUnit = '-';
+              }
+            }
           }
 
           setPassageName(passageName);

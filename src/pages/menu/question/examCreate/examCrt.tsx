@@ -37,6 +37,9 @@ const ExamCrt = (params: any) => {
   const [rowDataList, setRowDataList] = React.useState([] as any);
   // 전체 체크 했을 때 어떤 값들이 들어가 있었는지
   const [prevRowId, setPrevRowId] = React.useState({} as any);
+  // 전체 문제 수
+  const [totalCount, setTotalCount] = React.useState(0 as number);
+
 
   const [any, forceUpdate] = useReducer((num) => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
@@ -155,6 +158,14 @@ const ExamCrt = (params: any) => {
             for (let j = 0; j < res.data.list[i].passageInfo.length; j++){
               res.data.list[i].questionCount = res.data.list[i].questionCount + res.data.list[i].passageInfo[j].questionCount
             }
+
+            if(!res.data.list[i].passageUnit){
+              res.data.list[i].passageUnit = '-';
+              let passageInfoList = res.data.list[i].passageInfo;
+              for(let j = 0;j<passageInfoList.length;j++){
+                res.data.list[i].passageInfo[j].passageUnit = '-';
+              }
+            }
             console.log(res.data.list[i].questionCount)
           }
           setRowData(res.data.list);
@@ -181,6 +192,14 @@ const ExamCrt = (params: any) => {
             res.data.list[i].questionCount = 0
             for (let j = 0; j < res.data.list[i].passageInfo.length; j++){
               res.data.list[i].questionCount = res.data.list[i].questionCount + res.data.list[i].passageInfo[j].questionCount
+            }
+
+            if(!res.data.list[i].passageUnit){
+              res.data.list[i].passageUnit = '-';
+              let passageInfoList = res.data.list[i].passageInfo;
+              for(let j = 0;j<passageInfoList.length;j++){
+                res.data.list[i].passageInfo[j].passageUnit = '-';
+              }
             }
             console.log(res.data.list[i].questionCount)
           }
@@ -749,6 +768,7 @@ const ExamCrt = (params: any) => {
               setChecked={setChecked}
               removeRow={removeCheckBox}
               isExam={true}
+              totalCnt={totalCount}
             />
           </div>
         </div>
