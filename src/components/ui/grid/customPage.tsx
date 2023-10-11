@@ -18,7 +18,8 @@ useEffect(()=>{
             "/api/v1/passage/search/list?page=" +
             page.toString() +
             "&size=5&passageYear=" +
-            props.year,
+            props.year +
+            "&passageName=" + props.passageName,
             (res: any) => {
                 apiRef.current.setRows(addId(res,props.year))
             }
