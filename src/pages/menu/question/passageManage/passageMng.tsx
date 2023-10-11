@@ -37,6 +37,7 @@ declare module '@mui/x-data-grid' {
     page:number;
     type:string;
     year:string;
+    passageName:string;
   }
 }
 const PassageMng = () => {
@@ -48,6 +49,7 @@ const PassageMng = () => {
   const [year, setYear] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [count,setCount] = React.useState(0)
+  const [passageName, setPassageName] = React.useState("");
   const [data, setData] = React.useState([]);
   const popupRef: any = useRef();
 
@@ -60,7 +62,8 @@ const PassageMng = () => {
       "/api/v1/passage/search/list?page=" +
         page.toString() +
         "&size=5&passageYear=" +
-        yearData,
+        yearData +
+        "&passageName=" + passageName,
       (res: any) => {
         setData(addId(res, yearData));
         setCount(res.data.totalPages)
@@ -87,6 +90,8 @@ const PassageMng = () => {
           } else setData([]);
         }
       );
+
+      setPassageName(e.target.value);
   };
   //지문삭제
   const deletePassage = () => {
@@ -251,6 +256,7 @@ const PassageMng = () => {
                 pageCount:count,
                 page:page,
                 year:year,
+                passageName: passageName,
                 type:"passageMng"
               }
             }}
@@ -276,3 +282,4 @@ const PassageMng = () => {
 };
 
 export default PassageMng;
+

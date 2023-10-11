@@ -685,10 +685,7 @@ const QuestionCrt = (params: any) => {
               width={360}
               height={600}
               rowData={rowDataList}
-              setRowData={setRowDataList}
               buttonName={params.Children}
-              checked={checked}
-              setChecked={setChecked}
               removeRow={removeCheckBox}
             />
           </div>

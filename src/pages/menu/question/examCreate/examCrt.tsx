@@ -30,11 +30,13 @@ const ExamCrt = (params: any) => {
   const [page, setPage] = React.useState(0);
   const [totalPageSize, setTotalPageSize] = React.useState(0);
 
-  const [rowData, setRowData] = React.useState([] as any);
+  const [rowData, setRowData] = React.useState([] as any); // select 되는 grid data
   const [checked, setChecked] = React.useState([] as any); // 지문 번호 checkbox id
   const [multiChecked, setMultiChecked] = React.useState([] as any); // multi checkbox id
-  //questionList 에 넘겨줄 rowData
+  // questionList 에 넘겨주기전 가지고 있을 rowData
   const [rowDataList, setRowDataList] = React.useState([] as any);
+  // 담기전 가지고 있을 rowData
+  const [examRowDataList, setExamRowDataList] = React.useState([] as any);
   // 전체 체크 했을 때 어떤 값들이 들어가 있었는지
   const [prevRowId, setPrevRowId] = React.useState({} as any);
   // 전체 문제 수
@@ -64,6 +66,7 @@ const ExamCrt = (params: any) => {
   };
 
   const checkAll = (unitNum: number[]) => {
+    debugger;
     let prevRowNums = prevRowId[getUniqueKey()];
 
     if (!prevRowNums) {
@@ -150,7 +153,7 @@ const ExamCrt = (params: any) => {
       const passageType = convertPassageType(searchPassage);
 
       $GET(
-        `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        `${_url}/api/v1/exam/search/passage-numbers?page=${page}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
@@ -185,7 +188,7 @@ const ExamCrt = (params: any) => {
       const passageType = convertPassageType(searchPassage);
 
       $GET(
-        `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        `${_url}/api/v1/exam/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
@@ -225,7 +228,7 @@ const ExamCrt = (params: any) => {
         const passageType = convertPassageType(searchPassage);
 
         $GET(
-          `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${year}`,
+          `${_url}/api/v1/exam/search/passage-names?passageType=${passageType}&year=${year}`,
           (res: any) => {
             setSearchTextBook(res.data);
           }
@@ -250,7 +253,7 @@ const ExamCrt = (params: any) => {
         const passageType = convertPassageType(lecture);
 
         $GET(
-          `${_url}/api/v1/question/search/passage-names?passageType=${passageType}&year=${searchYear}`,
+          `${_url}/api/v1/exam/search/passage-names?passageType=${passageType}&year=${searchYear}`,
           (res: any) => {
             setSearchTextBook(res.data);
           }
@@ -762,10 +765,7 @@ const ExamCrt = (params: any) => {
               width={360}
               height={600}
               rowData={rowDataList}
-              setRowData={setRowDataList}
               buttonName={params.Children}
-              checked={checked}
-              setChecked={setChecked}
               removeRow={removeCheckBox}
               isExam={true}
               totalCnt={totalCount}
