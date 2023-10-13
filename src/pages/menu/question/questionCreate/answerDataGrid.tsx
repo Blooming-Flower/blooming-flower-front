@@ -133,7 +133,7 @@ const AnswerDataGrid = React.forwardRef(
     const [writeTypeRows, setWriteTypeRows] = React.useState(
       !props.answerList
         ? writeTypeDefaultRows
-        : !isNaN(props.answerList[0].chooseSeq)
+        : !isNaN(props.answerList[0]?.chooseSeq)
         ? writeTypeDefaultRows
         : props.answerList?.map((cur: any, idx: number) => {
             cur.id = idx + 1;
@@ -190,7 +190,7 @@ const AnswerDataGrid = React.forwardRef(
       setWriteTypeRows(
         !props.answerList
           ? writeTypeDefaultRows
-          : !isNaN(props.answerList[0].chooseSeq)
+          : !isNaN(props.answerList[0]?.chooseSeq)
           ? writeTypeDefaultRows
           : props.answerList?.map((cur: any, idx: number) => {
               cur.id = idx + 1;
