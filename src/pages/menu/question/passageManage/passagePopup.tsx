@@ -24,6 +24,7 @@ import {
   DEFAULT_QUESTION,
   DEFAULTANSWERROWS,
   QUESTIONTYPE,
+  WRITE_TYPES,
 } from "@common/const";
 import {
   ForwardedRef,
@@ -35,11 +36,12 @@ import {
 } from "react";
 import Typography from "@mui/material/Typography";
 import VerticalTabs from "@pages/menu/question/passageManage/passageTabs";
-import { $GET } from "@utils/request";
+import { $GET, $PUT } from "@utils/request";
 import TuiEditor from "@components/ui/tui/toast";
 import ChooseDataGrid from "@pages/menu/question/questionCreate/chooseDataGrid";
 import { DataGrid, useGridApiRef } from "@mui/x-data-grid";
 import { StyledTextarea } from "@components/ui/text/textarea";
+import AnswerDataGrid from "../questionCreate/answerDataGrid";
 
 const PassagePopup = forwardRef(
   (props: { passageId: number | undefined }, ref: ForwardedRef<any>) => {
@@ -55,11 +57,25 @@ const PassagePopup = forwardRef(
       title: "",
       subTitle: "",
       content: "",
+      questionContent: "",
       subContent: "",
+      chooseList: [],
+      answerList: [],
+      questionId: 0,
+      questionCode: "",
     });
     const editorRef: React.MutableRefObject<any> = React.useRef();
+    const subBoxRef: React.MutableRefObject<any> = React.useRef();
+    const subBoxRef2: React.MutableRefObject<any> = React.useRef();
     const chooseRef = useGridApiRef();
     const answerRef = useGridApiRef();
+    const chooseRef2 = React.useRef({
+      getChooseList: () => [],
+    });
+    const answerRef2 = React.useRef({
+      getAnswerList: () => [],
+      resetWriteTypeRows: () => {},
+    });
     const [listData, setListData] = React.useState([]);
     const [content, setContent] = React.useState(parent.content);
 
@@ -69,28 +85,40 @@ const PassagePopup = forwardRef(
       } = e;
       setParent((parent) => ({
         ...parent,
-        type: value as string,
+        type: value,
         title: DEFAULT_QUESTION[value],
       }));
     };
-    useEffect(() => {
-      console.log(props.passageId);
-      if (props.passageId != undefined) {
-        $GET("/api/v1/passage/search/" + props.passageId, (res: any) => {
-          setListData(res.data.questions);
-          setParent((parent) => ({
-            ...parent,
-            content: res.data.passageContent,
-            open: true,
-          }));
+
+    const getPassageDatas = () => {
+      $GET(`/api/v1/passage/search/${props.passageId}`, (res: any) => {
+        res.data.questions.forEach((Q: any) => {
+          Q.question.forEach((q: any) => {
+            q.answer.forEach((A: any) => (A.answerContent = A.content));
+            q.choose.forEach((C: any) => (C.chooseContent = C.content));
+          });
         });
+        setListData(res.data.questions);
+        setParent((parent) => ({
+          ...parent,
+          content: res.data.passageContent,
+          open: true,
+        }));
+      });
+    };
+
+    useEffect(() => {
+      if (props.passageId != undefined) {
+        getPassageDatas();
       }
     }, [parent.check]);
+
     const handleClose = () => {
       setParent((parent) => ({
         ...parent,
         content: "",
         subContent: "",
+        questionContent: "",
         type: "",
         title: "",
         pastYn: false,
@@ -103,6 +131,7 @@ const PassagePopup = forwardRef(
       }));
       setListData([]);
     };
+
     const handleOpen = () => {
       alert.confirm({
         type: ALERT.CONFIRM,
@@ -117,11 +146,109 @@ const PassagePopup = forwardRef(
       });
     };
 
-    console.log("parent", parent);
+    const getSubBoxContent = (type: string) => {
+      return ["Q16", "Q17", "Q18", "Q21"].includes(type)
+        ? subBoxRef.current.getInstance().getHTML()
+        : ["Q22"].includes(type)
+        ? subBoxRef.current.getInstance().getHTML() +
+          "|" +
+          subBoxRef2.current.getInstance().getHTML()
+        : "";
+    };
+
+    const getUpdateParam = () => {
+      return {
+        questionCode: parent.questionCode,
+        questionId: parent.questionId,
+        passageId: props.passageId,
+        questionContent: editorRef.current.getInstance().getHTML(),
+        questionTitle: parent.title,
+        questionSubTitle: parent.subTitle,
+        pastYn: parent.pastYn,
+        questionType: parent.type,
+        subBox: getSubBoxContent(parent.type),
+        chooseList:
+          chooseRef2.current?.getChooseList().map((choose: any) => ({
+            chooseSeq: choose.id,
+            chooseContent: choose.chooseContent,
+          })) ?? [],
+        answerList:
+          answerRef2.current
+            ?.getAnswerList()
+            .map((answer: any) => ({ answerContent: answer.answerContent })) ??
+          [],
+      };
+    };
+    const updateFuntions = [
+      // 지문 수정
+      (callBack?: Function) => {
+        // 바뀐게 없을때는 업데이트 안함
+        if (content === parent.content) {
+          return;
+        }
+        const param = {
+          passageId: props.passageId,
+          passageContent: content,
+        };
+        $PUT(`/api/v1/passage/update/content`, param, () => {
+          if (callBack) {
+            callBack();
+          }
+        });
+      },
+      // 복합문제 수정
+      (callBack?: Function) => {
+        const param = getUpdateParam();
+        param.questionId = 0;
+
+        $PUT(`/api/v1/question/update`, param, () => {
+          if (callBack) {
+            callBack();
+          }
+        });
+      },
+      // 복합문제의 하위문제 수정
+      (callBack?: Function) => {
+        updateFuntions[1]();
+        const param = getUpdateParam();
+        param.questionType = parent.subType;
+        param.pastYn = parent.subPastYn;
+
+        $PUT(`/api/v1/question/update`, param, () => {
+          if (callBack) {
+            callBack();
+          }
+        });
+      },
+      // 단일문제 수정
+      (callBack?: Function) => {
+        const param = getUpdateParam();
+
+        $PUT(`/api/v1/question/update`, param, () => {
+          if (callBack) {
+            callBack();
+          }
+        });
+      },
+    ];
+    const updateData = () => {
+      if (parent.display === 0) {
+        // 지문만 수정
+        updateFuntions[0]();
+        return;
+      }
+
+      if (parent.callPassage) {
+        updateFuntions[0]();
+      }
+      // 문제 수정
+      updateFuntions[parent.display](getPassageDatas);
+    };
 
     useImperativeHandle(ref, () => ({
       handleOpen,
     }));
+
     return (
       <BootstrapDialog
         onClose={handleClose}
@@ -159,7 +286,7 @@ const PassagePopup = forwardRef(
             size="medium"
             className="popup-change"
             sx={{ margin: "0 50px 20px 0" }}
-            onClick={handleClose}
+            onClick={updateData}
           >
             수정
           </Button>
@@ -170,8 +297,6 @@ const PassagePopup = forwardRef(
                 setParent={setParent}
                 data={listData}
                 editor={editorRef}
-                answerRef={answerRef}
-                chooseRef={chooseRef}
               />
             </Grid>
             <Grid item lg={10}>
@@ -214,7 +339,7 @@ const PassagePopup = forwardRef(
                               value={parent.type}
                               defaultValue={"복합유형"}
                               onChange={changeType}
-                              // displayEmpty
+                              disabled={parent.type === "Q25"}
                               inputProps={{ "aria-label": "Without label" }}
                             >
                               {Object.entries(QUESTIONTYPE).map(
@@ -225,31 +350,6 @@ const PassagePopup = forwardRef(
                                 )
                               )}
                             </Select>
-                          </FormControl>
-                        </div>
-                      </Grid>
-                      <Grid xs={1} item={true}>
-                        <div className="table-title table-top">기출여부</div>
-                      </Grid>
-                      <Grid xs={1} item={true}>
-                        <div className="table-content table-top">
-                          <FormControl className="table-select">
-                            <Checkbox
-                              checked={parent.pastYn}
-                              onChange={() =>
-                                setParent((parent) => ({
-                                  ...parent,
-                                  pastYn: !parent.pastYn,
-                                }))
-                              }
-                              sx={{
-                                color: "#ff8b2c",
-                                "& .MuiSvgIcon-root": { fontSize: 28 },
-                                "&.Mui-checked": {
-                                  color: "#ff8b2c",
-                                },
-                              }}
-                            />
                           </FormControl>
                         </div>
                       </Grid>
@@ -274,7 +374,7 @@ const PassagePopup = forwardRef(
                       </Grid>
                     </Grid>
                     <TuiEditor
-                      content={parent.subContent}
+                      content={parent.questionContent}
                       editorRef={editorRef}
                     />
                   </>
@@ -291,7 +391,7 @@ const PassagePopup = forwardRef(
                               value={parent.type}
                               defaultValue={"복합유형"}
                               onChange={changeType}
-                              // displayEmpty
+                              disabled={parent.type === "Q25"}
                               inputProps={{ "aria-label": "Without label" }}
                             >
                               {Object.entries(QUESTIONTYPE).map(
@@ -306,31 +406,6 @@ const PassagePopup = forwardRef(
                         </div>
                       </Grid>
                       <Grid xs={1} item={true}>
-                        <div className="table-title table-top">기출여부</div>
-                      </Grid>
-                      <Grid xs={1} item={true}>
-                        <div className="table-content table-top">
-                          <FormControl className="table-select">
-                            <Checkbox
-                              checked={parent.pastYn}
-                              onChange={() =>
-                                setParent((parent) => ({
-                                  ...parent,
-                                  pastYn: !parent.pastYn,
-                                }))
-                              }
-                              sx={{
-                                color: "#ff8b2c",
-                                "& .MuiSvgIcon-root": { fontSize: 28 },
-                                "&.Mui-checked": {
-                                  color: "#ff8b2c",
-                                },
-                              }}
-                            />
-                          </FormControl>
-                        </div>
-                      </Grid>
-                      <Grid xs={1} item={true}>
                         <div className="table-title table-top">발문</div>
                       </Grid>
                       <Grid xs={6} item={true}>
@@ -340,18 +415,18 @@ const PassagePopup = forwardRef(
                               onChange={(e) =>
                                 setParent((parent) => ({
                                   ...parent,
-                                  subTitle: e.target.value,
+                                  title: e.target.value,
                                 }))
                               }
                               label="발문"
-                              value={parent.subTitle}
+                              value={parent.title}
                             />
                           </FormControl>
                         </div>
                       </Grid>
                     </Grid>
                     <TuiEditor
-                      content={parent.subContent}
+                      content={parent.questionContent}
                       editorRef={editorRef}
                     />
                     <Grid container spacing={0} className="table-container">
@@ -363,17 +438,26 @@ const PassagePopup = forwardRef(
                           <FormControl className="table-select">
                             <Select
                               value={parent.subType}
-                              onChange={changeType}
+                              onChange={(e) => {
+                                const {
+                                  target: { value },
+                                } = e;
+                                setParent({
+                                  ...parent,
+                                  subType: value,
+                                  subTitle: DEFAULT_QUESTION[value],
+                                });
+                              }}
                               displayEmpty
                               inputProps={{ "aria-label": "Without label" }}
                             >
-                              {Object.entries(QUESTIONTYPE).map(
-                                ([type, text]) => (
+                              {Object.entries(QUESTIONTYPE)
+                                .filter(([type, value]) => type !== "Q25")
+                                .map(([type, text]) => (
                                   <MenuItem key={type} value={type}>
                                     {text}
                                   </MenuItem>
-                                )
-                              )}
+                                ))}
                             </Select>
                           </FormControl>
                         </div>
@@ -413,35 +497,71 @@ const PassagePopup = forwardRef(
                               onChange={(e) =>
                                 setParent((parent) => ({
                                   ...parent,
-                                  title: e.target.value,
+                                  subTitle: e.target.value,
                                 }))
                               }
                               label="발문"
-                              value={parent.title}
+                              value={parent.subTitle}
                             />
                           </FormControl>
                         </div>
                       </Grid>
                     </Grid>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      {["Q16", "Q17", "Q18", "Q21", "Q22"].includes(
+                        parent.subType
+                      ) ? (
+                        <TuiEditor
+                          editorRef={subBoxRef}
+                          height="200px"
+                          placeholder={
+                            ["Q16", "Q17"].includes(parent.subType)
+                              ? "<주어진 문장>"
+                              : ["Q21", "Q22"].includes(parent.subType)
+                              ? "<보기>"
+                              : "<요약문>"
+                          }
+                          content={parent.subContent.split("|")[0]}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      {parent.subType === "Q22" ? (
+                        <TuiEditor
+                          editorRef={subBoxRef2}
+                          height="200px"
+                          placeholder={"<조건>"}
+                          content={parent.subContent.split("|")[1]}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                     <Grid container>
-                      <Grid item lg={10.5}>
+                      <Grid
+                        item
+                        lg={WRITE_TYPES.includes(parent.subType) ? 0 : 10.5}
+                      >
                         <ChooseDataGrid
                           chooseRef={chooseRef}
+                          ref={chooseRef2}
+                          chooseList={parent.chooseList}
                           questionType={parent.subType}
                         />
                       </Grid>
-                      <Grid item lg={1.5}>
-                        <DataGrid
-                          apiRef={answerRef}
-                          rows={DEFAULTANSWERROWS}
-                          columns={ANSWERCOLUMNS}
-                          slots={{ columnHeaders: () => null }}
-                          hideFooter={true}
-                          hideFooterPagination={true}
-                          hideFooterSelectedRowCount={true}
-                          checkboxSelection
-                          sx={{ marginBottom: 1 }}
-                        />
+                      <Grid
+                        item
+                        lg={WRITE_TYPES.includes(parent.subType) ? 12 : 1.5}
+                      >
+                        <div className={`answer-wrap-${parent.questionId}`}>
+                          <AnswerDataGrid
+                            answerRef={answerRef}
+                            ref={answerRef2}
+                            questionType={parent.subType}
+                            answerList={parent.answerList}
+                            id={parent.questionId}
+                          />
+                        </div>
                       </Grid>
                     </Grid>
                   </>
@@ -458,6 +578,7 @@ const PassagePopup = forwardRef(
                               value={parent.type}
                               onChange={changeType}
                               displayEmpty
+                              disabled={parent.type === "Q25"}
                               inputProps={{ "aria-label": "Without label" }}
                             >
                               {Object.entries(QUESTIONTYPE).map(
@@ -517,28 +638,64 @@ const PassagePopup = forwardRef(
                       </Grid>
                     </Grid>
                     <TuiEditor
-                      content={parent.subContent}
+                      content={parent.questionContent}
                       editorRef={editorRef}
                     />
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      {["Q16", "Q17", "Q18", "Q21", "Q22"].includes(
+                        parent.type
+                      ) ? (
+                        <TuiEditor
+                          editorRef={subBoxRef}
+                          height="200px"
+                          placeholder={
+                            ["Q16", "Q17"].includes(parent.type)
+                              ? "<주어진 문장>"
+                              : ["Q21", "Q22"].includes(parent.type)
+                              ? "<보기>"
+                              : "<요약문>"
+                          }
+                          content={parent.subContent.split("|")[0]}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      {parent.type === "Q22" ? (
+                        <TuiEditor
+                          editorRef={subBoxRef2}
+                          height="200px"
+                          placeholder={"<조건>"}
+                          content={parent.subContent.split("|")[1]}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                     <Grid container>
-                      <Grid item lg={10.5}>
+                      <Grid
+                        item
+                        lg={WRITE_TYPES.includes(parent.type) ? 0 : 10.5}
+                      >
                         <ChooseDataGrid
                           chooseRef={chooseRef}
+                          ref={chooseRef2}
+                          chooseList={parent.chooseList}
                           questionType={parent.type}
                         />
                       </Grid>
-                      <Grid item lg={1.5}>
-                        <DataGrid
-                          apiRef={answerRef}
-                          rows={DEFAULTANSWERROWS}
-                          columns={ANSWERCOLUMNS}
-                          slots={{ columnHeaders: () => null }}
-                          hideFooter={true}
-                          hideFooterPagination={true}
-                          hideFooterSelectedRowCount={true}
-                          checkboxSelection
-                          sx={{ marginBottom: 1 }}
-                        />
+                      <Grid
+                        item
+                        lg={WRITE_TYPES.includes(parent.type) ? 12 : 1.5}
+                      >
+                        <div className={`answer-wrap-${parent.questionId}`}>
+                          <AnswerDataGrid
+                            answerRef={answerRef}
+                            ref={answerRef2}
+                            questionType={parent.type}
+                            answerList={parent.answerList}
+                            id={parent.questionId}
+                          />
+                        </div>
                       </Grid>
                     </Grid>
                   </>

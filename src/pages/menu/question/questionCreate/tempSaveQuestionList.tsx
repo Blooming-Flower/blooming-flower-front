@@ -137,22 +137,14 @@ const TempSaveQuestionList = (props: any) => {
             onClick={() => {
               const params = rowData.map((data: any) => {
                 const questionParams = data.questionParams.map((el: any) => {
-                  const answerList = el.answerList.map((answer: any) => {
-                    return { answerContent: answer.answerContent };
-                  });
+                  const answerList = el.answerList.map((answer: any) => ({
+                    answerContent: answer.answerContent,
+                  }));
 
-                  const chooseList = el.chooseList.map((choose: any) => {
-                    const chooseContents = [];
-                    for (const key in choose) {
-                      if (key.includes("chooseContent")) {
-                        chooseContents.push(choose[key]);
-                      }
-                    }
-                    return {
-                      chooseSeq: choose.chooseSeq,
-                      chooseContent: chooseContents.join("|"),
-                    };
-                  });
+                  const chooseList = el.chooseList.map((choose: any) => ({
+                    chooseSeq: choose.id,
+                    chooseContent: choose.chooseContent,
+                  }));
 
                   return {
                     questionSubTitle: el.questionSubTitle,
