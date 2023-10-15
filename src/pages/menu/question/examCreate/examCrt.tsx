@@ -1,9 +1,12 @@
 import Layout from "@components/layouts/layout";
 import React, { useReducer, useEffect, ChangeEvent } from "react";
 import {
-  Box, Button,
+  Box,
+  Button,
   Checkbox,
-  FormControl, FormControlLabel, Grid,
+  FormControl,
+  FormControlLabel,
+  Grid,
   InputLabel,
   MenuItem,
   Pagination,
@@ -12,9 +15,16 @@ import {
   Typography,
 } from "@mui/material";
 import { GridColDef, DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
-import {PASSAGETYPE, YEAR, URL, QUESTIONTYPE, TXTUNIT, TXTNUM} from "@common/const";
+import {
+  PASSAGETYPE,
+  YEAR,
+  URL,
+  QUESTIONTYPE,
+  TXTUNIT,
+  TXTNUM,
+} from "@common/const";
 import axios from "axios";
-import { $GET } from "@utils/request";
+import { $GET, $POST } from "@utils/request";
 
 //css
 import "@css/questionCreate/questionList.scss";
@@ -42,7 +52,6 @@ const ExamCrt = (params: any) => {
   // 전체 문제 수
   const [totalCount, setTotalCount] = React.useState(0 as number);
 
-
   const [any, forceUpdate] = useReducer((num) => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
   const _url: string = URL.SERVER_URL;
@@ -66,7 +75,6 @@ const ExamCrt = (params: any) => {
   };
 
   const checkAll = (unitNum: number[]) => {
-    debugger;
     let prevRowNums = prevRowId[getUniqueKey()];
 
     if (!prevRowNums) {
@@ -157,19 +165,21 @@ const ExamCrt = (params: any) => {
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
-            res.data.list[i].questionCount = 0
-            for (let j = 0; j < res.data.list[i].passageInfo.length; j++){
-              res.data.list[i].questionCount = res.data.list[i].questionCount + res.data.list[i].passageInfo[j].questionCount
+            res.data.list[i].questionCount = 0;
+            for (let j = 0; j < res.data.list[i].passageInfo.length; j++) {
+              res.data.list[i].questionCount =
+                res.data.list[i].questionCount +
+                res.data.list[i].passageInfo[j].questionCount;
             }
 
-            if(!res.data.list[i].passageUnit){
-              res.data.list[i].passageUnit = '-';
+            if (!res.data.list[i].passageUnit) {
+              res.data.list[i].passageUnit = "-";
               let passageInfoList = res.data.list[i].passageInfo;
-              for(let j = 0;j<passageInfoList.length;j++){
-                res.data.list[i].passageInfo[j].passageUnit = '-';
+              for (let j = 0; j < passageInfoList.length; j++) {
+                res.data.list[i].passageInfo[j].passageUnit = "-";
               }
             }
-            console.log(res.data.list[i].questionCount)
+            console.log(res.data.list[i].questionCount);
           }
           setRowData(res.data.list);
           setPage(page);
@@ -192,19 +202,21 @@ const ExamCrt = (params: any) => {
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
-            res.data.list[i].questionCount = 0
-            for (let j = 0; j < res.data.list[i].passageInfo.length; j++){
-              res.data.list[i].questionCount = res.data.list[i].questionCount + res.data.list[i].passageInfo[j].questionCount
+            res.data.list[i].questionCount = 0;
+            for (let j = 0; j < res.data.list[i].passageInfo.length; j++) {
+              res.data.list[i].questionCount =
+                res.data.list[i].questionCount +
+                res.data.list[i].passageInfo[j].questionCount;
             }
 
-            if(!res.data.list[i].passageUnit){
-              res.data.list[i].passageUnit = '-';
+            if (!res.data.list[i].passageUnit) {
+              res.data.list[i].passageUnit = "-";
               let passageInfoList = res.data.list[i].passageInfo;
-              for(let j = 0;j<passageInfoList.length;j++){
-                res.data.list[i].passageInfo[j].passageUnit = '-';
+              for (let j = 0; j < passageInfoList.length; j++) {
+                res.data.list[i].passageInfo[j].passageUnit = "-";
               }
             }
-            console.log(res.data.list[i].questionCount)
+            console.log(res.data.list[i].questionCount);
           }
 
           setPassageName(passageName);
@@ -394,6 +406,16 @@ const ExamCrt = (params: any) => {
     let newMultiChecked = [...multiChecked];
     let curIdx = newChecked.indexOf(row.passageId);
 
+    let examIdx = examRowDataList
+      .map((item: any) => item.passageId)
+      .indexOf(row.passageId);
+    if (examIdx !== -1) {
+      setTotalCount(
+        (totalCount) => totalCount - examRowDataList[examIdx].count
+      );
+      examRowDataList.splice(examIdx, 1);
+    }
+
     newChecked.splice(curIdx, 1);
     setChecked(newChecked);
 
@@ -406,7 +428,7 @@ const ExamCrt = (params: any) => {
     console.log(row);
 
     let uniqueKey =
-      row.searchPassage + row.passageYear + row.passageName + row.page;
+      row.passageType + row.passageYear + row.passageName + row.page;
     let multiCheckboxIdx = newMultiChecked.indexOf(uniqueKey + row.passageUnit);
 
     if (multiCheckboxIdx !== -1) {
@@ -529,6 +551,86 @@ const ExamCrt = (params: any) => {
     return searchPassage + searchYear + passageName + page;
   }
 
+  // 문제 유형에 따라 오른쪽 박스에 담는다
+  function putList() {
+    let nodes = getQuestionType();
+
+    let checkedQuestionType = Array.from(nodes)
+      .filter((node) => node.checked)
+      .map((node) => node.value);
+
+    let tempPassageIds = rowDataList.map((rowData: any) => rowData.passageId);
+
+    let passageIds = [] as any;
+
+    // 이미 오른쪽 사이드 박스에 있는 id 제거
+    let examPassageIdList = examRowDataList.map((item: any) => item.passageId);
+    // debugger;
+    for (let i = 0; i < tempPassageIds.length; i++) {
+      if (examPassageIdList.indexOf(tempPassageIds[i]) === -1) {
+        passageIds.push(tempPassageIds[i]);
+      }
+    }
+
+    let param = {
+      questionTypes: checkedQuestionType,
+      passageIds: passageIds,
+    };
+
+    $POST("api/v1/exam/find/question-info", param, (res: any) => {
+      console.log(`question info res ::`, res);
+      // debugger;
+
+      res.data.forEach((questionInfo: any) => {
+        for (let i = 0; i < rowDataList.length; i++) {
+          if (
+            rowDataList[i].passageId === questionInfo.passageId &&
+            questionInfo.count !== 0
+          ) {
+            examRowDataList.push({
+              passageType: rowDataList[i].searchPassage,
+              passageYear: rowDataList[i].passageYear,
+              passageName: rowDataList[i].passageName,
+              passageNumber: rowDataList[i].passageNumber,
+              passageId: rowDataList[i].passageId,
+              passageUnit: rowDataList[i].passageUnit,
+              page: rowDataList[i].page,
+              rowNum: rowDataList[i].rowNum,
+              questionIds: questionInfo.questionIds,
+              count: questionInfo.count,
+            });
+
+            setTotalCount((totalCount) => totalCount + questionInfo.count);
+            break;
+          }
+        }
+      });
+
+      forceUpdate(); // 컴포넌트 재 랜더링
+
+      //     setRowDataList([]);
+    });
+  }
+
+  // 문제 유형들 return
+  function getQuestionType() {
+    return document.querySelectorAll(
+      "input[type=checkbox][name=questionType]"
+    ) as NodeListOf<HTMLInputElement>;
+  }
+
+  // reset 누르면 questionType 전부 check되게 변경
+  function defaultQuestionType() {
+    let nodes = getQuestionType();
+
+    nodes.forEach((node) => {
+      if (!node.checked) {
+        node.click();
+      }
+    });
+    return QUESTIONTYPE;
+  }
+
   // selectbox 선택시 출력되는 그리드
   const columns: GridColDef[] = [
     {
@@ -611,20 +713,16 @@ const ExamCrt = (params: any) => {
       align: "center",
     },
     {
-      field:"questionCount",
-      headerName:"문제수",
-      width:250,
+      field: "questionCount",
+      headerName: "문제수",
+      width: 250,
       editable: false,
       align: "center",
       sortable: false,
       headerAlign: "center",
       type: "actions",
-      getActions:(params)=>[
-          <>
-            {params.row.questionCount}
-          </>
-      ]
-    }
+      getActions: (params) => [<>{params.row.questionCount}</>],
+    },
   ];
 
   return (
@@ -672,16 +770,18 @@ const ExamCrt = (params: any) => {
                     <Grid xs={2} item={true}>
                       <div className="table-content table-top">
                         <FormControl className="table-input-select">
-                          <InputLabel id="demo-simple-select-label">연도</InputLabel>
+                          <InputLabel id="demo-simple-select-label">
+                            연도
+                          </InputLabel>
                           <Select
-                              value={searchYear}
-                              onChange={handleYear}
-                              labelId="demo-simple-select-label"
+                            value={searchYear}
+                            onChange={handleYear}
+                            labelId="demo-simple-select-label"
                           >
                             {YEAR.map((text, id) => (
-                                <MenuItem key={id} value={text}>
-                                  {text}
-                                </MenuItem>
+                              <MenuItem key={id} value={text}>
+                                {text}
+                              </MenuItem>
                             ))}
                           </Select>
                         </FormControl>
@@ -693,42 +793,68 @@ const ExamCrt = (params: any) => {
                     <Grid xs={4} item={true}>
                       <div className="table-content table-top">
                         <FormControl className="table-input-select">
-                          <InputLabel id="demo-simple-select-label">교재명</InputLabel>
+                          <InputLabel id="demo-simple-select-label">
+                            교재명
+                          </InputLabel>
                           <Select
-                              value={passageName}
-                              onChange={handlePassageName}
-                              labelId="demo-simple-select-label"
+                            value={passageName}
+                            onChange={handlePassageName}
+                            labelId="demo-simple-select-label"
                           >
                             {searchTextBook.map((text, id) => (
-                                <MenuItem key={id} value={text}>
-                                  {text}
-                                </MenuItem>
+                              <MenuItem key={id} value={text}>
+                                {text}
+                              </MenuItem>
                             ))}
                           </Select>
                         </FormControl>
                       </div>
                     </Grid>
                     <Grid xs={1.5} item={true}>
-                      <div className="table-title" style={{height:'160px'}}>유형</div>
+                      <div className="table-title" style={{ height: "160px" }}>
+                        유형
+                      </div>
                     </Grid>
                     <Grid xs={10.5} item={true}>
-                      <div className="table-content" style={{height:'160px'}}>
+                      <div
+                        className="table-content"
+                        style={{ height: "160px" }}
+                      >
                         {Object.entries(QUESTIONTYPE).map(([type, text]) => (
-                            <div key={type} style={{display:'inline-flex', width:'130px', paddingTop:'5px'}}>
-                              <FormControlLabel control={<Checkbox defaultChecked style={{padding:'0'}}/>} label={text} style={{margin:'0 5px'}}/>
-                            </div>
+                          <div
+                            key={type}
+                            style={{
+                              display: "inline-flex",
+                              width: "130px",
+                              paddingTop: "5px",
+                            }}
+                          >
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  defaultChecked
+                                  style={{ padding: "0" }}
+                                  value={type}
+                                  name={"questionType"}
+                                />
+                              }
+                              label={text}
+                              style={{ margin: "0 5px" }}
+                            />
+                          </div>
                         ))}
                       </div>
                     </Grid>
                   </Grid>
                   <Button
-                      variant="text"
-                      sx={{ float: "right", color: "gray", display:'block' }}
-                      onClick={() => {
-                        setSearchYear("")
-                        setSearchPassage("")
-                        setSearchTextBook([])
-                      }}
+                    variant="text"
+                    sx={{ float: "right", color: "gray", display: "block" }}
+                    onClick={() => {
+                      setSearchYear("");
+                      setSearchPassage("");
+                      setSearchTextBook([]);
+                      defaultQuestionType();
+                    }}
                   >
                     Reset
                   </Button>
@@ -742,8 +868,18 @@ const ExamCrt = (params: any) => {
                 hideFooterPagination={true}
                 sx={
                   rowData.length > 0
-                    ? { fontWeight: "500", fontSize: "15px", height: "100%", display:'block' }
-                    : { fontWeight: "500", fontSize: "15px", height: "400px", display:'block' }
+                    ? {
+                        fontWeight: "500",
+                        fontSize: "15px",
+                        height: "100%",
+                        display: "block",
+                      }
+                    : {
+                        fontWeight: "500",
+                        fontSize: "15px",
+                        height: "400px",
+                        display: "block",
+                      }
                 }
               />
             </Box>
@@ -756,7 +892,7 @@ const ExamCrt = (params: any) => {
               shape="rounded"
               sx={{ display: "flex" }}
             />
-            <div onClick={()=>{}}>
+            <div onClick={putList}>
               <CustomButton label={"담기"} type={"true"} />
             </div>
           </div>
@@ -764,7 +900,7 @@ const ExamCrt = (params: any) => {
             <QuestionList
               width={360}
               height={600}
-              rowData={rowDataList}
+              rowData={examRowDataList}
               buttonName={params.Children}
               removeRow={removeCheckBox}
               isExam={true}
