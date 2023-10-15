@@ -1,0 +1,44 @@
+.div_container {
+  display: grid;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 900px;
+  width: 100%;
+  background-color: grey;
+  overflow: auto;
+}
+
+.div_container > button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  border: none;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 2px #e4e4e4;
+  background-color: white;
+  cursor: pointer;
+  transition: 1s;
+}
+
+.div_container > button:hover {
+  background-color: black;
+  color: white;
+}
+
+.div_paper {
+  height: 842px;
+  width: 595px;
+  //margin: 30px;
+  background-color: white;
+  text-align: center;
+  //overflow: auto;
+}
+.pdf_container{
+  margin: 30px;
+}
+
+.div_paper > div {
+  margin: 30px;
+}
