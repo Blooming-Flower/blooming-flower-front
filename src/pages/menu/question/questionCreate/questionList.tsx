@@ -70,7 +70,9 @@ const QuestionList = (props: any) => {
                   className="checkbox-list"
                   value={row}
                   onClick={(e) => {
-                    onClickListItem(row);
+                    if (onClickListItem) {
+                      onClickListItem(row);
+                    }
                   }}
                   secondaryAction={
                     <IconButton
@@ -102,20 +104,26 @@ const QuestionList = (props: any) => {
             );
           })
         )}
-
-        <div>
-          {totalCnt && <p>Total. {totalCnt}</p>}
-
-          {rowData.length !== 0 && (
+      </List>
+      <div>
+        {rowData.length !== 0 && (
+          <div
+            style={{
+              padding: "7px",
+              height: "53px",
+              border: "0.5px solid lightgray",
+            }}
+          >
+            {totalCnt ? <span>Total. {totalCnt}</span> : <></>}
             <CustomButton
               domain={isExam ? PATH.QUESTION4 : PATH.QUESTION6}
               label={buttonName ?? "GO!"}
               type={"true"}
               params={rowData}
             />
-          )}
-        </div>
-      </List>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
