@@ -1,14 +1,18 @@
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import Layout from "@components/layouts/layout";
+import {makePdf, onDownloadBtn} from "@utils/makePdf";
+import '@css/pdf.scss'
 import {
-    Box, Card, Divider, FormControl, Grid, IconButton, List, ListItem, TextField,
+    Box, Button, Card, Divider, FormControl, Grid, IconButton, List, ListItem, TextField,
 } from "@mui/material";
 import {EXAMTYPE, PASSAGETYPE, QUESTIONTYPE, TXTNUM, TXTUNIT, YEAR} from "@common/const";
 import MenuIcon from '@mui/icons-material/Menu';
 import CustomButton from "@components/ui/button/custeomButton";
 import {useCallback, useEffect, useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import NormalBook from "@pages/menu/question/examCreate/normalBook";
+import BigBook from "@pages/menu/question/examCreate/bigBook";
 
 const ExamView = () => {
     const [rowData, setRowData] = useState([
@@ -41,6 +45,16 @@ const ExamView = () => {
         }
         setAble(type);
     };
+
+    const handleDown = () => {
+        const pdf = makePdf(examTitle)
+        pdf.viewWithPdf()
+        // onDownloadBtn()
+    }
+
+
+
+
     const handleChange = (result:any) => {
         if (!result.destination) return;
         console.log(result);
@@ -142,21 +156,25 @@ const ExamView = () => {
                                     </Grid>
                                 </Box>
                             </Box>
-                            {/* 지문선택 */}
-                            <div>
-                                <Card
-                                    variant="outlined"
-                                    sx={{
-                                        p: 2,
-                                        borderRadius: 2,
-                                        bgcolor: 'background.default',
-                                        display: 'grid',
-                                        gridTemplateColumns: { md: '1fr 1fr' },
-                                        gap: 2,
-                                    }}
-                                >
-                                    시험지종류별 시험지..
-                                </Card>
+                            <div className='div_container'>
+                                    {
+                                        able == '시험지'?
+                                            <NormalBook
+                                                rowData={rowData}
+                                                examTitle={examTitle}
+                                                header={header}
+                                                leftBottom={leftBottom}
+                                                rightBottom={rightBottom}
+                                            />
+                                            :
+                                            <BigBook
+                                                rowData={rowData}
+                                                examTitle={examTitle}
+                                                header={header}
+                                                leftBottom={leftBottom}
+                                                rightBottom={rightBottom}
+                                            />
+                                    }
                             </div>
                         </Box>
                     </div>
@@ -227,6 +245,15 @@ const ExamView = () => {
                         </DragDropContext>
                             </List>
                         </div>
+                        <Button
+                            color="warning"
+                            size="large"
+                            variant="contained"
+                            onClick={handleDown}
+                            sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}
+                        >
+                            다운로드
+                        </Button>
                     </div>
                 </div>
             </div>
