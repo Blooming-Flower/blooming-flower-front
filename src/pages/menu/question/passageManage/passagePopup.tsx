@@ -78,6 +78,8 @@ const PassagePopup = forwardRef(
     });
     const [listData, setListData] = React.useState([]);
     const [content, setContent] = React.useState(parent.content);
+    console.log("listData", listData);
+    console.log("parent", parent);
 
     const changeType = (e: SelectChangeEvent<string>) => {
       const {
@@ -177,7 +179,7 @@ const PassagePopup = forwardRef(
             ?.getAnswerList()
             .map((answer: any) => ({ answerContent: answer.answerContent })) ??
           [],
-      };
+      } as any;
     };
     const updateFuntions = [
       // 지문 수정
@@ -202,6 +204,10 @@ const PassagePopup = forwardRef(
         param.questionId = 0;
 
         $PUT(`/api/v1/question/update`, param, () => {
+          setParent({
+            ...parent,
+            display: 0,
+          });
           if (callBack) {
             callBack();
           }
@@ -213,8 +219,12 @@ const PassagePopup = forwardRef(
         const param = getUpdateParam();
         param.questionType = parent.subType;
         param.pastYn = parent.subPastYn;
-
+        param.subBox = getSubBoxContent(parent.subType);
         $PUT(`/api/v1/question/update`, param, () => {
+          setParent({
+            ...parent,
+            display: 0,
+          });
           if (callBack) {
             callBack();
           }
@@ -225,6 +235,10 @@ const PassagePopup = forwardRef(
         const param = getUpdateParam();
 
         $PUT(`/api/v1/question/update`, param, () => {
+          setParent({
+            ...parent,
+            display: 0,
+          });
           if (callBack) {
             callBack();
           }
@@ -234,7 +248,7 @@ const PassagePopup = forwardRef(
     const updateData = () => {
       if (parent.display === 0) {
         // 지문만 수정
-        updateFuntions[0]();
+        updateFuntions[0](getPassageDatas);
         return;
       }
 
@@ -297,6 +311,8 @@ const PassagePopup = forwardRef(
                 setParent={setParent}
                 data={listData}
                 editor={editorRef}
+                subBoxEditor1={subBoxRef}
+                subBoxEditor2={subBoxRef2}
               />
             </Grid>
             <Grid item lg={10}>

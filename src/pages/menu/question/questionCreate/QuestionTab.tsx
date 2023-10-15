@@ -279,7 +279,7 @@ const QuestionTab = () => {
                 // color="gray"
                 onClick={questionTempSave}
               >
-                저장
+                담기
               </Button>
             ) : (
               <></>
