@@ -128,7 +128,8 @@ const TempSaveQuestionList = (props: any) => {
             );
           })
         )}
-
+      </List>
+      <div>
         {rowData.length !== 0 && (
           <Button
             color="warning"
@@ -177,7 +178,7 @@ const TempSaveQuestionList = (props: any) => {
             {"SAVE"}
           </Button>
         )}
-      </List>
+      </div>
     </div>
   );
 };

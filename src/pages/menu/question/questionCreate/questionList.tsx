@@ -39,6 +39,7 @@ const QuestionList = (props: any) => {
     isExam,
     onClickListItem,
     totalCnt,
+    noDelete,
   } = props;
 
   //리스트업 목록 삭제 버튼
@@ -75,13 +76,17 @@ const QuestionList = (props: any) => {
                     }
                   }}
                   secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => onRemove(row)}
-                    >
-                      <HighlightOffIcon />
-                    </IconButton>
+                    noDelete ? (
+                      <></>
+                    ) : (
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => onRemove(row)}
+                      >
+                        <HighlightOffIcon />
+                      </IconButton>
+                    )
                   }
                 >
                   <div>{row.passageYear}</div>

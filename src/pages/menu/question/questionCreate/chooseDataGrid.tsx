@@ -295,9 +295,9 @@ const ChooseDataGrid = React.forwardRef(
           !ARROW_TYPES.includes(questionType) &&
           !ABC_TYPES.includes(questionType) &&
           !AB_TYPES.includes(questionType) &&
-          arr.length > 1
+          (!arr || arr.length > 1)
         ) {
-          item.chooseContent = arr.join("");
+          item.chooseContent = arr?.join("") ?? "";
         } else if (ARROW_TYPES.includes(questionType)) {
           item.arrow = "→";
           item.chooseContentA = arr[0];
@@ -359,9 +359,38 @@ const ChooseDataGrid = React.forwardRef(
       setRowData(
         chooseList?.map((item, idx) => {
           item.id = idx + 1;
+          item.chooseSeq = chooseSeqs[idx];
 
-          const arr = item.content.split("|");
-          if (ARROW_TYPES.includes(questionType)) {
+          if (!("content" in item)) {
+            if ("chooseContent" in item && item.chooseContent) {
+              item.content = item.chooseContent;
+            } else if ("chooseContentA" in item) {
+              item.content = Object.entries(item)
+                .reduce((arr, [key, value]) => {
+                  if (
+                    [
+                      "chooseContentA",
+                      "chooseContentB",
+                      "chooseContentC",
+                    ].includes(key)
+                  ) {
+                    arr.push(value);
+                    return arr;
+                  }
+                  return arr;
+                }, [] as any)
+                .join("|");
+            }
+          }
+          const arr = item.content?.split("|");
+          if (
+            !ARROW_TYPES.includes(questionType) &&
+            !ABC_TYPES.includes(questionType) &&
+            !AB_TYPES.includes(questionType) &&
+            (!arr || arr.length > 1)
+          ) {
+            item.chooseContent = arr?.join("") ?? "";
+          } else if (ARROW_TYPES.includes(questionType)) {
             item.arrow = "→";
             item.chooseContentA = arr[0];
             item.chooseContentB = arr[1];
