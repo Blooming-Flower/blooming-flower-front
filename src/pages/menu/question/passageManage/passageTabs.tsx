@@ -15,6 +15,8 @@ interface callParent {
   parent: popupProps;
   setParent: setPopupProps;
   editor: React.MutableRefObject<any>;
+  subBoxEditor1: React.MutableRefObject<any>;
+  subBoxEditor2: React.MutableRefObject<any>;
 }
 export default function NestedList(props: callParent) {
   const [open, setOpen] = React.useState(false);
@@ -45,21 +47,19 @@ export default function NestedList(props: callParent) {
 
   const deleteHandle = (param: string, buttonType: number) => {
     if (buttonType == 1 || buttonType == 3) {
-      $DELETEPARAM(
-        "/api/v1/question/delete",
-        { questionCode: param },
-        (res: any) => {
-          props.setParent((parent: any) => ({
-            ...parent,
-            check: !parent.check,
-          }));
-        }
-      );
-    } else {
-      $DELETE("/api/v1/question/delete/" + param, (res: any) => {
+      $DELETE(`/api/v1/question/delete?questionCode=${param}`, (res: any) => {
         props.setParent((parent: any) => ({
           ...parent,
           check: !parent.check,
+          display: 0,
+        }));
+      });
+    } else {
+      $DELETE(`/api/v1/question/delete/${param}`, (res: any) => {
+        props.setParent((parent: any) => ({
+          ...parent,
+          check: !parent.check,
+          display: 0,
         }));
       });
     }
@@ -89,7 +89,7 @@ export default function NestedList(props: callParent) {
     >
       {listData.map((value1: any, index, array) =>
         value1.question.length > 1 ? (
-          <div key={value1.question[index].questionType}>
+          <div key={index}>
             <ListItem
               sx={{ paddingRight: "40px" }}
               secondaryAction={
@@ -142,6 +142,13 @@ export default function NestedList(props: callParent) {
                       props.editor.current
                         .getInstance()
                         .setHTML(value1.questionContent);
+                      const subBoxs = value2.split("|");
+                      props.subBoxEditor1?.current
+                        ?.getInstance()
+                        .setHTML(subBoxs[0]);
+                      props.subBoxEditor2?.current
+                        ?.getInstance()
+                        .setHTML(subBoxs[1]);
                     }}
                     secondaryAction={
                       <IconButton
@@ -176,6 +183,7 @@ export default function NestedList(props: callParent) {
                 type: value1.question[0].questionType,
                 questionContent: value1.questionContent,
                 subTitle: "",
+                subContent: value1.question[0].subBox,
                 title: value1.questionTitle,
                 pastYn: value1.question[0].pastYn,
                 chooseList: value1.question[0].choose,
@@ -186,6 +194,9 @@ export default function NestedList(props: callParent) {
               props.editor.current
                 .getInstance()
                 .setHTML(value1.questionContent);
+              const subBoxs = value1.question[0].subBox.split("|");
+              props.subBoxEditor1?.current?.getInstance().setHTML(subBoxs[0]);
+              props.subBoxEditor2?.current?.getInstance().setHTML(subBoxs[1]);
             }}
             secondaryAction={
               <IconButton

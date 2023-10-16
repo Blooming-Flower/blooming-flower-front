@@ -1,5 +1,6 @@
 import Layout from "@components/layouts/layout";
 import CustomButton from "@components/ui/button/custeomButton";
+import pdgImg from "@images/common/pdficon.png";
 import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {
@@ -78,12 +79,7 @@ const ExamMng = () => {
       align: "center",
       headerAlign: "center",
       renderCell: () => (
-        <img
-          src="/assets/svg/pdfSvg.svg"
-          width={30}
-          height={30}
-          onClick={downPdf}
-        />
+        <img src={pdgImg} width={30} height={30} onClick={downPdf} />
       ),
     },
     {
