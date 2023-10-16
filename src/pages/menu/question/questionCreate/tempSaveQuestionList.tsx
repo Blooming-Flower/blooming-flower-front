@@ -129,7 +129,9 @@ const TempSaveQuestionList = (props: any) => {
           })
         )}
       </List>
-      <div>
+      <div
+        style={{ padding: 7, height: 48, borderTop: "0.5px solid lightgrey" }}
+      >
         {rowData.length !== 0 && (
           <Button
             color="warning"
