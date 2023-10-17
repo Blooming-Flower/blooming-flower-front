@@ -100,7 +100,7 @@ const PassagePopup = forwardRef(
             q.choose.forEach((C: any) => (C.chooseContent = C.content));
           });
         });
-        setListData(res.data.questions);
+        setListData(res.data.questionInfo);
         setParent((parent) => ({
           ...parent,
           content: res.data.passageContent,
