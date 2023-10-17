@@ -43,7 +43,6 @@ interface IOptions {
 	from: number
 	to: number
 }
-interface ExamProps {rowData:{ id:string, passageYear:string,passageName:string,passageUnit:string,passageNumber:string }[],examTitle:string,header:string,leftBottom:string,rightBottom:string}
 /* ******************* UTILS ******************* */
 interface IAlterProps {
 	type: number

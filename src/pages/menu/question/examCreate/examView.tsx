@@ -1,41 +1,46 @@
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import Layout from "@components/layouts/layout";
-import {makePdf, onDownloadBtn} from "@utils/makePdf";
+import { viewWithPdf} from "@utils/makePdf";
 import '@css/pdf.scss'
 import {
-    Box, Button, Card, Divider, FormControl, Grid, IconButton, List, ListItem, TextField,
+    Box, Button, Divider, FormControl, Grid, IconButton, List, ListItem, Paper, TextField,
 } from "@mui/material";
-import {EXAMTYPE, PASSAGETYPE, QUESTIONTYPE, TXTNUM, TXTUNIT, YEAR} from "@common/const";
+import {EXAMTYPE} from "@common/const";
 import MenuIcon from '@mui/icons-material/Menu';
 import CustomButton from "@components/ui/button/custeomButton";
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import NormalBook from "@pages/menu/question/examCreate/normalBook";
 import BigBook from "@pages/menu/question/examCreate/bigBook";
+import {useLocation} from "react-router-dom";
+import {$GET} from "@utils/request";
 
 const ExamView = () => {
-    const [rowData, setRowData] = useState([
-        { id: "1", passageYear: "2022", passageName:'교재1',passageUnit:'2', passageNumber:'1-12'},
-        { id: "2", passageYear: "2022", passageName:'교재2',passageUnit:'3', passageNumber:'1-12'},
-        { id: "3", passageYear: "2023", passageName:'교재3',passageUnit:'4', passageNumber:'1-12'},
-        { id: "4", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "5", passageYear: "2025", passageName:'교재5',passageUnit:'6', passageNumber:'1-12'},
-        { id: "6", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "7", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "8", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "9", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "10", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "11", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "12", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "13", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'},
-        { id: "14", passageYear: "2024", passageName:'교재4',passageUnit:'5', passageNumber:'1-12'}
-    ])
+    const props = useLocation().state;
+    const [rowData, setRowData] = useState<ExamBase>([])
+
+    useEffect(()=>{
+        for(let i = 0; i<props.length; i++){
+            $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
+                console.log(res)
+                let cont = []
+                for(let j = 0; j<res.data.length;j++){
+                    cont[j] = res.data[j]
+                }
+                props[i].questionSet = cont
+            })
+        }
+        console.log(props)
+        setRowData(props)
+    },[])
     const [examTitle, setExamTitle] = useState('')
     const [header, setHeader] = useState('')
     const [leftBottom, setLeftBottom] = useState('')
     const [rightBottom, setRightBottom] = useState('')
     const [able, setAble] = useState("시험지");
+    
+    //시험지종류 체크
     const handleClick = (type: string) => {
         switch (type) {
             case "시험지":
@@ -46,15 +51,17 @@ const ExamView = () => {
         setAble(type);
     };
 
+    //PDF 다운로드 호출
     const handleDown = () => {
-        const pdf = makePdf(examTitle)
-        pdf.viewWithPdf()
-        // onDownloadBtn()
+        const pdf = viewWithPdf(examTitle,'down')
+        console.log(pdf)
     }
 
+    const handlePreview = () => {
+        const pdf = viewWithPdf(examTitle,'preview')
+    }
 
-
-
+    //Drag-End이벤트
     const handleChange = (result:any) => {
         if (!result.destination) return;
         console.log(result);
@@ -156,7 +163,7 @@ const ExamView = () => {
                                     </Grid>
                                 </Box>
                             </Box>
-                            <div className='div_container'>
+                            <Paper className='div_container' elevation={4} style={{backgroundColor:'#a4a4a4'}}>
                                     {
                                         able == '시험지'?
                                             <NormalBook
@@ -175,7 +182,7 @@ const ExamView = () => {
                                                 rightBottom={rightBottom}
                                             />
                                     }
-                            </div>
+                            </Paper>
                         </Box>
                     </div>
                     <div className="css-margin-left100 ">
@@ -187,8 +194,7 @@ const ExamView = () => {
                                     bgcolor: "background.paper",
                                     position: "relative",
                                     overflow: "auto",
-                                    // maxHeight: height,
-                                    height: '100%',
+                                    height: '640px',
                                     "& ul": { padding: 0 },
                                 }}
                             >
@@ -200,8 +206,8 @@ const ExamView = () => {
                                         {...provided.droppableProps}
                                         ref={provided.innerRef}
                                     >
-                                        {rowData.map(({ id, passageYear,passageName,passageUnit,passageNumber }, index) => (
-                                            <Draggable key={id} draggableId={id} index={index}>
+                                        {rowData.map(({ passageId, passageYear,passageName,passageUnit,passageNumber }, index) => (
+                                            <Draggable key={passageId} draggableId={passageId.toString()} index={index}>
                                                 {(provided) => (
                                                     <>
                                                     <ListItem
@@ -253,6 +259,15 @@ const ExamView = () => {
                             sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}
                         >
                             다운로드
+                        </Button>
+                        <Button
+                            color="warning"
+                            size="large"
+                            variant="contained"
+                            onClick={handlePreview}
+                            sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}
+                        >
+                            미리보기
                         </Button>
                     </div>
                 </div>

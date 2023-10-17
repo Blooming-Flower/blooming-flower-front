@@ -42,5 +42,37 @@ type popupProps = {
 	content : string,
 	subContent : string
 }
+type questionSet = {
+	answerList:[],
+	chooseList:[],
+	passageName:string,
+	passageNumber:string,
+	passageYear:string,
+	questionCode:string,
+	questionContent:string,
+	questionId:number,
+	questionSubTitle:string,
+	questionType:string,
+	subBox:string
+}
+type ExamBase = {
+	count:number,
+	page:number,
+	passageId:number,
+	passageName:string,
+	passageNumber:string,
+	passageType:string,
+	passageUnit:string,
+	passageYear:string,
+	questionIds:[],
+	questionSet:questionSet
+}[]
 
+type ExamProps = {
+	rowData:ExamBase,
+	examTitle:string,
+	header:string,
+	leftBottom:string,
+	rightBottom:string
+}
 type setPopupProps = Dispatch<SetStateAction<{ display: number; callPassage: boolean; check: boolean; open: boolean; type: string; subType: string; pastYn: boolean; subPastYn: boolean; title: string; subTitle: string; content: string; subContent: string; }>>
