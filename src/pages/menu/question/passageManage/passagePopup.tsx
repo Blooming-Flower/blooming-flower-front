@@ -94,13 +94,13 @@ const PassagePopup = forwardRef(
 
     const getPassageDatas = () => {
       $GET(`/api/v1/passage/search/${props.passageId}`, (res: any) => {
-        res.data.questions.forEach((Q: any) => {
+        res.data.questionInfo.forEach((Q: any) => {
           Q.question.forEach((q: any) => {
             q.answer.forEach((A: any) => (A.answerContent = A.content));
             q.choose.forEach((C: any) => (C.chooseContent = C.content));
           });
         });
-        setListData(res.data.questions);
+        setListData(res.data.questionInfo);
         setParent((parent) => ({
           ...parent,
           content: res.data.passageContent,

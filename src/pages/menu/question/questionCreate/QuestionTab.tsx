@@ -14,7 +14,7 @@ import {
   Checkbox,
   Alert,
 } from "@mui/material";
-import { QUESTIONTYPE, DEFAULT_QUESTION } from "@common/const";
+import { QUESTIONTYPE, DEFAULT_QUESTION, WRITE_TYPES } from "@common/const";
 import QuestionList from "./questionList";
 import { useLocation } from "react-router-dom";
 import TuiEditor from "@components/ui/tui/toast";
@@ -63,6 +63,14 @@ const QuestionTab = () => {
       return;
     }
     const questionContent = editorRef.current.getInstance().getHTML();
+    if (questionContent.replace(/[<p>|<br>|</p>|\s]/g, "") === "") {
+      alert("지문은 비워둘 수 없습니다.");
+      return;
+    }
+    if (questionTitle === "") {
+      alert("발문이 비어있습니다.");
+      return;
+    }
 
     const newQuestion = {
       questionContent,
@@ -72,6 +80,27 @@ const QuestionTab = () => {
         defaultQuestionRefList[idx].current.getQuestionParams()
       ),
     };
+
+    for (const { answerList, chooseList } of newQuestion.questionParams) {
+      if (
+        !WRITE_TYPES.includes(questionType) &&
+        chooseList.some(
+          (el: any) => el.chooseContent.replace(/[\s|\|]/g, "") === ""
+        )
+      ) {
+        alert("비어있는 보기란이 있습니다.");
+        return;
+      }
+
+      if (!answerList.length) {
+        alert("정답을 골라주세요.");
+        return;
+      }
+      if (answerList.some((el: any) => el.answerContent === "")) {
+        alert("비어있는 정답란이 있습니다.");
+        return;
+      }
+    }
 
     if (questionType !== "Q25") {
       const {
@@ -114,9 +143,6 @@ const QuestionTab = () => {
     editorRef.current.getInstance().setHTML(questionContent);
     if (questionParams.length > 1) {
       setQuestionType("Q25");
-      // setQuestionParamList(
-      //   Array.from({ length: questionParams.length }, (acc, idx) => idx)
-      // );
     } else {
       setQuestionType(questionParams[0].questionType);
       setPastYn(questionParams[0].pastYn);
@@ -151,6 +177,7 @@ const QuestionTab = () => {
                       value={questionType}
                       onChange={(e) => changeType(e, false)}
                       displayEmpty
+                      disabled={JSON.stringify(passageData) === "{}"}
                       inputProps={{ "aria-label": "Without label" }}
                     >
                       {Object.entries(QUESTIONTYPE).map(([type, text]) => (
@@ -302,6 +329,7 @@ const QuestionTab = () => {
               onClickListItem={onClinkPassageListItem}
               setPassageData={setPassageData}
               setIsModifyTempSave={setIsModifyTempSave}
+              noDelete={true}
             />
             <TempSaveQuestionList
               width={300}
