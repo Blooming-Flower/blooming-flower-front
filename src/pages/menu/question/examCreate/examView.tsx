@@ -9,17 +9,18 @@ import {
 import {EXAMTYPE} from "@common/const";
 import MenuIcon from '@mui/icons-material/Menu';
 import CustomButton from "@components/ui/button/custeomButton";
-import {useEffect, useState} from "react";
+import {MutableRefObject, useEffect, useRef, useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import NormalBook from "@pages/menu/question/examCreate/normalBook";
 import BigBook from "@pages/menu/question/examCreate/bigBook";
 import {useLocation} from "react-router-dom";
 import {$GET} from "@utils/request";
+import ReactToPrint from "react-to-print";
 
 const ExamView = () => {
     const props = useLocation().state;
     const [rowData, setRowData] = useState<ExamBase>([])
-
+    const ref = useRef<HTMLDivElement>(null);
     useEffect(()=>{
         for(let i = 0; i<props.length; i++){
             $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
@@ -51,15 +52,6 @@ const ExamView = () => {
         setAble(type);
     };
 
-    //PDF 다운로드 호출
-    const handleDown = () => {
-        const pdf = viewWithPdf(examTitle,'down')
-        console.log(pdf)
-    }
-
-    const handlePreview = () => {
-        const pdf = viewWithPdf(examTitle,'preview')
-    }
 
     //Drag-End이벤트
     const handleChange = (result:any) => {
@@ -167,6 +159,7 @@ const ExamView = () => {
                                     {
                                         able == '시험지'?
                                             <NormalBook
+                                                pdfRef={ref}
                                                 rowData={rowData}
                                                 examTitle={examTitle}
                                                 header={header}
@@ -175,6 +168,7 @@ const ExamView = () => {
                                             />
                                             :
                                             <BigBook
+                                                pdfRef={ref}
                                                 rowData={rowData}
                                                 examTitle={examTitle}
                                                 header={header}
@@ -251,24 +245,19 @@ const ExamView = () => {
                         </DragDropContext>
                             </List>
                         </div>
-                        <Button
-                            color="warning"
-                            size="large"
-                            variant="contained"
-                            onClick={handleDown}
-                            sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}
-                        >
-                            다운로드
-                        </Button>
-                        <Button
-                            color="warning"
-                            size="large"
-                            variant="contained"
-                            onClick={handlePreview}
-                            sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}
-                        >
-                            미리보기
-                        </Button>
+                        <ReactToPrint
+                            trigger={() => <Button color="warning" variant="contained" size="large" sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}>다운로드</Button>}
+                            content={() => ref.current}
+                        />
+                        {/*<Button*/}
+                        {/*    color="warning"*/}
+                        {/*    size="large"*/}
+                        {/*    variant="contained"*/}
+                        {/*    onClick={handlePreview}*/}
+                        {/*    sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}*/}
+                        {/*>*/}
+                        {/*    미리보기*/}
+                        {/*</Button>*/}
                     </div>
                 </div>
             </div>

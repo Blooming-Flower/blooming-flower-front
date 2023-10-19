@@ -73,6 +73,7 @@ type ExamProps = {
 	examTitle:string,
 	header:string,
 	leftBottom:string,
-	rightBottom:string
+	rightBottom:string,
+	pdfRef:any
 }
 type setPopupProps = Dispatch<SetStateAction<{ display: number; callPassage: boolean; check: boolean; open: boolean; type: string; subType: string; pastYn: boolean; subPastYn: boolean; title: string; subTitle: string; content: string; subContent: string; }>>
