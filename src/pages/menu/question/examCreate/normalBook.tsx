@@ -11,18 +11,17 @@ const NormalBook = (props: ExamProps) => {
         className="head"
         style={{ borderBottom: "3px solid", marginBottom: 17 }}
       >
-        <div style={{ textAlign: "center", fontSize: 25 }}>
-          {props.examTitle}
-        </div>
+        <div style={{ textAlign: "center", fontSize: 25 }}>{props.header}</div>
         <h1 style={{ textAlign: "center", fontSize: 52 }}>영어</h1>
       </div>
       <div
         className="bigCont"
         style={{
           padding: "0 0 20px 0",
-          height: "82.5%",
+          height: "70.5%",
           columnFill: "auto",
           columnGap: 30,
+          columnRule: "1px solid black",
         }}
       >
         <div className="question" style={{ marginBottom: 30 }}>
@@ -193,13 +192,10 @@ const NormalBook = (props: ExamProps) => {
             8
           </div>
         </div>
-        <div
-          className="warning"
-          style={{ fontSize: 10.4, border: "1px solid" }}
-        >
-          &nbsp; 이 시험문자의 저작긛은 00고등학교에 있습니다. 저작긛법에 의해
-          보호받는 저작물이므로 전재와 복지는 금지되여. 이를 어길시 저작긛법에
-          의거 처벌될 수 있습니다.
+        <div className="warning" style={{ fontSize: 9.4, border: "1px solid" }}>
+          이 시험문자의 저작긛은 00고등학교에 있습니다. 저작긛법에 의해 보호받는
+          저작물이므로 전재와 복지는 금지되여. 이를 어길시 저작긛법에 의거
+          처벌될 수 있습니다.
         </div>
       </div>
     </div>
