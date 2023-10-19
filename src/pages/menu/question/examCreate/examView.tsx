@@ -179,7 +179,7 @@ const ExamView = () => {
                             </Paper>
                         </Box>
                     </div>
-                    <div className="css-margin-left100 ">
+                    <div className="css-margin-left100 examView">
                         <div className="questionList-item">
                             <List
                                 sx={{
@@ -245,10 +245,11 @@ const ExamView = () => {
                         </DragDropContext>
                             </List>
                         </div>
-                        <ReactToPrint
-                            trigger={() => <Button color="warning" variant="contained" size="large" sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}>다운로드</Button>}
-                            content={() => ref.current}
-                        />
+                            <ReactToPrint
+                                trigger={() => <Button color="warning" variant="contained" size="large" className="examView_btn" sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px',position:'fixed', right:'300px',bottom:'100px' }}>다운로드</Button>}
+                                content={() => ref.current}
+                                documentTitle={header}
+                            />
                         {/*<Button*/}
                         {/*    color="warning"*/}
                         {/*    size="large"*/}

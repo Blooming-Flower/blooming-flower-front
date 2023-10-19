@@ -3,12 +3,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 900px;
+  height: 310mm;
   width: 100%;
   background-color: grey;
   overflow: auto;
   word-break: keep-all; //줄바꿈시 단어기준
-  break-after: page;  //페이지 초과시 다음 페이지(작업해야함)
+  //break-after: page;  //페이지 초과시 다음 페이지(작업해야함)
 }
 
 .div_paper {
@@ -16,6 +16,8 @@
   min-height: 297mm;  //A4 높이
   max-height: 297mm;  //A4 최대높이
   margin-top: 40px; //화면표출 마진은 40px
+  break-after: page;
+  padding:10px 30px 50px 30px;
   @page {
     size: A4;
     margin: 0;
@@ -29,7 +31,7 @@
   .bigCont{
     column-count: 2;
     max-height: 280mm;
-    padding: 10px 50px 100px 50px;
+    //padding: 10px 50px 100px 50px;
 
     //나눠진 단 div
     .bigCont_sub{
@@ -88,9 +90,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50*0.5+50px;
+    height: 15mm;
   }
   img{
     width:100%;
+  }
+}
+
+.examView{
+  .questionList-item{
+    position: fixed;
+    right: 300px;
+    bottom:150px
+  }
+  .examView_btn{
+    height: 40px;
+    border-radius: 20px;
+    font-size: 15px;
+    width: 100px;
+    position:fixed;
+    right:400px;
+    bottom:100px;
   }
 }
