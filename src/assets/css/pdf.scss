@@ -7,6 +7,7 @@
   width: 100%;
   background-color: grey;
   overflow: auto;
+  word-break: keep-all;
 }
 
 .div_container > button {
@@ -28,17 +29,81 @@
 }
 
 .div_paper {
-  height: 842px;
-  width: 595px;
+  height: 842*0.5+842px;
+  width: 595*0.5+595px;
   //margin: 30px;
   background-color: white;
-  text-align: center;
+  text-align: left;
+  word-spacing: 5px;
   //overflow: auto;
+  .bigCont{
+    column-count: 2;
+    height: 90%;
+    padding: 10px 50px 100px 50px;
+
+    //나눠진 단 div
+    .bigCont_sub{
+      padding: 10px;
+      width: 100%;
+      height: 1100px;
+
+      //문제 감싸는 박스
+      .bigCont_questionBox{
+        margin-bottom: 20px;
+      }
+      //문제타이틀
+      .bigCont_questionTitle{
+        font-size: 12.7px !important;
+        line-height: 160%;
+        .bigCont_pastYn{
+          font-size: 7*0.5+7px !important;
+          color: white;
+          line-height: 160%;
+          display: inline-block;
+          padding: 3px 10px;
+          border-radius: 5px;
+          background-color: #4a4a4a;
+          margin : 0 8px
+        }
+        .bigCont_from{
+          font-size: 6.5*0.5+6.5px !important;
+          line-height: 160%;
+        }
+      }
+
+      //문제지문
+      .bigCont_questionContent{
+        margin-top: 15px;
+        font-weight: lighter;
+        font-size: 8*0.5+8px !important;
+        line-height: 155%;
+      }
+
+      //문제선지
+      .bigCont_answerList{
+        margin-top: 15px;
+        font-weight: lighter;
+        font-size: 8*0.5+8px !important;
+        line-height: 150%;
+      }
+    }
+  }
 }
 .pdf_container{
   margin: 30px;
 }
 
-.div_paper > div {
-  margin: 30px;
+.big_first > .bigHeader {
+  padding: 30px 60px 0 60px;
+  .bigHeader_text{
+    font-family: 'esamanru', sans-serif !important;
+    font-size: 20*0.5+20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50*0.5+50px;
+  }
+  img{
+    width:100%;
+  }
 }
