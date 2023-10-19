@@ -27,7 +27,7 @@ export const viewWithPdf = async (fileName:string, type:string) => {
 const convertToImg = async () => {
     // html to imageFile
     const paper:any = document.querySelector(".div_container > .pdf_container");
-    return await html2canvas(paper,{scale:3});
+    return await html2canvas(paper,{scale:2.5});
 }
 const convertToPdf = (canvas:HTMLCanvasElement, fileName:string,type:string) => {
     //1.이미지화
