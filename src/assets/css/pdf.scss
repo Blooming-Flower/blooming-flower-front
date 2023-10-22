@@ -26,9 +26,10 @@
       margin-top: 0; //다운로드시 마진은 0px
   }
   background-color: white;
-  text-align: left;
-  word-spacing: 5px;
+  text-align: justify;
+  word-spacing: 2px;
   .bigCont{
+    padding: 10px 30px;
     column-count: 2;
     max-height: 280mm;
     //padding: 10px 50px 100px 50px;
@@ -72,7 +73,7 @@
       }
 
       //문제선지
-      .bigCont_answerList{
+      .bigCont_chooseList{
         margin-top: 15px;
         font-weight: lighter;
         font-size: 8*0.5+8px !important;
@@ -112,4 +113,13 @@
     right:400px;
     bottom:100px;
   }
+}
+
+.left-bottom{
+  bottom:10px;
+  left:10px;
+}
+.right-bottom{
+  bottom:10px;
+  float: right;
 }
