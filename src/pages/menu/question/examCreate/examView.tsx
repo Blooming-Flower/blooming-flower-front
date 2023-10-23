@@ -25,14 +25,13 @@ const ExamView = () => {
         for(let i = 0; i<props.length; i++){
             $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
                 console.log(res)
-                let cont = []
+                // let cont = []
                 for(let j = 0; j<res.data.length;j++){
-                    cont[j] = res.data[j]
+                    props[i].questionInfo = res.data[j].questionInfo
                 }
-                props[i].questionSet = cont
+                // props[i].questionInfo = cont
             })
         }
-        console.log(props)
         setRowData(props)
     },[])
     const [examTitle, setExamTitle] = useState('')

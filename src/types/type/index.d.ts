@@ -76,7 +76,7 @@ type ExamBase = {
 	passageUnit:string,
 	passageYear:string,
 	questionIds:[],
-	questionSet:questionSet[]
+	questionInfo:questionInfo[]
 }[]
 
 type ExamProps = {

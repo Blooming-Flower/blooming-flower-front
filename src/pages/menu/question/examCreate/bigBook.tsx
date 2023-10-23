@@ -2,7 +2,9 @@ import {createElement, useEffect, useState} from "react";
 import bigHeader1 from '@images/common/big-head1.png'
 import bigHeader2 from '@images/common/big-head2.png'
 import {Grid} from "@mui/material";
-import {render} from "react-dom";
+import {
+    ComplexType, NormalType,
+} from "@pages/menu/question/examCreate/questionType";
 
 const BigBook = (props:ExamProps) => {
     let seq = 1
@@ -31,40 +33,27 @@ const BigBook = (props:ExamProps) => {
                 </Grid>
                 <div className='bigCont'>
                     <div className='bigCont_sub'>
-                        {props.rowData.map(({passageId,questionSet,passageName})=>(
-                            <div key={passageId} className='bigCont_questionBox'>
-                                {questionSet.map(({passageName,passageYear,questionInfo},index)=>(
-                                    <>
-                                        {questionInfo[index].question.length == 1?  //복합유형이 아닐경우
-                                            questionInfo.map(({questionTitle,question,questionContent})=>(
-                                                <>
-                                                    <div className='bigCont_questionTitle'>
-                                                        {seq+++'.'}
-                                                        {question[0].pastYn?
-                                                            <div className='bigCont_pastYn'>
-                                                                기출
-                                                            </div>
-                                                            :
-                                                            <></>
-                                                        }
-                                                        {questionTitle}
-                                                        <span className='bigCont_from'>
-                                                        (2023년 6월 고3 30번)
-                                                        </span>
-                                                    </div>
-                                                    <div className='bigCont_questionContent' dangerouslySetInnerHTML={{__html:questionContent}}>
-                                                    </div>
-                                                    <div className='bigCont_chooseList'>
-                                                        {question[0].choose.map(({seq,content},num)=>(
-                                                            <p>{num == 0? '①' : num == 1? '②': num==2? '③':num==3? '④':'⑤'}     {content}</p>
-                                                        ))}
-                                                    </div>
-                                                </>
-                                                ))
-                                            :
-                                            <div>복합유형</div>
+                        {props.rowData.map(({passageId,questionInfo,passageName,passageYear,passageUnit,passageNumber},index0)=>(
+                            <div key={index0}>
+                                {questionInfo.map(({questionTitle,question,questionContent},index1)=>(
+                                    <div key={index1} className='bigCont_questionBox'>
+                                        {questionInfo[index1].question.length == 1?  //복합유형이 아닐경우
+                                                <NormalType
+                                                    question={question}
+                                                    seq={seq++}
+                                                    questionTitle={questionTitle}
+                                                    questionContent={questionContent}
+                                                    from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
+                                                />
+                                        : //복합유형일 경우
+                                                <ComplexType
+                                                    questionInfo={questionInfo[index1]}
+                                                    seqLength={questionInfo[index1].question.length}
+                                                    seq={seq=seq+questionInfo[index1].question.length}
+                                                    from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
+                                                />
                                         }
-                                    </>
+                                    </div>
                                 ))}
                             </div>
                         ))}
@@ -80,11 +69,10 @@ const BigBook = (props:ExamProps) => {
                     </div>
                 }
             </div>
-            {/******************************************************테스트용********************************************/}
             <div className='div_paper big_second'>
                 <div className='bigCont'>
                     <div className='bigCont_sub'>
-                        {props.rowData.map(({passageId,questionSet,passageName})=>(
+                        {props.rowData.map(({passageId,questionInfo,passageName})=>(
                             <div key={passageId} className='bigCont_questionBox'>
                                 <div className='bigCont_questionTitle'>
                                     1.
@@ -132,7 +120,7 @@ const BigBook = (props:ExamProps) => {
             </div>
             <div className='div_paper'>
                 {props.examTitle}
-                {props.rowData.map(({passageId,questionSet,passageName})=>(
+                {props.rowData.map(({passageId,questionInfo,passageName})=>(
                     <p key={passageId}>{passageName}</p>
                 ))}
                 {pageSeq % 2  == 0?
@@ -147,7 +135,7 @@ const BigBook = (props:ExamProps) => {
             </div>
             <div className='div_paper'>
                 {props.examTitle}
-                {props.rowData.map(({passageId,questionSet,passageName})=>(
+                {props.rowData.map(({passageId,questionInfo,passageName})=>(
                     <p key={passageId}>{passageName}</p>
                 ))}
             </div>
