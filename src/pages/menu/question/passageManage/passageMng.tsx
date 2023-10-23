@@ -21,23 +21,23 @@ import {
   useTheme,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {ALERT, YEAR} from "@common/const";
+import { ALERT, YEAR } from "@common/const";
 import PassagePopup from "@pages/menu/question/passageManage/passagePopup";
-import {ChangeEvent, useEffect, useRef} from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import { $DELETE, $GET } from "@utils/request";
 import { debounce } from "@utils/useDebounce";
 import { customTheme } from "@pages/menu/question/passageManage/customThemePsg";
 import { addId } from "@utils/functions";
 import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
 import customPagination from "@components/ui/grid/customPage";
-import {alert} from "@utils/alert";
-declare module '@mui/x-data-grid' {
+import { alert } from "@utils/alert";
+declare module "@mui/x-data-grid" {
   interface PaginationPropsOverrides {
     pageCount: number;
-    page:number;
-    type:string;
-    year:string;
-    passageName:string;
+    page: number;
+    type: string;
+    year: string;
+    passageName: string;
   }
 }
 const PassageMng = () => {
@@ -48,7 +48,7 @@ const PassageMng = () => {
   const [popupParam, setPopupParam] = React.useState<number>();
   const [year, setYear] = React.useState("");
   const [page, setPage] = React.useState(0);
-  const [count,setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0);
   const [passageName, setPassageName] = React.useState("");
   const [data, setData] = React.useState([]);
   const popupRef: any = useRef();
@@ -63,10 +63,11 @@ const PassageMng = () => {
         page.toString() +
         "&size=5&passageYear=" +
         yearData +
-        "&passageName=" + passageName,
+        "&passageName=" +
+        passageName,
       (res: any) => {
         setData(addId(res, yearData));
-        setCount(res.data.totalPages)
+        setCount(res.data.totalPages);
       }
     );
   };
@@ -85,46 +86,45 @@ const PassageMng = () => {
             for (let i = 0; i < res.data.content.length; i++) {
               console.log(year);
               setData(addId(res, year));
-              setCount(res.data.totalPages)
+              setCount(res.data.totalPages);
             }
           } else setData([]);
         }
       );
 
-      setPassageName(e.target.value);
+    setPassageName(e.target.value);
   };
   //지문삭제
   const deletePassage = () => {
     const passageTemp = apiRef.current.getSelectedRows();
     alert.confirm({
       type: ALERT.CONFIRM,
-      text: '지문을 삭제\n 하시겠습니까?\n\n',
-      confirmText: '확인',
+      text: "지문을 삭제\n 하시겠습니까?\n\n",
+      confirmText: "확인",
       confirmCall: async () => {
         await passageTemp.forEach((value, key, map) => {
           $DELETE("/api/v1/passage/delete/" + value.passageId, (res: any) => {
-            setDelCheck(!delCheck)
-            apiRef.current.setRowSelectionModel([])
+            setDelCheck(!delCheck);
+            apiRef.current.setRowSelectionModel([]);
           });
         });
-      }
-    })
+      },
+    });
   };
   //지문삭제 성공시 그리드 초기화
-  useEffect(()=>{
-    if(year != ""){
+  useEffect(() => {
+    if (year != "") {
       $GET(
-          "/api/v1/passage/search/list?page=" +
+        "/api/v1/passage/search/list?page=" +
           page.toString() +
           "&size=5&passageYear=" +
           year,
-          (res: any) => {
-            setData(addId(res, year));
-          }
+        (res: any) => {
+          setData(addId(res, year));
+        }
       );
-
     }
-  },[delCheck])
+  }, [delCheck]);
   const debouncedOnChange = debounce<typeof handleChange>(handleChange, 200);
   const handleClickOpen = (passageId: number) => {
     setPopupParam(passageId);
@@ -252,27 +252,31 @@ const PassageMng = () => {
               pagination: customPagination,
             }}
             slotProps={{
-              pagination:{
-                pageCount:count,
-                page:page,
-                year:year,
+              pagination: {
+                pageCount: count,
+                page: page,
+                year: year,
                 passageName: passageName,
-                type:"passageMng"
-              }
+                type: "passageMng",
+              },
             }}
             columns={columns}
             initialState={{
               pagination: {
-                paginationModel:{
+                paginationModel: {
                   pageSize: 5,
-                }
+                },
               },
             }}
             apiRef={apiRef}
             checkboxSelection
             // disableRowSelectionOnClick
             hideFooterPagination={false}
-            sx={data.length > 0 ?{ fontWeight: "500", fontSize: "15px", height:'100%' } : {fontWeight: "500", fontSize: "15px", height:'400px' }}
+            sx={
+              data.length > 0
+                ? { fontWeight: "500", fontSize: "15px", height: "100%" }
+                : { fontWeight: "500", fontSize: "15px", height: "400px" }
+            }
           />
         </Box>
       </div>
@@ -282,4 +286,3 @@ const PassageMng = () => {
 };
 
 export default PassageMng;
-
