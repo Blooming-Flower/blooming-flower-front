@@ -151,11 +151,11 @@ const QuestionCrt = (params: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
 
-            if(!res.data.list[i].passageUnit){
-              res.data.list[i].passageUnit = '-';
+            if (!res.data.list[i].passageUnit) {
+              res.data.list[i].passageUnit = "-";
               let passageInfoList = res.data.list[i].passageInfo;
-              for(let j = 0;j<passageInfoList.length;j++){
-                res.data.list[i].passageInfo[j].passageUnit = '-';
+              for (let j = 0; j < passageInfoList.length; j++) {
+                res.data.list[i].passageInfo[j].passageUnit = "-";
               }
             }
           }
@@ -181,12 +181,12 @@ const QuestionCrt = (params: any) => {
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
-            
-            if(!res.data.list[i].passageUnit){
-              res.data.list[i].passageUnit = '-';
+
+            if (!res.data.list[i].passageUnit) {
+              res.data.list[i].passageUnit = "-";
               let passageInfoList = res.data.list[i].passageInfo;
-              for(let j = 0;j<passageInfoList.length;j++){
-                res.data.list[i].passageInfo[j].passageUnit = '-';
+              for (let j = 0; j < passageInfoList.length; j++) {
+                res.data.list[i].passageInfo[j].passageUnit = "-";
               }
             }
           }
@@ -682,7 +682,7 @@ const QuestionCrt = (params: any) => {
           </div>
           <div className="css-margin-left100 ">
             <QuestionList
-              width={360}
+              width={400}
               height={600}
               rowData={rowDataList}
               buttonName={params.Children}

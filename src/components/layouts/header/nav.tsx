@@ -68,7 +68,7 @@ const NestedList = () => {
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>
-        <ListItemText primary="지문관리" />
+        <ListItemText primary="지문 관리" />
       </ListItemButton>
       <Divider />
       <ListItemButton
@@ -78,7 +78,7 @@ const NestedList = () => {
         <ListItemIcon>
           <SaveAltIcon />
         </ListItemIcon>
-        <ListItemText primary="지문저장" />
+        <ListItemText primary="지문 저장" />
       </ListItemButton>
       <Divider />
       <ListItemButton
@@ -88,7 +88,7 @@ const NestedList = () => {
         <ListItemIcon>
           <ArticleIcon />
         </ListItemIcon>
-        <ListItemText primary="문제출제" />
+        <ListItemText primary="문제 출제" />
       </ListItemButton>
       <Divider />
       <ListItemButton
