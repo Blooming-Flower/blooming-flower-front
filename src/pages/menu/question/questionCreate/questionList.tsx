@@ -89,21 +89,22 @@ const QuestionList = (props: any) => {
                     )
                   }
                 >
-                  <div>{row.passageYear}</div>
+                  <div style={{ flex: 1 }}>{row.passageYear}</div>
                   <div
                     className="passageName"
                     style={{
-                      maxWidth: 65,
+                      // maxWidth: 65,
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
+                      flex: 6,
                     }}
                     data-tooltip={row.passageName}
                   >
                     {row.passageName}
                   </div>
-                  <div>{row.passageUnit}</div>
-                  <div>{row.passageNumber}</div>
+                  <div style={{ flex: 1.5 }}>{row.passageUnit}</div>
+                  <div style={{ flex: 1.5 }}>{row.passageNumber}</div>
                 </ListItem>
               </div>
             );

@@ -1,6 +1,6 @@
 .questionList-item {
   width: 100%;
-  max-width: 220px;
+  // max-width: 220px;
   min-width: 220px;
   // margin-top: 133px;
   // height: 475px;
@@ -17,15 +17,26 @@
   }
 
   .MuiList-root {
-    max-width: 220px !important;
+    // max-width: 220px !important;
     max-height: 473px !important;
     // height: 100%;
     border-radius: 10px !important;
+    overflow-x: hidden;
+    
 
     .MuiListItem-root{
       justify-content: space-between;
       cursor: pointer;
     }
+  }
+  .MuiList-root::-webkit-scrollbar{
+    display: none;
+  }
+  .MuiList-root:hover::-webkit-scrollbar{
+    display: block;
+  }
+  .MuiList-root:hover::-webkit-scrollbar-thumb{
+    background: #b0aba7;
   }
 
   .MuiListItemSecondaryAction-root {
@@ -53,7 +64,7 @@
   }
 
   .MuiListItem-root {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .MuiList-root{
@@ -64,10 +75,10 @@
     position: absolute;
     background-color: rgba(0,0,0,0.5);
     color: #fff;
-    padding: 10px 7px;
+    padding: 3px 7px;
     border-radius: 10px;
     max-width: 300px;
-    left: 40%; /* 버튼 왼쪽에서 부터 버튼 너비 25% 이동한 위치에 툴팁 왼쪽이 오게 */
+    left: 10%; /* 버튼 왼쪽에서 부터 버튼 너비 25% 이동한 위치에 툴팁 왼쪽이 오게 */
     opacity: 0; /* 기본 상태는 안보이게 */
     transition: all 0.5s linear; /* 나타났다 사라지는 애니메이션 */
   }
