@@ -43,17 +43,28 @@ type popupProps = {
 	subContent : string
 }
 type questionSet = {
-	answerList:[],
-	chooseList:[],
 	passageName:string,
-	passageNumber:string,
 	passageYear:string,
+	questionInfo:questionInfo[]
+}
+type questionInfo = {
+	question:question[],
 	questionCode:string,
 	questionContent:string,
+	questionTitle:string
+}
+type question = {
+	answer:[],
+	choose:chooseList[],
+	pastYn:boolean,
 	questionId:number,
 	questionSubTitle:string,
 	questionType:string,
 	subBox:string
+}
+type chooseList = {
+	seq:number,
+	content:string
 }
 type ExamBase = {
 	count:number,
@@ -65,7 +76,7 @@ type ExamBase = {
 	passageUnit:string,
 	passageYear:string,
 	questionIds:[],
-	questionSet:questionSet
+	questionInfo:questionInfo[]
 }[]
 
 type ExamProps = {

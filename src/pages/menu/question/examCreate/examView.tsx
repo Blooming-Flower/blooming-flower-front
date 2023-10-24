@@ -25,14 +25,13 @@ const ExamView = () => {
         for(let i = 0; i<props.length; i++){
             $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
                 console.log(res)
-                let cont = []
+                // let cont = []
                 for(let j = 0; j<res.data.length;j++){
-                    cont[j] = res.data[j]
+                    props[i].questionInfo = res.data[j].questionInfo
                 }
-                props[i].questionSet = cont
+                // props[i].questionInfo = cont
             })
         }
-        console.log(props)
         setRowData(props)
     },[])
     const [examTitle, setExamTitle] = useState('')
@@ -179,7 +178,7 @@ const ExamView = () => {
                             </Paper>
                         </Box>
                     </div>
-                    <div className="css-margin-left100 ">
+                    <div className="css-margin-left100 examView">
                         <div className="questionList-item">
                             <List
                                 sx={{
@@ -245,10 +244,11 @@ const ExamView = () => {
                         </DragDropContext>
                             </List>
                         </div>
-                        <ReactToPrint
-                            trigger={() => <Button color="warning" variant="contained" size="large" sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px' }}>다운로드</Button>}
-                            content={() => ref.current}
-                        />
+                            <ReactToPrint
+                                trigger={() => <Button color="warning" variant="contained" size="large" className="examView_btn" sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px',position:'fixed', right:'300px',bottom:'100px' }}>다운로드</Button>}
+                                content={() => ref.current}
+                                documentTitle={header}
+                            />
                         {/*<Button*/}
                         {/*    color="warning"*/}
                         {/*    size="large"*/}

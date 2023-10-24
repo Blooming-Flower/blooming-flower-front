@@ -3,12 +3,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 900px;
+  height: 310mm;
   width: 100%;
   background-color: grey;
   overflow: auto;
   word-break: keep-all; //줄바꿈시 단어기준
-  break-after: page;  //페이지 초과시 다음 페이지(작업해야함)
+  //break-after: page;  //페이지 초과시 다음 페이지(작업해야함)
 }
 
 .div_paper {
@@ -16,6 +16,8 @@
   min-height: 297mm;  //A4 높이
   max-height: 297mm;  //A4 최대높이
   margin-top: 40px; //화면표출 마진은 40px
+  break-after: page;
+  padding:10px 30px 50px 30px;
   @page {
     size: A4;
     margin: 0;
@@ -24,12 +26,17 @@
       margin-top: 0; //다운로드시 마진은 0px
   }
   background-color: white;
-  text-align: left;
-  word-spacing: 5px;
+  text-align: justify;
+  word-spacing: 2px;
   .bigCont{
+    padding: 10px 30px;
     column-count: 2;
     max-height: 280mm;
-    padding: 10px 50px 100px 50px;
+    height: 252mm;
+    column-fill: auto;
+    //column-gap: 30px;
+    //column-rule: 1px solid black;
+    //padding: 10px 50px 100px 50px;
 
     //나눠진 단 div
     .bigCont_sub{
@@ -56,8 +63,9 @@
           margin : 0 8px
         }
         .bigCont_from{
-          font-size: 6.5*0.5+6.5px !important;
+          font-size: 6.5px !important;
           line-height: 160%;
+          color: #666666;
         }
       }
 
@@ -70,7 +78,7 @@
       }
 
       //문제선지
-      .bigCont_answerList{
+      .bigCont_chooseList{
         margin-top: 15px;
         font-weight: lighter;
         font-size: 8*0.5+8px !important;
@@ -88,9 +96,50 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50*0.5+50px;
+    height: 15mm;
   }
   img{
     width:100%;
   }
+}
+
+.examView{
+  .questionList-item{
+    position: fixed;
+    right: 300px;
+    bottom:150px
+  }
+  .examView_btn{
+    height: 40px;
+    border-radius: 20px;
+    font-size: 15px;
+    width: 100px;
+    position:fixed;
+    right:400px;
+    bottom:100px;
+  }
+}
+
+.left-bottom{
+  bottom:10px;
+  left:10px;
+}
+.right-bottom{
+  bottom:10px;
+  float: right;
+}
+.choose{
+  display: flex;
+  flex-direction: column;
+}
+.pastYn{
+  color: white;
+  background: #4c4c4c;
+  border-radius: 4px;
+  padding: 0px 6px 0 4px;
+}
+.subBox{
+  border-bottom: 0.5px solid black;
+  border-top: 0.5px solid black;
+  margin-bottom: 5px;
 }
