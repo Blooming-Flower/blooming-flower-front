@@ -1,26 +1,30 @@
-import {createElement, useEffect, useState} from "react";
+import {createElement, useEffect, useRef, useState} from "react";
 import bigHeader1 from '@images/common/big-head1.png'
 import bigHeader2 from '@images/common/big-head2.png'
 import {Grid} from "@mui/material";
 import {
-    ComplexType, NormalType,
+    ComplexType, NormalType, QuestionType1,
 } from "@pages/menu/question/examCreate/questionType";
 
 const BigBook = (props:ExamProps) => {
     let seq = 1
     let pageSeq = 1
+    const containerRef = useRef<any>()
     const [rowData, setRowData] = useState(props.rowData)
     const [pageTemp, setPageTemp] = useState(0);
     useEffect(()=>{
-        const pdfCont = document.getElementById('pdf_container')
-        // console.log(paper!.clientHeight < paper!.scrollHeight)
-        // if (paper!.clientHeight < paper!.scrollHeight){
-        //     console.log(paper!.lastElementChild!.lastElementChild!.lastChild)
+        containerRef.current.appendChild()
+        // const pdfCont = document.getElementById('paper1')
+        // console.log(pdfCont!.clientWidth < pdfCont!.scrollWidth)
+        // if (pdfCont!.clientWidth < pdfCont!.scrollWidth){
+        //     console.log(pdfCont!.lastElementChild!)
         // }
+
         console.log('미리보기데이터',props)
     },[rowData])
     return(
         <div className="pdf_container" ref={props.pdfRef} id="pdf_container">
+            <div ref={containerRef}>
             <div className='div_paper big_first'  id='paper1'>
                 <Grid container className='bigHeader'>
                     <Grid item xs={4}>
@@ -138,6 +142,7 @@ const BigBook = (props:ExamProps) => {
                 {props.rowData.map(({passageId,questionInfo,passageName})=>(
                     <p key={passageId}>{passageName}</p>
                 ))}
+            </div>
             </div>
         </div>
     )

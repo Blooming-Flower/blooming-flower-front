@@ -325,6 +325,7 @@ export const QuestionType7 = (props:questionType) => {
     )
 }
 
+//normal유형
 export const NormalType = (props:normalType) => {
     return(
         <>
