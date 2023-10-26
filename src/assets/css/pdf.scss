@@ -105,9 +105,10 @@
 
 .examView{
   .questionList-item{
-    position: fixed;
-    right: 300px;
-    bottom:150px
+    position: sticky;
+    // right: 300px;
+    // bottom:150px
+    top: 200px;
   }
   .examView_btn{
     height: 40px;
@@ -115,7 +116,7 @@
     font-size: 15px;
     width: 100px;
     position:fixed;
-    right:400px;
+    right:300px;
     bottom:100px;
   }
 }

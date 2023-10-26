@@ -55,7 +55,20 @@ export const PASSAGETYPE = [
 ];
 
 export const TXTUNIT = {
-  P1: ["1과", "2과", "3과", "4과", "5과", "6과", "7과", "8과", "9과", "10과"],
+  P1: [
+    "1과",
+    "2과",
+    "3과",
+    "4과",
+    "5과",
+    "6과",
+    "7과",
+    "8과",
+    "9과",
+    "10과",
+    "S1",
+    "S2",
+  ],
   P2: [],
   P3: [
     "1강",
@@ -235,12 +248,12 @@ export const TXTNUM = {
     "11-12",
     "1-3",
     "4-6",
+    "5-7",
     "7-9",
     "10-12",
+    "12-14",
     "13-15",
     "16-18",
-    "5-7",
-    "12-14",
   ],
   P4: [
     "01",
@@ -461,7 +474,4 @@ export const ANSWERCOLUMNS: GridColDef[] = [
   },
 ];
 
-export const EXAMTYPE = [
-    '시험지',
-    'Big Book'
-]
+export const EXAMTYPE = ["시험지", "Big Book"];

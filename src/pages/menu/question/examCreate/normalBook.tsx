@@ -292,7 +292,10 @@ const NormalBook = (props: ExamProps) => {
               correctly, it allows the endocrine system to ensure the conditions
               in your body remain ill balance.
             </div>
-            <div className="choose" style={{ display: "flex" }}>
+            <div
+              className="choose"
+              style={{ display: "flex", flexDirection: "row" }}
+            >
               <div style={{ flex: 1 }}>①</div>
               <div style={{ flex: 1 }}>②</div>
               <div style={{ flex: 1 }}>③</div>

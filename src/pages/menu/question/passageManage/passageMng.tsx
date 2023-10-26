@@ -141,13 +141,14 @@ const PassageMng = () => {
       align: "center",
       headerAlign: "center",
       sortable: false,
+      editable: false,
     },
     {
       field: "passageName",
       headerName: "교재명",
       headerAlign: "center",
       width: 500,
-      editable: true,
+      editable: false,
       align: "center",
       sortable: false,
     },
@@ -156,7 +157,7 @@ const PassageMng = () => {
       headerName: "강",
       headerAlign: "center",
       width: 150,
-      editable: true,
+      editable: false,
       align: "center",
       sortable: false,
     },
@@ -166,7 +167,7 @@ const PassageMng = () => {
       headerAlign: "center",
       type: "string",
       width: 110,
-      editable: true,
+      editable: false,
       align: "center",
       sortable: false,
     },
@@ -177,7 +178,7 @@ const PassageMng = () => {
       sortable: false,
       type: "number",
       width: 160,
-      editable: true,
+      editable: false,
       align: "center",
     },
     {
@@ -272,7 +273,7 @@ const PassageMng = () => {
             }}
             apiRef={apiRef}
             checkboxSelection
-            // disableRowSelectionOnClick
+            disableRowSelectionOnClick
             hideFooterPagination={false}
             sx={
               data.length > 0

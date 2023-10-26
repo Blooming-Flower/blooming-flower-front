@@ -148,6 +148,7 @@ const defaultColumns: GridColDef[] = [
     width: 30,
     align: "center",
     headerAlign: "center",
+    sortable: false,
   },
   {
     field: "chooseContent",
@@ -156,6 +157,7 @@ const defaultColumns: GridColDef[] = [
     align: "left",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
 ];
 
@@ -166,6 +168,7 @@ const arrowColunms: GridColDef[] = [
     width: 30,
     align: "center",
     headerAlign: "center",
+    sortable: false,
   },
   {
     field: "chooseContentA",
@@ -174,6 +177,7 @@ const arrowColunms: GridColDef[] = [
     align: "left",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
   {
     field: "arrow",
@@ -181,6 +185,7 @@ const arrowColunms: GridColDef[] = [
     width: 30,
     align: "center",
     headerAlign: "center",
+    sortable: false,
   },
   {
     field: "chooseContentB",
@@ -189,66 +194,74 @@ const arrowColunms: GridColDef[] = [
     align: "left",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
 ];
 
 const abcColunms: GridColDef[] = [
   {
     field: "chooseSeq",
-    headerName: "선지번호",
+    headerName: "",
     width: 30,
     align: "center",
     headerAlign: "center",
+    sortable: false,
   },
   {
     field: "chooseContentA",
-    headerName: "선지내용",
+    headerName: "(A)",
     width: 250,
     align: "center",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
   {
     field: "chooseContentB",
-    headerName: "선지내용",
+    headerName: "(B)",
     width: 250,
     align: "center",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
   {
     field: "chooseContentC",
-    headerName: "선지내용",
+    headerName: "(C)",
     width: 250,
     align: "center",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
 ];
 
 const abColunms: GridColDef[] = [
   {
     field: "chooseSeq",
-    headerName: "선지번호",
+    headerName: "",
     width: 30,
     align: "center",
     headerAlign: "center",
+    sortable: false,
   },
   {
     field: "chooseContentA",
-    headerName: "선지내용",
+    headerName: "(A)",
     width: 375,
     align: "center",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
   {
     field: "chooseContentB",
-    headerName: "선지내용",
+    headerName: "(B)",
     width: 375,
     align: "center",
     headerAlign: "center",
     editable: true,
+    sortable: false,
   },
 ];
 
@@ -432,7 +445,11 @@ const ChooseDataGrid = React.forwardRef(
             ? abColunms
             : defaultColumns
         }
-        slots={{ columnHeaders: () => null }}
+        slots={
+          ABC_TYPES.includes(questionType) || AB_TYPES.includes(questionType)
+            ? {}
+            : { columnHeaders: () => null }
+        }
         hideFooter={true}
         hideFooterPagination={true}
         hideFooterSelectedRowCount={true}
