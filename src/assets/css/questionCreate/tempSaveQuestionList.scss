@@ -23,12 +23,19 @@
       }
     }
   
+    .MuiList-root:hover::-webkit-scrollbar{
+      display: block;
+    }
+    .MuiList-root:hover::-webkit-scrollbar-thumb{
+      background: #b0aba7;
+    }
     .MuiListItemSecondaryAction-root {
       top: 18px !important;
     }
   
     .MuiList-root::-webkit-scrollbar{
       width: 10px;
+      display: none;
     }
     .MuiList-root::-webkit-scrollbar-thumb{
       background-color: #8a8683;
@@ -58,10 +65,10 @@
       position: absolute;
       background-color: rgba(0,0,0,0.5);
       color: #fff;
-      padding: 10px 7px;
+      padding: 3px 7px;
       border-radius: 10px;
       max-width: 300px;
-      left: 40%; /* 버튼 왼쪽에서 부터 버튼 너비 25% 이동한 위치에 툴팁 왼쪽이 오게 */
+      left: 10%; /* 버튼 왼쪽에서 부터 버튼 너비 25% 이동한 위치에 툴팁 왼쪽이 오게 */
       opacity: 0; /* 기본 상태는 안보이게 */
       transition: all 0.5s linear; /* 나타났다 사라지는 애니메이션 */
     }

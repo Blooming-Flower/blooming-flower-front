@@ -69,6 +69,11 @@ const AnswerDataGrid = React.forwardRef(
         chooseSeq: "D",
         answerContent: "",
       },
+      {
+        id: 5,
+        chooseSeq: "E",
+        answerContent: "",
+      },
     ];
 
     const answerColunms: GridColDef[] = [
@@ -127,7 +132,7 @@ const AnswerDataGrid = React.forwardRef(
         },
       },
     ];
-    const seq = [..."ABCD"];
+    const seq = [..."ABCDE"];
     const { answerRef, questionType } = props;
 
     const [writeTypeRows, setWriteTypeRows] = React.useState(
