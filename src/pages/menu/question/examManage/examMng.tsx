@@ -19,7 +19,7 @@ import {
 import { log } from "console";
 import * as React from "react";
 import { useEffect, useRef, useReducer } from "react";
-import { $GET } from "@utils/request";
+import { $GET, $DELETE, $PUT } from "@utils/request";
 // import pdfSvg from "/src/assets/svg/pdfSvg.svg";
 
 const ExamMng = () => {
@@ -79,8 +79,12 @@ const ExamMng = () => {
     setSearchText(value);
   };
 
-  const deleteExam = () => {
-    console.log("api로 삭제 요청");
+  const deleteExam = (examId: number) => {
+    console.log(`${examId} api로 삭제 요청`);
+    $DELETE(`/api/v1/exam/delete/${examId}`, (res: any) => {
+      console.log("시험지 삭제 완료!");
+      getExamList(page);
+    });
   };
 
   const downPdf = () => {
@@ -88,6 +92,7 @@ const ExamMng = () => {
   };
 
 
+  // 시험지 title 변경
   const titleEdit = (
     params: GridCellEditStopParams<any, any, any>,
     event: MuiEvent<MuiBaseEvent | any>
@@ -103,6 +108,12 @@ const ExamMng = () => {
     if (formattedValue !== newTitle) {
       newExam.title = newTitle;
       console.log("타이틀 변경 요청", newExam);
+      $PUT("/api/v1/exam/change/title", {
+        examId: newExam.examId,
+        newTitle: newExam.title
+      }, ()=>{
+        getExamList(page);
+      });
     }
   };
 
@@ -114,6 +125,7 @@ const ExamMng = () => {
       align: "center",
       headerAlign: "center",
       editable: true,
+      sortable: false,
     },
     {
       field: "createDate",
@@ -121,6 +133,7 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
+      sortable: false
     },
     {
       field: "downPdf",
@@ -128,6 +141,7 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
+      sortable: false,
       renderCell: () => (
         <img src={pdgImg} width={30} height={30} onClick={downPdf} />
       ),
@@ -144,7 +158,7 @@ const ExamMng = () => {
           variant="outlined"
           color="warning"
           size="medium"
-          onClick={() => deleteExam()}
+          onClick={() => deleteExam(params.row.examId)}
         >
           삭제
         </Button>,
@@ -191,7 +205,7 @@ const ExamMng = () => {
                 text: searcText,
               },
             }}
-            checkboxSelection
+            // checkboxSelection
             initialState={{
               pagination: {
                 paginationModel: {
@@ -202,6 +216,11 @@ const ExamMng = () => {
             sx={{ fontWeight: "500", fontSize: "15px" }}
             hideFooter={true}
             hideFooterPagination={true}
+            onCellEditStop={(params: GridCellEditStopParams, event: MuiEvent<MuiBaseEvent | any>) => {
+              if (params.reason === GridCellEditStopReasons.enterKeyDown) {
+                titleEdit(params, event)
+              }
+            }}
           />
           <Pagination
             count={count}
