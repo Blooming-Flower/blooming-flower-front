@@ -38,6 +38,7 @@ declare module "@mui/x-data-grid" {
     type: string;
     year: string;
     passageName: string;
+    text: string;
   }
 }
 const PassageMng = () => {
@@ -66,6 +67,7 @@ const PassageMng = () => {
         "&passageName=" +
         passageName,
       (res: any) => {
+        // debugger;
         setData(addId(res, yearData));
         setCount(res.data.totalPages);
       }

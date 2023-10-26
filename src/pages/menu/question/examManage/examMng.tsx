@@ -3,6 +3,8 @@ import CustomButton from "@components/ui/button/custeomButton";
 import pdgImg from "@images/common/pdficon.png";
 import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
+import customPagination from "@components/ui/grid/customPage";
 import {
   DataGrid,
   GridCallbackDetails,
@@ -12,14 +14,61 @@ import {
   GridRowParams,
   MuiBaseEvent,
   MuiEvent,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import { log } from "console";
 import * as React from "react";
+import { useEffect, useRef, useReducer } from "react";
+import { $GET } from "@utils/request";
 // import pdfSvg from "/src/assets/svg/pdfSvg.svg";
 
 const ExamMng = () => {
+  const apiRef = useGridApiRef();
   const [searcText, setSearchText] = React.useState("");
   const [page, setPage] = React.useState(0);
+  const [count, setCount] = React.useState(0);
+  const [data, setData] = React.useState([] as any);
+  const [any, forceUpdate] = useReducer((num) => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
+
+  useEffect(() => {
+    console.log("effect!!")
+
+    getExamList(0);
+
+  }, []);
+
+  const changePage = (pageNum: number) => {
+    getExamList(pageNum);
+  };
+
+  const getExamList = (pageNum: number) => {
+    let baseUrl = `/api/v1/exam/search?page=${pageNum}&size=5`;
+
+    let uri = searcText ? baseUrl + "&examTitle=" + searcText : baseUrl;
+
+    setTimeout(() => {
+      $GET(
+        uri,
+        (res: any) => {
+          let data = res.data.content;
+          let newRows = [];
+          for (let i = 0; i < data.length; i++) {
+            newRows.push({
+              id: i + 1,
+              title: data[i].examTitle,
+              createDate: data[i].createTime.split(" ")[0],
+              downPdf: "",
+              examId: data[i].examId
+            });
+          }
+
+          setData(newRows);
+          setCount(res.data.totalPages);
+          setPage(pageNum);
+        }
+      );
+    }, 5);
+  };
 
   const textFieldOnChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,6 +86,7 @@ const ExamMng = () => {
   const downPdf = () => {
     console.log("pdf 다운도르");
   };
+
 
   const titleEdit = (
     params: GridCellEditStopParams<any, any, any>,
@@ -101,29 +151,6 @@ const ExamMng = () => {
       ],
     },
   ];
-  const rows = [
-    {
-      id: 1,
-      title: "[2023-2 중간]종촌고1",
-      createDate: new Date().toISOString().split("T")[0],
-      downPdf: "",
-      examId: 1,
-    },
-    {
-      id: 2,
-      title: "[2023-2 중간]종촌고2",
-      createDate: new Date().toISOString().split("T")[0],
-      // downPdf: "",
-      examId: 2,
-    },
-    {
-      id: 3,
-      title: "[2023-2 중간]종촌고3",
-      createDate: new Date().toISOString().split("T")[0],
-      downPdf: "",
-      examId: 3,
-    },
-  ];
 
   return (
     <Layout>
@@ -144,29 +171,41 @@ const ExamMng = () => {
           >
             {searcText}
           </TextField>
-          <CustomButton type="string" label="검색" />
+          <span onClick={() => getExamList(0)}>
+            <CustomButton type="string" label="검색" />
+          </span>
         </div>
         <div>
           <DataGrid
-            rows={rows}
+            rows={data}
             columns={columns}
+            slots={{
+              noRowsOverlay: CustomNoRowsOverlay,
+              pagination: customPagination,
+            }}
+            slotProps={{
+              pagination: {
+                pageCount: count,
+                page: page,
+                type: "examMng",
+                text: searcText,
+              },
+            }}
             checkboxSelection
-            disableRowSelectionOnClick
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
+                  pageSize: 5,
                 },
               },
             }}
-            onCellEditStart={(params, event, details) => {}}
-            onCellEditStop={titleEdit}
             sx={{ fontWeight: "500", fontSize: "15px" }}
+            hideFooter={true}
             hideFooterPagination={true}
           />
           <Pagination
-            count={parseInt((rows.length / 5).toString()) + 1}
-            onChange={(event, value) => setPage(value - 1)}
+            count={count}
+            onChange={(event, value) => changePage(value - 1)}
             page={page + 1}
             showFirstButton
             showLastButton
