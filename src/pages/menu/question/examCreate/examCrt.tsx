@@ -161,7 +161,7 @@ const ExamCrt = (params: any) => {
       const passageType = convertPassageType(searchPassage);
 
       $GET(
-        `${_url}/api/v1/exam/search/passage-numbers?page=${page}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        `${_url}/api/v1/exam/search/passage-numbers?page=${page}&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
@@ -198,7 +198,7 @@ const ExamCrt = (params: any) => {
       const passageType = convertPassageType(searchPassage);
 
       $GET(
-        `${_url}/api/v1/exam/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        `${_url}/api/v1/exam/search/passage-numbers?page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;

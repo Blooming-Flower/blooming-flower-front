@@ -62,7 +62,7 @@ const PassageMng = () => {
     $GET(
       "/api/v1/passage/search/list?page=" +
         page.toString() +
-        "&size=5&passageYear=" +
+        "&size=10&passageYear=" +
         yearData +
         "&passageName=" +
         passageName,
@@ -79,7 +79,7 @@ const PassageMng = () => {
       $GET(
         "/api/v1/passage/search/list?page=" +
           page.toString() +
-          "&size=5&passageYear=" +
+          "&size=10&passageYear=" +
           year +
           "&passageName=" +
           e.target.value,
@@ -119,7 +119,7 @@ const PassageMng = () => {
       $GET(
         "/api/v1/passage/search/list?page=" +
           page.toString() +
-          "&size=5&passageYear=" +
+          "&size=10&passageYear=" +
           year,
         (res: any) => {
           setData(addId(res, year));
@@ -146,7 +146,7 @@ const PassageMng = () => {
       field: "passageName",
       headerName: "교재명",
       headerAlign: "center",
-      width: 300,
+      width: 500,
       editable: true,
       align: "center",
       sortable: false,
@@ -266,7 +266,7 @@ const PassageMng = () => {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 5,
+                  pageSize: 10,
                 },
               },
             }}

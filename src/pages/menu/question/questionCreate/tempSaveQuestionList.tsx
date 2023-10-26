@@ -97,31 +97,33 @@ const TempSaveQuestionList = (props: any) => {
                     </IconButton>
                   }
                 >
-                  <div>{row.passageYear}</div>
+                  <div style={{ flex: 1 }}>{row.passageYear}</div>
                   <div
                     className="passageName"
                     style={{
-                      maxWidth: 65,
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
+                      flex: 5,
                     }}
                     data-tooltip={row.passageName}
                   >
                     {row.passageName}
                   </div>
-                  <div>{row.passageUnit}</div>
-                  <div>{row.passageNumber}</div>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      color: "white",
-                      background: "#727171",
-                      borderRadius: 3,
-                      padding: "1px 7px 1px 6px",
-                    }}
-                  >
-                    {QUESTIONTYPE[row.questionType]}
+                  <div style={{ flex: 1 }}>{row.passageUnit}</div>
+                  <div style={{ flex: 1 }}>{row.passageNumber}</div>
+                  <div style={{ flex: 2 }}>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: "white",
+                        background: "#727171",
+                        borderRadius: 3,
+                        padding: "1px 4px 1px 6px",
+                      }}
+                    >
+                      {QUESTIONTYPE[row.questionType]}
+                    </span>
                   </div>
                 </ListItem>
               </div>

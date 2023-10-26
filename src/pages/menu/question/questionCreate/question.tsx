@@ -219,7 +219,7 @@ const Question = React.forwardRef(
         </div>
         <div style={{ display: "flex", gap: 30 }}>
           {questionType && !WRITE_TYPES.includes(questionType) ? (
-            <div className="answer-wrap" style={{ width: 805, height: 262 }}>
+            <div className="answer-wrap" style={{ width: 860, height: 262 }}>
               <ChooseDataGrid
                 chooseRef={chooseRef}
                 questionType={questionType}
@@ -244,7 +244,7 @@ const Question = React.forwardRef(
               <div
                 className="answer-wrap"
                 style={{
-                  width: 900,
+                  width: 1000,
                   height: 262,
                 }}
               >

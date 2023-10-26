@@ -146,7 +146,7 @@ const QuestionCrt = (params: any) => {
       const passageType = convertPassageType(searchPassage);
 
       $GET(
-        `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
@@ -177,7 +177,7 @@ const QuestionCrt = (params: any) => {
       const passageType = convertPassageType(searchPassage);
 
       $GET(
-        `${_url}/api/v1/question/search/passage-numbers?page=0&size=5&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
+        `${_url}/api/v1/question/search/passage-numbers?page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
@@ -565,31 +565,35 @@ const QuestionCrt = (params: any) => {
     {
       field: "passageInfo",
       headerName: "지문",
-      width: 300,
+      width: 700,
       type: "actions",
       editable: false,
       headerAlign: "center",
       getActions: (params) => [
         <>
-          {params.row.passageInfo.map((row: any) => {
-            row.rowNum = params.id;
-            return (
-              <div key={row.passageNumber} id="checkbox-list">
-                <Checkbox
-                  id={row.passageId.toString()}
-                  value={params.id}
-                  inputProps={
-                    {
-                      "data-passage": `${JSON.stringify(row)}`,
-                    } as any
-                  }
-                  onChange={(event) => handleCheckBox(event)}
-                  checked={checked.indexOf(row.passageId) !== -1} // 다른 화면 갓다와도 체크되게 함
-                />
-                {row.passageNumber}
-              </div>
-            );
-          })}
+          {params.row.passageInfo
+            .sort((q1: any, q2: any) =>
+              q1.passageNumber > q2.passageNumber ? 1 : -1
+            )
+            .map((row: any) => {
+              row.rowNum = params.id;
+              return (
+                <div key={row.passageNumber} id="checkbox-list">
+                  <Checkbox
+                    id={row.passageId.toString()}
+                    value={params.id}
+                    inputProps={
+                      {
+                        "data-passage": `${JSON.stringify(row)}`,
+                      } as any
+                    }
+                    onChange={(event) => handleCheckBox(event)}
+                    checked={checked.indexOf(row.passageId) !== -1} // 다른 화면 갓다와도 체크되게 함
+                  />
+                  {row.passageNumber}
+                </div>
+              );
+            })}
         </>,
       ],
       align: "center",

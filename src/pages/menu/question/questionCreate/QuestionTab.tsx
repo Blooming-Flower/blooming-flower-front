@@ -165,13 +165,13 @@ const QuestionTab = () => {
           문제출제
         </Typography>
         <div style={{ display: "flex", gap: 30 }}>
-          <div style={{ width: 950 }}>
+          <div style={{ width: 1000 }}>
             <Grid container spacing={0} className="table-container">
               <Grid xs={1} item={true}>
-                <div className="table-title table-top">유형</div>
+                <div className="table-title">유형</div>
               </Grid>
               <Grid xs={2} item={true}>
-                <div className="table-content table-top">
+                <div className="table-content">
                   <FormControl className="table-select">
                     <Select
                       value={questionType}
@@ -194,10 +194,10 @@ const QuestionTab = () => {
               ) : (
                 <>
                   <Grid xs={1} item={true}>
-                    <div className="table-title table-top">기출여부</div>
+                    <div className="table-title">기출여부</div>
                   </Grid>
                   <Grid xs={1} item={true}>
-                    <div className="table-content table-top">
+                    <div className="table-content">
                       <FormControl className="table-select">
                         <Checkbox
                           checked={pastYn}
@@ -216,10 +216,10 @@ const QuestionTab = () => {
                 </>
               )}
               <Grid xs={1} item={true}>
-                <div className="table-title table-top">발문</div>
+                <div className="table-title">발문</div>
               </Grid>
               <Grid xs={6} item={true}>
-                <div className="table-content table-top">
+                <div className="table-content">
                   <FormControl className="table-input-select">
                     <TextField
                       onChange={(e) => setQuestionTitle(e.target.value)}
@@ -232,10 +232,10 @@ const QuestionTab = () => {
               {questionType === "Q25" ? (
                 <>
                   <Grid xs={1} item={true}>
-                    <div className="table-title table-top">문제수</div>
+                    <div className="table-title">문제수</div>
                   </Grid>
                   <Grid xs={1} item={true}>
-                    <div className="table-content table-top">
+                    <div className="table-content">
                       <FormControl className="table-select">
                         <Select
                           value={questionParamList.length}
@@ -317,11 +317,11 @@ const QuestionTab = () => {
               display: "flex",
               flexDirection: "column",
               gap: 30,
-              width: 300,
+              width: 500,
             }}
           >
             <QuestionList
-              width={250}
+              width={500}
               height={300}
               rowData={passageDatas}
               setRowData={() => {}}
@@ -332,7 +332,7 @@ const QuestionTab = () => {
               noDelete={true}
             />
             <TempSaveQuestionList
-              width={300}
+              width={500}
               height={300}
               rowData={tempSaveList}
               editorRef={editorRef}
