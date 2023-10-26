@@ -3,6 +3,8 @@ import CustomButton from "@components/ui/button/custeomButton";
 import pdgImg from "@images/common/pdficon.png";
 import { FormControl, TextField, Pagination, Button } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
+import customPagination from "@components/ui/grid/customPage";
 import {
   DataGrid,
   GridCallbackDetails,
@@ -12,14 +14,61 @@ import {
   GridRowParams,
   MuiBaseEvent,
   MuiEvent,
+  useGridApiRef,
 } from "@mui/x-data-grid";
 import { log } from "console";
 import * as React from "react";
+import { useEffect, useRef, useReducer } from "react";
+import { $GET, $DELETE, $PUT } from "@utils/request";
 // import pdfSvg from "/src/assets/svg/pdfSvg.svg";
 
 const ExamMng = () => {
+  const apiRef = useGridApiRef();
   const [searcText, setSearchText] = React.useState("");
   const [page, setPage] = React.useState(0);
+  const [count, setCount] = React.useState(0);
+  const [data, setData] = React.useState([] as any);
+  const [any, forceUpdate] = useReducer((num) => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
+
+  useEffect(() => {
+    console.log("effect!!")
+
+    getExamList(0);
+
+  }, []);
+
+  const changePage = (pageNum: number) => {
+    getExamList(pageNum);
+  };
+
+  const getExamList = (pageNum: number) => {
+    let baseUrl = `/api/v1/exam/search?page=${pageNum}&size=5`;
+
+    let uri = searcText ? baseUrl + "&examTitle=" + searcText : baseUrl;
+
+    setTimeout(() => {
+      $GET(
+        uri,
+        (res: any) => {
+          let data = res.data.content;
+          let newRows = [];
+          for (let i = 0; i < data.length; i++) {
+            newRows.push({
+              id: i + 1,
+              title: data[i].examTitle,
+              createDate: data[i].createTime.split(" ")[0],
+              downPdf: "",
+              examId: data[i].examId
+            });
+          }
+
+          setData(newRows);
+          setCount(res.data.totalPages);
+          setPage(pageNum);
+        }
+      );
+    }, 5);
+  };
 
   const textFieldOnChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,14 +79,20 @@ const ExamMng = () => {
     setSearchText(value);
   };
 
-  const deleteExam = () => {
-    console.log("api로 삭제 요청");
+  const deleteExam = (examId: number) => {
+    console.log(`${examId} api로 삭제 요청`);
+    $DELETE(`/api/v1/exam/delete/${examId}`, (res: any) => {
+      console.log("시험지 삭제 완료!");
+      getExamList(page);
+    });
   };
 
   const downPdf = () => {
     console.log("pdf 다운도르");
   };
 
+
+  // 시험지 title 변경
   const titleEdit = (
     params: GridCellEditStopParams<any, any, any>,
     event: MuiEvent<MuiBaseEvent | any>
@@ -53,6 +108,12 @@ const ExamMng = () => {
     if (formattedValue !== newTitle) {
       newExam.title = newTitle;
       console.log("타이틀 변경 요청", newExam);
+      $PUT("/api/v1/exam/change/title", {
+        examId: newExam.examId,
+        newTitle: newExam.title
+      }, ()=>{
+        getExamList(page);
+      });
     }
   };
 
@@ -64,6 +125,7 @@ const ExamMng = () => {
       align: "center",
       headerAlign: "center",
       editable: true,
+      sortable: false,
     },
     {
       field: "createDate",
@@ -71,6 +133,7 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
+      sortable: false
     },
     {
       field: "downPdf",
@@ -78,6 +141,7 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
+      sortable: false,
       renderCell: () => (
         <img src={pdgImg} width={30} height={30} onClick={downPdf} />
       ),
@@ -94,34 +158,11 @@ const ExamMng = () => {
           variant="outlined"
           color="warning"
           size="medium"
-          onClick={() => deleteExam()}
+          onClick={() => deleteExam(params.row.examId)}
         >
           삭제
         </Button>,
       ],
-    },
-  ];
-  const rows = [
-    {
-      id: 1,
-      title: "[2023-2 중간]종촌고1",
-      createDate: new Date().toISOString().split("T")[0],
-      downPdf: "",
-      examId: 1,
-    },
-    {
-      id: 2,
-      title: "[2023-2 중간]종촌고2",
-      createDate: new Date().toISOString().split("T")[0],
-      // downPdf: "",
-      examId: 2,
-    },
-    {
-      id: 3,
-      title: "[2023-2 중간]종촌고3",
-      createDate: new Date().toISOString().split("T")[0],
-      downPdf: "",
-      examId: 3,
     },
   ];
 
@@ -144,29 +185,46 @@ const ExamMng = () => {
           >
             {searcText}
           </TextField>
-          <CustomButton type="string" label="검색" />
+          <span onClick={() => getExamList(0)}>
+            <CustomButton type="string" label="검색" />
+          </span>
         </div>
         <div>
           <DataGrid
-            rows={rows}
+            rows={data}
             columns={columns}
-            checkboxSelection
-            disableRowSelectionOnClick
+            slots={{
+              noRowsOverlay: CustomNoRowsOverlay,
+              pagination: customPagination,
+            }}
+            slotProps={{
+              pagination: {
+                pageCount: count,
+                page: page,
+                type: "examMng",
+                text: searcText,
+              },
+            }}
+            // checkboxSelection
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
+                  pageSize: 5,
                 },
               },
             }}
-            onCellEditStart={(params, event, details) => {}}
-            onCellEditStop={titleEdit}
             sx={{ fontWeight: "500", fontSize: "15px" }}
+            hideFooter={true}
             hideFooterPagination={true}
+            onCellEditStop={(params: GridCellEditStopParams, event: MuiEvent<MuiBaseEvent | any>) => {
+              if (params.reason === GridCellEditStopReasons.enterKeyDown) {
+                titleEdit(params, event)
+              }
+            }}
           />
           <Pagination
-            count={parseInt((rows.length / 5).toString()) + 1}
-            onChange={(event, value) => setPage(value - 1)}
+            count={count}
+            onChange={(event, value) => changePage(value - 1)}
             page={page + 1}
             showFirstButton
             showLastButton
