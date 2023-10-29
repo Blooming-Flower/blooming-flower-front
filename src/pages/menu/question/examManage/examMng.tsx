@@ -41,12 +41,10 @@ const ExamMng = () => {
   };
 
   const getExamList = (pageNum: number) => {
-    let baseUrl = `/api/v1/exam/search?page=${pageNum}&size=10`;
-
-    let uri = searcText ? baseUrl + "&examTitle=" + searcText : baseUrl;
+    const url = `/api/v1/exam/search?page=${pageNum}&size=10&examTitle=${searcText}`;
 
     setTimeout(() => {
-      $GET(uri, (res: any) => {
+      $GET(url, (res: any) => {
         let data = res.data.content;
         let newRows = [];
         for (let i = 0; i < data.length; i++) {
@@ -180,6 +178,10 @@ const ExamMng = () => {
             label="타이틀"
             variant="outlined"
             onChange={textFieldOnChange}
+            onKeyUp={(e) => {
+              if (e.key !== "Enter") return;
+              getExamList(0);
+            }}
             style={{ marginRight: "20px", width: "400px" }}
           >
             {searcText}
@@ -192,26 +194,6 @@ const ExamMng = () => {
           <DataGrid
             rows={data}
             columns={columns}
-            slots={{
-              noRowsOverlay: CustomNoRowsOverlay,
-              pagination: customPagination,
-            }}
-            slotProps={{
-              pagination: {
-                pageCount: count,
-                page: page,
-                type: "examMng",
-                text: searcText,
-              },
-            }}
-            // checkboxSelection
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
             sx={{ fontWeight: "500", fontSize: "15px" }}
             hideFooter={true}
             hideFooterPagination={true}
