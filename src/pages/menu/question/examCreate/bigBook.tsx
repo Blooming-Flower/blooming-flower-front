@@ -1,149 +1,335 @@
-import {createElement, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import bigHeader1 from '@images/common/big-head1.png'
 import bigHeader2 from '@images/common/big-head2.png'
 import {Grid} from "@mui/material";
 import {
-    ComplexType, NormalType, QuestionType1,
+    ComplexType, NormalType,
 } from "@pages/menu/question/examCreate/questionType";
 
+let seqTemp = 1
+let questionSize = 0
 const BigBook = (props:ExamProps) => {
-    let seq = 1
-    let pageSeq = 1
-    const containerRef = useRef<any>()
-    const [rowData, setRowData] = useState(props.rowData)
-    const [pageTemp, setPageTemp] = useState(0);
+    let seq = seqTemp
+    let complexLength = 0
+    const [pagePerQuestion, setPagePerQuestion] = useState<{pageCount:number,questionIds:number[]}[]>([])
+    const [questionArr, setQuestionArr] = useState<{questionCode:string,questionTitle:string,question:question[],questionContent:string,passageName:string,passageYear:string,passageUnit:string,passageNumber:string}[]>([])
+    const [isDone, setIsDone] = useState(false)
+    const [temp1, setTemp1] = useState(0)
+    const [temp2, setTemp2] = useState(1)
+    const [isOverflow, setIsOverflow] = useState<boolean>(false);
+    const [pageSeq, setPageSeq] = useState(1)
+    const pageRef = useRef<any>(null)
+    const scrollWidth = pageRef.current?.scrollWidth
     useEffect(()=>{
-        containerRef.current.appendChild()
-        // const pdfCont = document.getElementById('paper1')
-        // console.log(pdfCont!.clientWidth < pdfCont!.scrollWidth)
-        // if (pdfCont!.clientWidth < pdfCont!.scrollWidth){
-        //     console.log(pdfCont!.lastElementChild!)
-        // }
+        for (let i = 0; i <props.rowData.length; i++) {
+            for (let j = 0; j < props.rowData[i].questionInfo.length; j++) {
+                questionSize += props.rowData[i].questionInfo[j].question.length
+                questionArr.push({
+                    questionCode:props.rowData[i].questionInfo[j].questionCode,
+                    questionTitle:props.rowData[i].questionInfo[j].questionTitle,
+                    question:props.rowData[i].questionInfo[j].question,
+                    questionContent:props.rowData[i].questionInfo[j].questionContent,
+                    passageName:props.rowData[i].passageName,
+                    passageYear:props.rowData[i].passageYear,
+                    passageUnit:props.rowData[i].passageUnit,
+                    passageNumber:props.rowData[i].passageNumber
+                })
+            }
+        }
 
-        console.log('미리보기데이터',props)
-    },[rowData])
+        console.log('문제배열------------',questionArr)
+        console.log('문제사이즈------------',questionSize)
+        return (()=>{
+            seqTemp = 1
+            questionSize = 0
+        })
+    },[])
+
+    useEffect(()=>{
+            const element = pageRef.current
+            console.log(element.scrollWidth > element.clientWidth)
+            if(element.scrollWidth > element.clientWidth){
+                setIsOverflow(isOverflow)
+                setPageSeq(pageSeq+1)
+                // pagePerQuestion.push({pageSeq:pageSeq})
+                let questionIds = [];
+                console.log('temp',temp1)
+                console.log('temp2',temp2)
+                for (let i = temp1; i < temp2-1; i++) {
+                    questionIds.push(i)
+                }
+                pagePerQuestion.push({pageCount:pageSeq,questionIds:questionIds})
+                setTemp1(temp2-Math.max(complexLength-1,1))
+                seqTemp = seq-complexLength
+                console.log('오버플로우',pagePerQuestion)
+            }else{
+                if(questionSize <= temp2){
+                    let questionIds = [];
+                    console.log('temp',temp1)
+                    console.log('temp2',temp2)
+                    for (let i = temp1; i < temp2-1; i++) {
+                        questionIds.push(i)
+                    }
+                    pagePerQuestion.push({pageCount:pageSeq,questionIds:questionIds})
+                    console.log('마지막',pagePerQuestion)
+                    seqTemp = 1
+                    setIsDone(!isDone)
+                    return
+                }
+            }
+            setTemp2(temp2+1)
+            // const subRef = document.getElementById('subRef')
+    }, [temp2])
+
+
+
+    let pages =(
+            <>
+                {
+                    isDone?
+                        pagePerQuestion.map(({pageCount,questionIds},index0)=>(
+                        <div className='div_paper big_first' ref={pageRef} key={index0}>
+                            {pageCount == 1 ?
+                                <Grid container className='bigHeader'>
+                                    <Grid item xs={4}>
+                                        <img src={bigHeader1} alt='bigHeader1'/>
+                                    </Grid>
+                                    <Grid item xs={4} className='bigHeader_text'>{props.header}</Grid>
+                                    <Grid item xs={4}>
+                                        <img src={bigHeader2} alt='bigHeader2'/>
+                                    </Grid>
+                                </Grid>
+                                :
+                                <></>
+                            }
+                            <div className='bigCont'>
+                                <div className='bigCont_sub'>
+                                        <div id='subRef'>
+                                            {questionIds.map((num,index1)=>(
+                                                        <div className='bigCont_questionBox' key={index1}>
+                                                            {(()=>{
+                                                                if(questionArr[num].question.length == 1){
+                                                                    complexLength = 1
+                                                                    return(
+                                                                        <NormalType
+                                                                            question={questionArr[num].question}
+                                                                            seq={seq++}
+                                                                            questionTitle={questionArr[num].questionTitle}
+                                                                            questionContent={questionArr[num].questionContent}
+                                                                            from={questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
+                                                                        />
+                                                                    )
+                                                                }else{
+                                                                    complexLength = questionArr[num].question.length
+                                                                    const question = questionArr[num].question
+                                                                    const questionCode = questionArr[num].questionCode
+                                                                    const questionTitle = questionArr[num].questionTitle
+                                                                    const questionContent = questionArr[num].questionContent
+                                                                    const ssh = {question,questionCode,questionTitle,questionContent}
+                                                                    return (
+                                                                        <ComplexType
+                                                                            questionInfo={ssh}
+                                                                            seqLength={complexLength}
+                                                                            seq={seq=seq+complexLength}
+                                                                            from={questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
+                                                                        />
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                )
+                                            )}
+                                        </div>
+                                </div>
+                            </div>
+                            {pageCount % 2  == 0?
+                                <div className='right-bottom'>
+                                    {props.rightBottom}{pageCount}
+                                </div>
+                                :
+                                <div className='left-bottom'>
+                                    {pageCount}{props.leftBottom}
+                                </div>
+                            }
+                        </div>
+                    ))
+                        :
+                        <div className='div_paper big_first' ref={pageRef}>
+                            {pageSeq == 1 ?
+                                <Grid container className='bigHeader'>
+                                    <Grid item xs={4}>
+                                        <img src={bigHeader1} alt='bigHeader1'/>
+                                    </Grid>
+                                    <Grid item xs={4} className='bigHeader_text'>{props.header}</Grid>
+                                    <Grid item xs={4}>
+                                        <img src={bigHeader2} alt='bigHeader2'/>
+                                    </Grid>
+                                </Grid>
+                                :
+                                <></>
+                            }
+                            <div className='bigCont'>
+                                <div className='bigCont_sub'>
+                                    {props.rowData.map(({passageId,questionInfo,passageName,passageYear,passageUnit,passageNumber},index0)=>(
+                                        <div key={index0} id='subRef'>
+                                            {questionInfo.slice(temp1,temp2).map((q,index1)=>(
+                                                    <div className='bigCont_questionBox' key={index1}>
+                                                        {(()=>{
+                                                            const {questionTitle,question,questionContent} = q
+
+                                                            if(question.length == 1){
+                                                                // if(isOverflow){
+                                                                //     return null
+                                                                // }
+                                                                complexLength = 1
+                                                                return(
+                                                                    <NormalType
+                                                                        question={question}
+                                                                        seq={seq++}
+                                                                        questionTitle={questionTitle}
+                                                                        questionContent={questionContent}
+                                                                        from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
+                                                                    />
+                                                                )
+                                                            }else{
+                                                                // if(isOverflow){
+                                                                //     return null
+                                                                // }
+                                                                complexLength = question.length
+                                                                return (
+                                                                    <ComplexType
+                                                                        questionInfo={q}
+                                                                        seqLength={complexLength}
+                                                                        seq={seq=seq+complexLength}
+                                                                        from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
+                                                                    />
+                                                                )
+                                                            }
+                                                        })()}
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            {pageSeq % 2  == 0?
+                                <div className='right-bottom'>
+                                    {props.rightBottom}{pageSeq}
+                                </div>
+                                :
+                                <div className='left-bottom'>
+                                    {pageSeq}{props.leftBottom}
+                                </div>
+                            }
+                        </div>
+                }
+            </>
+    )
+
+
+    // useEffect(()=>{
+    //     // const root = createRoot(document.getElementById('div_container')!);
+    //     // root.render(pages)
+    //     console.log(pagePerQuestion)
+    //     for (let i = 0; i < pageSeq; i++) {
+    //         if(document.getElementById('page')!.clientWidth < document.getElementById('page')!.scrollWidth){
+    //             console.log('오버플로우초과')
+    //             pageArr.push(++i+1)
+    //             // setPageSeq(pageSeq+1)
+    //         }
+    //         console.log(pageSeq)
+    //     }
+    // },[pageSeq])
+    
+    
+    
     return(
         <div className="pdf_container" ref={props.pdfRef} id="pdf_container">
-            <div ref={containerRef}>
-            <div className='div_paper big_first'  id='paper1'>
-                <Grid container className='bigHeader'>
-                    <Grid item xs={4}>
-                        <img src={bigHeader1} alt='bigHeader1'/>
-                    </Grid>
-                    <Grid item xs={4} className='bigHeader_text'>{props.header}</Grid>
-                    <Grid item xs={4}>
-                        <img src={bigHeader2} alt='bigHeader2'/>
-                    </Grid>
-                </Grid>
-                <div className='bigCont'>
-                    <div className='bigCont_sub'>
-                        {props.rowData.map(({passageId,questionInfo,passageName,passageYear,passageUnit,passageNumber},index0)=>(
-                            <div key={index0}>
-                                {questionInfo.map(({questionTitle,question,questionContent},index1)=>(
-                                    <div key={index1} className='bigCont_questionBox'>
-                                        {questionInfo[index1].question.length == 1?  //복합유형이 아닐경우
-                                                <NormalType
-                                                    question={question}
-                                                    seq={seq++}
-                                                    questionTitle={questionTitle}
-                                                    questionContent={questionContent}
-                                                    from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
-                                                />
-                                        : //복합유형일 경우
-                                                <ComplexType
-                                                    questionInfo={questionInfo[index1]}
-                                                    seqLength={questionInfo[index1].question.length}
-                                                    seq={seq=seq+questionInfo[index1].question.length}
-                                                    from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
-                                                />
-                                        }
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                {pageSeq % 2  == 0?
-                    <div className='right-bottom'>
-                        {props.rightBottom}{pageSeq++}
-                    </div>
-                    :
-                    <div className='left-bottom'>
-                        {pageSeq++}{props.leftBottom}
-                    </div>
-                }
-            </div>
-            <div className='div_paper big_second'>
-                <div className='bigCont'>
-                    <div className='bigCont_sub'>
-                        {props.rowData.map(({passageId,questionInfo,passageName})=>(
-                            <div key={passageId} className='bigCont_questionBox'>
-                                <div className='bigCont_questionTitle'>
-                                    1.
-                                    <div className='bigCont_pastYn'>
-                                        기출
-                                    </div>
-                                    다음글의 제목으로 가장 적절한 것은?
-                                    <span className='bigCont_from'>
-                                        (2023년 6월 고3 30번)
-                                    </span>
-                                </div>
-                                <div className='bigCont_questionContent'>
-                                    How do hormones trigger reactions in the body? When a hormone is released from a gland, it travels in the
-                                    bloodstream through the body in search of its target.
-                                    Organs, tissues and other glands in the body have
-                                    receptor sites that hormonds to its receptor, it sets
-                                    off a chain of other signaling pathways to create a change in the body. Once the desired effect has taken
-                                    place and there is too much hormone circulating in the
-                                    blood, this signal is fed back to the glands to restrain
-                                    further hormone release. This is called a feedback loop
-                                    and, when functioning correctly, it allows the endocrine
-                                    system to ensure the conditions in your body remain in
-                                    balance
-                                </div>
-                                <div className='bigCont_chooseList'>
-                                    <p>① It deliver their message and cause an effect.</p>
-                                    <p>② They are designed to act only on the parts of the body.</p>
-                                    <p>③ A hormone binds to its receptor.</p>
-                                    <p>④ The glands to restrain further hormone is released.</p>
-                                    <p>⑤ It allows the endocrine system to ensure the conditions in your body.</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                {pageSeq % 2  == 0?
-                    <div className='right-bottom'>
-                        {props.rightBottom}{pageSeq++}
-                    </div>
-                    :
-                    <div className='left-bottom'>
-                        {pageSeq++}{props.leftBottom}
-                    </div>
-                }
-            </div>
-            <div className='div_paper'>
-                {props.examTitle}
-                {props.rowData.map(({passageId,questionInfo,passageName})=>(
-                    <p key={passageId}>{passageName}</p>
-                ))}
-                {pageSeq % 2  == 0?
-                    <div className='right-bottom'>
-                        {props.rightBottom}{pageSeq++}
-                    </div>
-                    :
-                    <div className='left-bottom'>
-                        {pageSeq++}{props.leftBottom}
-                    </div>
-                }
-            </div>
-            <div className='div_paper'>
-                {props.examTitle}
-                {props.rowData.map(({passageId,questionInfo,passageName})=>(
-                    <p key={passageId}>{passageName}</p>
-                ))}
-            </div>
-            </div>
+            {pages}
+            {/*{pageArr.map((index,array,value)=>(*/}
+            {/*    <div className='div_paper big_first' id='page1' key={index}>*/}
+            {/*        {pageSeq == 1 ?*/}
+            {/*            <Grid container className='bigHeader'>*/}
+            {/*                <Grid item xs={4}>*/}
+            {/*                    <img src={bigHeader1} alt='bigHeader1'/>*/}
+            {/*                </Grid>*/}
+            {/*                <Grid item xs={4} className='bigHeader_text'>{props.header}</Grid>*/}
+            {/*                <Grid item xs={4}>*/}
+            {/*                    <img src={bigHeader2} alt='bigHeader2'/>*/}
+            {/*                </Grid>*/}
+            {/*            </Grid>*/}
+            {/*            :*/}
+            {/*            <></>*/}
+            {/*        }*/}
+            {/*        <div className='bigCont'>*/}
+            {/*            <div className='bigCont_sub'>*/}
+            {/*                {props.rowData.map(({passageId,questionInfo,passageName,passageYear,passageUnit,passageNumber},index0)=>(*/}
+            {/*                    <div key={index0}>*/}
+                                    {/*{questionInfo.map(({questionTitle,question,questionContent},index1)=>(*/}
+                                    {/*    <div key={index1} className='bigCont_questionBox'>*/}
+                                    {/*        {questionInfo[index1].question.length == 1?  //복합유형이 아닐경우*/}
+                                    {/*            <NormalType*/}
+                                    {/*                question={question}*/}
+                                    {/*                seq={seq++}*/}
+                                    {/*                questionTitle={questionTitle}*/}
+                                    {/*                questionContent={questionContent}*/}
+                                    {/*                from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
+                                    {/*            />*/}
+                                    {/*            : //복합유형일 경우*/}
+                                    {/*            <ComplexType*/}
+                                    {/*                questionInfo={questionInfo[index1]}*/}
+                                    {/*                seqLength={questionInfo[index1].question.length}*/}
+                                    {/*                seq={seq=seq+questionInfo[index1].question.length}*/}
+                                    {/*                from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
+                                    {/*            />*/}
+                                    {/*        }*/}
+                                    {/*    </div>*/}
+                                    {/*))}*/}
+                                    {/*{questionInfo.map(({questionTitle,question,questionContent},index1)=>{*/}
+                                    {/*    console.log(document.getElementById('page1'))*/}
+                                    {/*    if (document.getElementById('page1')!.clientWidth < document.getElementById('page1')!.scrollWidth){*/}
+                                    {/*        return(*/}
+                                    {/*            <></>*/}
+                                    {/*        )*/}
+                                    {/*    }else {*/}
+                                    {/*        return (*/}
+                                    {/*            <div key={index1} className='bigCont_questionBox'>*/}
+                                    {/*                {questionInfo[index1].question.length == 1?  //복합유형이 아닐경우*/}
+                                    {/*                    <NormalType*/}
+                                    {/*                        question={question}*/}
+                                    {/*                        seq={seq++}*/}
+                                    {/*                        questionTitle={questionTitle}*/}
+                                    {/*                        questionContent={questionContent}*/}
+                                    {/*                        from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
+                                    {/*                    />*/}
+                                    {/*                    : //복합유형일 경우*/}
+                                    {/*                    <ComplexType*/}
+                                    {/*                        questionInfo={questionInfo[index1]}*/}
+                                    {/*                        seqLength={questionInfo[index1].question.length}*/}
+                                    {/*                        seq={seq=seq+questionInfo[index1].question.length}*/}
+                                    {/*                        from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
+                                    {/*                    />*/}
+                                    {/*                }*/}
+                                    {/*            </div>*/}
+                                    {/*        )*/}
+                                    {/*    }*/}
+                                    {/*})}*/}
+            {/*                    </div>*/}
+            {/*                ))}*/}
+            {/*            </div>*/}
+            {/*        </div>*/}
+            {/*        {pageSeq % 2  == 0?*/}
+            {/*            <div className='right-bottom'>*/}
+            {/*                {props.rightBottom}{pageSeq++}*/}
+            {/*            </div>*/}
+            {/*            :*/}
+            {/*            <div className='left-bottom'>*/}
+            {/*                {pageSeq++}{props.leftBottom}*/}
+            {/*            </div>*/}
+            {/*        }*/}
+            {/*    </div>*/}
+            {/*))}*/}
         </div>
     )
 }

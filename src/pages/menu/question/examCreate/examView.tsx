@@ -24,6 +24,7 @@ const ExamView = () => {
     useEffect(()=>{
         for(let i = 0; i<props.length; i++){
             $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
+                console.log(props[i].questionIds.toString())
                 console.log(res)
                 // let cont = []
                 for(let j = 0; j<res.data.length;j++){
@@ -154,7 +155,7 @@ const ExamView = () => {
                                     </Grid>
                                 </Box>
                             </Box>
-                            <Paper className='div_container' elevation={4} style={{backgroundColor:'#a4a4a4'}}>
+                            <Paper className='div_container' elevation={4} style={{backgroundColor:'#a4a4a4'}} id='div_container'>
                                     {
                                         able == '시험지'?
                                             <NormalBook
