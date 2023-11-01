@@ -325,6 +325,7 @@ export const QuestionType7 = (props:questionType) => {
     )
 }
 
+//normal유형
 export const NormalType = (props:normalType) => {
     return(
         <>
@@ -431,7 +432,7 @@ export const ComplexType = (props:complexType) => {
     return(
         <>
             <div className='bigCont_questionTitle'>
-                {props.seq-props.questionInfo.question.length+'-'+(props.seq-1)+'. '}
+                {props.seq-props.seqLength+'-'+(props.seq-1)+'. '}
                 {props.questionInfo.questionTitle}
                 <span className='bigCont_from'>
                     (2023년 6월 고3 30번)
