@@ -55,6 +55,8 @@ const NormalBook = (props: ExamProps) => {
               </li>
             </ul>
           </div>
+
+          {/*{요기다가 map돌릴것!!}*/}
           {/* 기본유형 1, 2, 3, 5, 6, 7, 9, 10, 15,  */}
           <div className="question" style={{ marginBottom: 30 }}>
             <div className="title" style={{ display: "flex" }}>
