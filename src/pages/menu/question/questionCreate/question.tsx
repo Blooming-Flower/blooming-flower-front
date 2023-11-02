@@ -1,4 +1,10 @@
-﻿import { DEFAULT_QUESTION, QUESTIONTYPE, WRITE_TYPES } from "@common/const";
+﻿import {
+  ABC_TYPES,
+  AB_TYPES,
+  DEFAULT_QUESTION,
+  QUESTIONTYPE,
+  WRITE_TYPES,
+} from "@common/const";
 import { StyledTextarea } from "@components/ui/text/textarea";
 import * as React from "react";
 import ChooseDataGrid from "./chooseDataGrid";
@@ -219,7 +225,17 @@ const Question = React.forwardRef(
         </div>
         <div style={{ display: "flex", gap: 30 }}>
           {questionType && !WRITE_TYPES.includes(questionType) ? (
-            <div className="answer-wrap" style={{ width: 860, height: 262 }}>
+            <div
+              className="answer-wrap"
+              style={{
+                width: 860,
+                height:
+                  ABC_TYPES.includes(questionType) ||
+                  AB_TYPES.includes(questionType)
+                    ? 318
+                    : 262,
+              }}
+            >
               <ChooseDataGrid
                 chooseRef={chooseRef}
                 questionType={questionType}

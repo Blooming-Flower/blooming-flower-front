@@ -192,3 +192,6 @@ footer {
 		max-width: unset !important;
 	}
 }
+.MuiDataGrid-cell:focus{
+	outline: none !important;
+}

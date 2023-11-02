@@ -176,9 +176,6 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
               // ev.preventDefault()
               if (ev.code == "KeyB" && ev.ctrlKey) {
                 console.log("Bold호출");
-              } else if (ev.code == "KeyI" && ev.ctrlKey) {
-                console.log("기울기호출");
-                editorRef.current.getInstance().exec("italic");
               } else if (ev.code == "KeyM" && ev.ctrlKey) {
                 console.log("밑줄호출");
                 editorRef.current.getInstance().exec("strike");
@@ -223,6 +220,9 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
               } else if (ev.code == "KeyE" && ev.altKey) {
                 console.log("e호출");
                 editorRef.current.getInstance().insertText("ⓔ");
+              } else if (ev.code == "Tab") {
+                editorRef.current.getInstance().insertText(`\t`);
+                ev.preventDefault();
               }
             }}
           ></Editor>
