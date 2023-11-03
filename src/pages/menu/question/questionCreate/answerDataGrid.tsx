@@ -76,6 +76,44 @@ const AnswerDataGrid = React.forwardRef(
       },
     ];
 
+    const writeTypeQ23Rows = [
+      {
+        id: 1,
+        chooseSeq: "A",
+        answerContent: "",
+      },
+      {
+        id: 2,
+        chooseSeq: "B",
+        answerContent: "",
+      },
+      {
+        id: 3,
+        chooseSeq: "C",
+        answerContent: "",
+      },
+      {
+        id: 4,
+        chooseSeq: "D",
+        answerContent: "",
+      },
+      {
+        id: 5,
+        chooseSeq: "E",
+        answerContent: "",
+      },
+      {
+        id: 6,
+        chooseSeq: "F",
+        answerContent: "",
+      },
+      {
+        id: 7,
+        chooseSeq: "G",
+        answerContent: "",
+      },
+    ];
+
     const answerColunms: GridColDef[] = [
       {
         field: "chooseSeq",
@@ -121,7 +159,7 @@ const AnswerDataGrid = React.forwardRef(
                   .filter((row: any) => row.id !== id)
                   .map(({ id }: any) => answerRef.current.getRow(id));
                 if (newRows.length === 0) {
-                  newRows = writeTypeDefaultRows;
+                  newRows = getWriteTypeRows();
                 }
                 let idx = 0;
                 newRows.forEach((row: any) => (row.chooseSeq = seq[idx++]));
@@ -132,19 +170,22 @@ const AnswerDataGrid = React.forwardRef(
         },
       },
     ];
-    const seq = [..."ABCDE"];
+    const seq = [..."ABCDEFG"];
     const { answerRef, questionType } = props;
 
-    const [writeTypeRows, setWriteTypeRows] = React.useState(
-      !props.answerList
-        ? writeTypeDefaultRows
-        : !isNaN(props.answerList[0]?.chooseSeq)
-        ? writeTypeDefaultRows
-        : props.answerList?.map((cur: any, idx: number) => {
+    const getWriteTypeRows = () =>
+      props.answerList && isNaN(props.answerList[0]?.chooseSeq)
+        ? props.answerList?.map((cur: any, idx: number) => {
             cur.id = idx + 1;
             cur.chooseSeq = seq[idx];
             return cur;
           })
+        : props.questionType === "Q23"
+        ? writeTypeQ23Rows
+        : writeTypeDefaultRows;
+
+    const [writeTypeRows, setWriteTypeRows] = React.useState(
+      getWriteTypeRows()
     );
 
     React.useImperativeHandle(ref, () => ({
@@ -166,7 +207,7 @@ const AnswerDataGrid = React.forwardRef(
         });
       },
       resetWriteTypeRows() {
-        setWriteTypeRows(writeTypeDefaultRows);
+        setWriteTypeRows(getWriteTypeRows());
       },
     }));
 
@@ -192,18 +233,8 @@ const AnswerDataGrid = React.forwardRef(
     });
 
     React.useEffect(() => {
-      setWriteTypeRows(
-        !props.answerList
-          ? writeTypeDefaultRows
-          : !isNaN(props.answerList[0]?.chooseSeq)
-          ? writeTypeDefaultRows
-          : props.answerList?.map((cur: any, idx: number) => {
-              cur.id = idx + 1;
-              cur.chooseSeq = seq[idx];
-              return cur;
-            })
-      );
-    }, [props.answerList]);
+      setWriteTypeRows(getWriteTypeRows());
+    }, [props.answerList, props.questionType]);
     return !questionType ? (
       <></>
     ) : WRITE_TYPES.includes(questionType) ? (

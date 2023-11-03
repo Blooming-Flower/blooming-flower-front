@@ -31,10 +31,9 @@ const ExamMng = () => {
   const [any, forceUpdate] = useReducer((num) => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
   useEffect(() => {
-    console.log("effect!!")
+    console.log("effect!!");
 
     getExamList(0);
-
   }, []);
 
   const changePage = (pageNum: number) => {
@@ -42,31 +41,26 @@ const ExamMng = () => {
   };
 
   const getExamList = (pageNum: number) => {
-    let baseUrl = `/api/v1/exam/search?page=${pageNum}&size=5`;
-
-    let uri = searcText ? baseUrl + "&examTitle=" + searcText : baseUrl;
+    const url = `/api/v1/exam/search?page=${pageNum}&size=10&examTitle=${searcText}`;
 
     setTimeout(() => {
-      $GET(
-        uri,
-        (res: any) => {
-          let data = res.data.content;
-          let newRows = [];
-          for (let i = 0; i < data.length; i++) {
-            newRows.push({
-              id: i + 1,
-              title: data[i].examTitle,
-              createDate: data[i].createTime.split(" ")[0],
-              downPdf: "",
-              examId: data[i].examId
-            });
-          }
-
-          setData(newRows);
-          setCount(res.data.totalPages);
-          setPage(pageNum);
+      $GET(url, (res: any) => {
+        let data = res.data.content;
+        let newRows = [];
+        for (let i = 0; i < data.length; i++) {
+          newRows.push({
+            id: i + 1,
+            title: data[i].examTitle,
+            createDate: data[i].createTime.split(" ")[0],
+            downPdf: "",
+            examId: data[i].examId,
+          });
         }
-      );
+
+        setData(newRows);
+        setCount(res.data.totalPages);
+        setPage(pageNum);
+      });
     }, 5);
   };
 
@@ -91,7 +85,6 @@ const ExamMng = () => {
     console.log("pdf 다운도르");
   };
 
-
   // 시험지 title 변경
   const titleEdit = (
     params: GridCellEditStopParams<any, any, any>,
@@ -108,12 +101,16 @@ const ExamMng = () => {
     if (formattedValue !== newTitle) {
       newExam.title = newTitle;
       console.log("타이틀 변경 요청", newExam);
-      $PUT("/api/v1/exam/change/title", {
-        examId: newExam.examId,
-        newTitle: newExam.title
-      }, ()=>{
-        getExamList(page);
-      });
+      $PUT(
+        "/api/v1/exam/change/title",
+        {
+          examId: newExam.examId,
+          newTitle: newExam.title,
+        },
+        () => {
+          getExamList(page);
+        }
+      );
     }
   };
 
@@ -133,7 +130,7 @@ const ExamMng = () => {
       width: 150,
       align: "center",
       headerAlign: "center",
-      sortable: false
+      sortable: false,
     },
     {
       field: "downPdf",
@@ -181,6 +178,10 @@ const ExamMng = () => {
             label="타이틀"
             variant="outlined"
             onChange={textFieldOnChange}
+            onKeyUp={(e) => {
+              if (e.key !== "Enter") return;
+              getExamList(0);
+            }}
             style={{ marginRight: "20px", width: "400px" }}
           >
             {searcText}
@@ -193,32 +194,15 @@ const ExamMng = () => {
           <DataGrid
             rows={data}
             columns={columns}
-            slots={{
-              noRowsOverlay: CustomNoRowsOverlay,
-              pagination: customPagination,
-            }}
-            slotProps={{
-              pagination: {
-                pageCount: count,
-                page: page,
-                type: "examMng",
-                text: searcText,
-              },
-            }}
-            // checkboxSelection
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
             sx={{ fontWeight: "500", fontSize: "15px" }}
             hideFooter={true}
             hideFooterPagination={true}
-            onCellEditStop={(params: GridCellEditStopParams, event: MuiEvent<MuiBaseEvent | any>) => {
+            onCellEditStop={(
+              params: GridCellEditStopParams,
+              event: MuiEvent<MuiBaseEvent | any>
+            ) => {
               if (params.reason === GridCellEditStopReasons.enterKeyDown) {
-                titleEdit(params, event)
+                titleEdit(params, event);
               }
             }}
           />
