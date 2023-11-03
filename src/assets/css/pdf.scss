@@ -68,6 +68,28 @@
           color: #666666;
         }
       }
+      .bigCont_questionTitle_normal{
+        font-family: 'hancom', sans-serif !important;
+        font-size: 12.7px !important;
+        line-height: 160%;
+        .bigCont_pastYn{
+          font-family: 'KoPubDotum', sans-serif !important;
+          font-size: 7*0.5+7px !important;
+          color: white;
+          line-height: 160%;
+          display: inline-block;
+          padding: 3px 10px;
+          border-radius: 5px;
+          background-color: #4a4a4a;
+          margin : 0 8px
+        }
+        .bigCont_from{
+          font-family: 'KoPubDotum', sans-serif !important;
+          font-size: 9px !important;
+          line-height: 160%;
+          color: #666666;
+        }
+      }
 
       //문제지문
       .bigCont_questionContent{
@@ -76,20 +98,53 @@
         font-size: 8*0.5+8px !important;
         line-height: 155%;
       }
+      .bigCont_questionContent_normal{
+        margin-top: 15px;
+        font-weight: lighter;
+        font-size: 8*0.5+8px !important;
+        line-height: 155%;
+        p{
+          font-family: 'Times New Roman', sans-serif !important;
+        }
+      }
 
       //문제선지
-      .bigCont_chooseList{
+      .choose{
         margin-top: 15px;
         font-weight: lighter;
         font-size: 8*0.5+8px !important;
         line-height: 150%;
+      }
+      .choose_normal{
+        margin-top: 15px;
+        font-weight: lighter;
+        font-size: 8*0.5+8px !important;
+        line-height: 150%;
+      }
+      .choose_text{
+        font-family: 'hancom', sans-serif !important;
       }
     }
   }
 }
 
 .big_first > .bigHeader {
-  padding: 30px 60px 0 60px;
+  padding: 30px 40px 0 40px;
+  .bigHeader_text{
+    font-family: 'esamanru', sans-serif !important;
+    font-size: 20*0.5+20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15mm;
+  }
+  img{
+    width:100%;
+  }
+}
+
+.big_second > .bigHeader {
+  padding: 30px 40px 0 40px;
   .bigHeader_text{
     font-family: 'esamanru', sans-serif !important;
     font-size: 20*0.5+20px;
@@ -119,11 +174,21 @@
     right:50px;
     bottom:100px;
   }
+  .examView_crt{
+    height: 40px;
+    border-radius: 20px;
+    font-size: 15px;
+    width: 120px;
+    position:fixed;
+    right:300px;
+    bottom:100px;
+  }
 }
 
 .left-bottom{
   bottom:10px;
   left:10px;
+  float: left;
 }
 .right-bottom{
   bottom:10px;
@@ -140,7 +205,26 @@
   padding: 0px 6px 0 4px;
 }
 .subBox{
-  border-bottom: 0.5px solid black;
-  border-top: 0.5px solid black;
+  border-bottom: 0.3px solid black;
+  border-top: 0.3px solid black;
   margin-bottom: 5px;
+  margin-top: 15px;
+  font-weight: lighter;
+  font-size: 8*0.5+8px !important;
+  line-height: 155%;
+}
+.subBox_normal{
+  border-bottom: 0.3px solid black;
+  border-top: 0.3px solid black;
+  margin-bottom: 5px;
+  margin-top: 15px;
+  font-weight: lighter;
+  font-size: 8*0.5+8px !important;
+  line-height: 155%;
+  p{
+    font-family: 'Times New Roman', sans-serif !important;
+  }
+}
+.bigBook_bottom{
+  padding: 0 20px;
 }

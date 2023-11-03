@@ -9,18 +9,20 @@ import {
 import {EXAMTYPE} from "@common/const";
 import MenuIcon from '@mui/icons-material/Menu';
 import CustomButton from "@components/ui/button/custeomButton";
-import {MutableRefObject, useEffect, useRef, useState} from "react";
+import {MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import NormalBook from "@pages/menu/question/examCreate/normalBook";
 import BigBook from "@pages/menu/question/examCreate/bigBook";
 import {useLocation} from "react-router-dom";
 import {$GET} from "@utils/request";
 import ReactToPrint from "react-to-print";
+import axios from "axios";
 
 const ExamView = () => {
     const props = useLocation().state;
+    const [able, setAble] = useState('');
     const [rowData, setRowData] = useState<ExamBase>([])
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLDivElement>(null)
     useEffect(()=>{
         for(let i = 0; i<props.length; i++){
             $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
@@ -30,16 +32,17 @@ const ExamView = () => {
                 for(let j = 0; j<res.data.length;j++){
                     props[i].questionInfo = res.data[j].questionInfo
                 }
-                // props[i].questionInfo = cont
             })
         }
-        setRowData(props)
+        setTimeout(()=>{
+            setRowData(props)
+            setAble('시험지')
+        },500)
     },[])
     const [examTitle, setExamTitle] = useState('')
     const [header, setHeader] = useState('')
     const [leftBottom, setLeftBottom] = useState('')
     const [rightBottom, setRightBottom] = useState('')
-    const [able, setAble] = useState("시험지");
     
     //시험지종류 체크
     const handleClick = (type: string) => {
@@ -157,7 +160,9 @@ const ExamView = () => {
                             </Box>
                             <Paper className='div_container' elevation={4} style={{backgroundColor:'#a4a4a4'}} id='div_container'>
                                     {
-                                        able == '시험지'?
+                                        able == ''?
+                                            <></>
+                                            :able == '시험지'?
                                             <NormalBook
                                                 pdfRef={ref}
                                                 rowData={rowData}
@@ -246,11 +251,10 @@ const ExamView = () => {
                             </List>
                         </div>
                             <ReactToPrint
-                                trigger={() => <Button color="warning" variant="contained" size="large" className="examView_btn" sx={{ height: "40px", borderRadius: "20px", fontSize: "15px", width:'300px',position:'fixed', right:'300px',bottom:'100px' }}>다운로드</Button>}
+                                trigger={() => <Button color="warning" variant="contained" size="large" className="examView_btn">다운로드</Button>}
                                 content={() => ref.current}
                                 documentTitle={header}
                             />
-                        {/*<Button*/}
                         {/*    color="warning"*/}
                         {/*    size="large"*/}
                         {/*    variant="contained"*/}

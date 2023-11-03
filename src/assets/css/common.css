@@ -30,6 +30,18 @@
 	font-weight: bold;
 	src: url('../fonts/esamanru OTF Bold.otf') format('opentype');
 }
+@font-face {
+	font-family: 'hancom';
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/HANBatang.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'hancom';
+	font-style: normal;
+	font-weight: bold;
+	src: url('../fonts/HANBatangB.ttf') format('truetype');
+}
 * {
 	margin: 0;
 	padding: 0;
