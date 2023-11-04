@@ -1,7 +1,6 @@
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import Layout from "@components/layouts/layout";
-import { viewWithPdf} from "@utils/makePdf";
 import '@css/pdf.scss'
 import {
     Box, Button, Divider, FormControl, Grid, IconButton, List, ListItem, Paper, TextField,
@@ -9,14 +8,13 @@ import {
 import {EXAMTYPE} from "@common/const";
 import MenuIcon from '@mui/icons-material/Menu';
 import CustomButton from "@components/ui/button/custeomButton";
-import {MutableRefObject, useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import NormalBook from "@pages/menu/question/examCreate/normalBook";
 import BigBook from "@pages/menu/question/examCreate/bigBook";
 import {useLocation} from "react-router-dom";
 import {$GET} from "@utils/request";
 import ReactToPrint from "react-to-print";
-import axios from "axios";
 
 const ExamView = () => {
     const props = useLocation().state;
@@ -37,7 +35,7 @@ const ExamView = () => {
         setTimeout(()=>{
             setRowData(props)
             setAble('시험지')
-        },500)
+        },1000)
     },[])
     const [examTitle, setExamTitle] = useState('')
     const [header, setHeader] = useState('')
@@ -66,6 +64,13 @@ const ExamView = () => {
         setRowData(items)
         console.log(items)
     };
+
+    //프린트 After 이벤트
+    const onAfterPrint = () =>{
+        
+    }
+
+
     return (
         <Layout>
             <div className="mainCont">
@@ -93,7 +98,7 @@ const ExamView = () => {
                     ))}
                 </Box>
                 <div className="grid-flex">
-                    <div className="css-with80">
+                    <div className="css-with80" style={{width:'75%'}}>
                         <Box sx={{ width: "100%" }}>
                             <Box sx={{ width: "100%", paddingBottom: "40px" }}>
                                 <Box>
@@ -253,7 +258,9 @@ const ExamView = () => {
                             <ReactToPrint
                                 trigger={() => <Button color="warning" variant="contained" size="large" className="examView_btn">다운로드</Button>}
                                 content={() => ref.current}
-                                documentTitle={header}
+                                documentTitle={examTitle}
+                                // onBeforeGetContent={()=>console.log('프린트대기중')}
+                                onAfterPrint={onAfterPrint}
                             />
                         {/*    color="warning"*/}
                         {/*    size="large"*/}

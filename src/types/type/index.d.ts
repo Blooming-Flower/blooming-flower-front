@@ -54,7 +54,7 @@ type questionInfo = {
 	questionTitle:string
 }
 type question = {
-	answer:[],
+	answer:{content:string}[],
 	choose:chooseList[],
 	pastYn:boolean,
 	questionId:number,

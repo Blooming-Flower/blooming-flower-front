@@ -228,3 +228,25 @@
 .bigBook_bottom{
   padding: 0 20px;
 }
+
+.questionType{
+  //padding:3px 5px;
+  background-color: #437fc1;
+  color: white;
+  width: 70px;
+  //height: 30px;
+  text-align: center;
+}
+.big_answer_head{
+  font-family: 'esamanru', sans-serif !important;
+  font-size: 20px;
+  font-weight: lighter;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10mm;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid black;
+  box-shadow: 5px 5px 2px 2px #c7c7c7;
+}

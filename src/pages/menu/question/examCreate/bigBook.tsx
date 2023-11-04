@@ -14,6 +14,7 @@ let pagePerQuestion:{pageCount:number,questionIds:number[]}[] = []
 const BigBook = (props:ExamProps) => {
     let seq = seqTemp
     let complexLength = 0
+    let answerSeq = 1
     const [isDone, setIsDone] = useState(false)
     const [temp1, setTemp1] = useState(0)
     const [temp2, setTemp2] = useState(0)
@@ -198,51 +199,6 @@ const BigBook = (props:ExamProps) => {
                                     </Grid>
                                 </Grid>
                             }
-                            {/*<div className='bigCont'>*/}
-                            {/*    <div className='bigCont_sub'>*/}
-                            {/*        {props.rowData.map(({passageId,questionInfo,passageName,passageYear,passageUnit,passageNumber},index0)=>(*/}
-                            {/*            <div key={index0} id='subRef'>*/}
-                            {/*                {questionInfo.slice(temp1,temp2).map((q,index1)=>(*/}
-                            {/*                        <div className='bigCont_questionBox' key={index1}>*/}
-                            {/*                            {(()=>{*/}
-                            {/*                                const {questionTitle,question,questionContent} = q*/}
-
-                            {/*                                if(question.length == 1){*/}
-                            {/*                                    // if(isOverflow){*/}
-                            {/*                                    //     return null*/}
-                            {/*                                    // }*/}
-                            {/*                                    complexLength = 1*/}
-                            {/*                                    return(*/}
-                            {/*                                        <NormalType*/}
-                            {/*                                            question={question}*/}
-                            {/*                                            seq={seq++}*/}
-                            {/*                                            questionTitle={questionTitle}*/}
-                            {/*                                            questionContent={questionContent}*/}
-                            {/*                                            from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
-                            {/*                                        />*/}
-                            {/*                                    )*/}
-                            {/*                                }else{*/}
-                            {/*                                    // if(isOverflow){*/}
-                            {/*                                    //     return null*/}
-                            {/*                                    // }*/}
-                            {/*                                    complexLength = question.length*/}
-                            {/*                                    return (*/}
-                            {/*                                        <ComplexType*/}
-                            {/*                                            questionInfo={q}*/}
-                            {/*                                            seqLength={complexLength}*/}
-                            {/*                                            seq={seq=seq+complexLength}*/}
-                            {/*                                            from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
-                            {/*                                        />*/}
-                            {/*                                    )*/}
-                            {/*                                }*/}
-                            {/*                            })()}*/}
-                            {/*                        </div>*/}
-                            {/*                    )*/}
-                            {/*                )}*/}
-                            {/*            </div>*/}
-                            {/*        ))}*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
                             <div className='bigCont'>
                                 <div className='bigCont_sub'>
                                     <div id='subRef'>
@@ -293,90 +249,51 @@ const BigBook = (props:ExamProps) => {
                             </div>
                         </div>
                 }
+                <div className='div_paper big_first'>
+                        <Grid container className='bigHeader'>
+                            <Grid item xs={4}>
+                                <img src={bigHeader1} alt='bigHeader1'/>
+                            </Grid>
+                            <Grid item xs={4} className='bigHeader_text'>Answers</Grid>
+                            <Grid item xs={4}>
+                                <img src={bigHeader2} alt='bigHeader2'/>
+                            </Grid>
+                        </Grid>
+                    <div className='bigCont'>
+                        <div className='bigCont_sub'>
+                            {questionArr.map(({question},index)=>(
+                                <div key={index}>
+                                    {question.map(({answer},index1)=>(
+                                        <div key={index1}>
+                                            {(answerSeq++)+') '}
+                                            {answer.map(({content},index2)=>(
+                                                <span key={index2}>
+                                                    {content == '1'?'①':content=='2'?'②':content=='3'?'③':content=='4'?'④':content=='5'?'⑤':content}
+                                                    {answer.length == 1 || answer.length-1 == index2?
+                                                        '':
+                                                        ', '
+                                                    }
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className='bigBook_bottom'>
+                        {pageSeq+1 % 2  == 0?
+                            <div className='right-bottom'>
+                                {props.rightBottom}{pageSeq+1}
+                            </div>
+                            :
+                            <div className='left-bottom'>
+                                {pageSeq+1}{props.leftBottom}
+                            </div>
+                        }
+                    </div>
+                </div>
             </>
-            {/*{pageArr.map((index,array,value)=>(*/}
-            {/*    <div className='div_paper big_first' id='page1' key={index}>*/}
-            {/*        {pageSeq == 1 ?*/}
-            {/*            <Grid container className='bigHeader'>*/}
-            {/*                <Grid item xs={4}>*/}
-            {/*                    <img src={bigHeader1} alt='bigHeader1'/>*/}
-            {/*                </Grid>*/}
-            {/*                <Grid item xs={4} className='bigHeader_text'>{props.header}</Grid>*/}
-            {/*                <Grid item xs={4}>*/}
-            {/*                    <img src={bigHeader2} alt='bigHeader2'/>*/}
-            {/*                </Grid>*/}
-            {/*            </Grid>*/}
-            {/*            :*/}
-            {/*            <></>*/}
-            {/*        }*/}
-            {/*        <div className='bigCont'>*/}
-            {/*            <div className='bigCont_sub'>*/}
-            {/*                {props.rowData.map(({passageId,questionInfo,passageName,passageYear,passageUnit,passageNumber},index0)=>(*/}
-            {/*                    <div key={index0}>*/}
-                                    {/*{questionInfo.map(({questionTitle,question,questionContent},index1)=>(*/}
-                                    {/*    <div key={index1} className='bigCont_questionBox'>*/}
-                                    {/*        {questionInfo[index1].question.length == 1?  //복합유형이 아닐경우*/}
-                                    {/*            <NormalType*/}
-                                    {/*                question={question}*/}
-                                    {/*                seq={seq++}*/}
-                                    {/*                questionTitle={questionTitle}*/}
-                                    {/*                questionContent={questionContent}*/}
-                                    {/*                from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
-                                    {/*            />*/}
-                                    {/*            : //복합유형일 경우*/}
-                                    {/*            <ComplexType*/}
-                                    {/*                questionInfo={questionInfo[index1]}*/}
-                                    {/*                seqLength={questionInfo[index1].question.length}*/}
-                                    {/*                seq={seq=seq+questionInfo[index1].question.length}*/}
-                                    {/*                from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
-                                    {/*            />*/}
-                                    {/*        }*/}
-                                    {/*    </div>*/}
-                                    {/*))}*/}
-                                    {/*{questionInfo.map(({questionTitle,question,questionContent},index1)=>{*/}
-                                    {/*    console.log(document.getElementById('page1'))*/}
-                                    {/*    if (document.getElementById('page1')!.clientWidth < document.getElementById('page1')!.scrollWidth){*/}
-                                    {/*        return(*/}
-                                    {/*            <></>*/}
-                                    {/*        )*/}
-                                    {/*    }else {*/}
-                                    {/*        return (*/}
-                                    {/*            <div key={index1} className='bigCont_questionBox'>*/}
-                                    {/*                {questionInfo[index1].question.length == 1?  //복합유형이 아닐경우*/}
-                                    {/*                    <NormalType*/}
-                                    {/*                        question={question}*/}
-                                    {/*                        seq={seq++}*/}
-                                    {/*                        questionTitle={questionTitle}*/}
-                                    {/*                        questionContent={questionContent}*/}
-                                    {/*                        from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
-                                    {/*                    />*/}
-                                    {/*                    : //복합유형일 경우*/}
-                                    {/*                    <ComplexType*/}
-                                    {/*                        questionInfo={questionInfo[index1]}*/}
-                                    {/*                        seqLength={questionInfo[index1].question.length}*/}
-                                    {/*                        seq={seq=seq+questionInfo[index1].question.length}*/}
-                                    {/*                        from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}*/}
-                                    {/*                    />*/}
-                                    {/*                }*/}
-                                    {/*            </div>*/}
-                                    {/*        )*/}
-                                    {/*    }*/}
-                                    {/*})}*/}
-            {/*                    </div>*/}
-            {/*                ))}*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*        {pageSeq % 2  == 0?*/}
-            {/*            <div className='right-bottom'>*/}
-            {/*                {props.rightBottom}{pageSeq++}*/}
-            {/*            </div>*/}
-            {/*            :*/}
-            {/*            <div className='left-bottom'>*/}
-            {/*                {pageSeq++}{props.leftBottom}*/}
-            {/*            </div>*/}
-            {/*        }*/}
-            {/*    </div>*/}
-            {/*))}*/}
         </div>
     )
 }

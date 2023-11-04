@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
+import {QUESTIONTYPE} from "@common/const";
+import question from "@pages/menu/question/questionCreate/question";
 //기본타입
 type questionType = {
     pastYn:boolean,         //기출여부
     choose:chooseList[],    //문제선지
-    answer?:[],
+    answer?:{content:string}[],
     subBox:string,          //서브박스
     seq:number,             //문제번호
     questionTitle:string,   //문제발문
@@ -63,6 +65,19 @@ export const QuestionType1 = (props:questionType) => {
 
 // 화살표 유형 4
 export const QuestionType2 = (props:questionType) => {
+    const [chooseCont, setChooseCont] = useState<chooseList[]>([]);
+    //seq배열 재정리
+    useEffect(()=>{
+        let chooseCont:any = []
+        for (let i = 0; i < props.choose.length; i++){
+            chooseCont[i] = props.choose.find((chooseList)=>{
+                if(chooseList.seq === i+1){
+                    return true
+                }
+            })
+        }
+        setChooseCont(chooseCont)
+    },[])
     return(
         <>
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
@@ -82,7 +97,14 @@ export const QuestionType2 = (props:questionType) => {
             <div className={props.type == 'bigBook'?'bigCont_questionContent':'bigCont_questionContent_normal'} dangerouslySetInnerHTML={{__html:props.questionContent!}}>
             </div>
             <div className={props.type == 'bigBook'?'choose':'choose_normal'}>
-
+                {chooseCont.map(({seq,content},index)=>(
+                    <div style={{ display: "flex", gap: 5 }} key={index}>
+                        <div style={{ flex: 1 }}>{seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}</div>
+                        <div style={{ flex: 5, textAlign: "center" }}>{content.split('|')[0]}</div>
+                        <div style={{ flex: 1 }}>→</div>
+                        <div style={{ flex: 5, textAlign: "center" }}>{content.split('|')[1]}</div>
+                    </div>
+                ))}
             </div>
         </>
     )
@@ -318,11 +340,11 @@ export const QuestionType7 = (props:questionType) => {
                 </div>
                 <div style={{ flex: 8 }}>
                     {props.answer!.map(({},index)=>(
-                        <>
+                        <div key={index}>
                             <div className={props.type == 'bigBook'?'':'choose_text'} style={{display:'flex',float:'left'}}>{index==0?'(A)':index==1?'(B)':index==2?'(C)':index==3?'(D)':'(E)'}</div>
                             <div className={props.type == 'bigBook'?'':'choose_text'} style={{ display:'flex', height: 23, borderBottom: "0.5px solid black" }}
                             ></div>
-                        </>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -334,6 +356,18 @@ export const QuestionType7 = (props:questionType) => {
 export const NormalType = (props:normalType) => {
     return(
         <>
+            {props.type != 'bigBook'?
+                <div className='questionType'>{
+                    props.question[0].questionType == 'Q20'||
+                    props.question[0].questionType == 'Q21'||
+                    props.question[0].questionType == 'Q22'?
+                        '서술(해석)':
+                        props.question[0].questionType == 'Q23'?
+                            '서술(단어)':
+                    QUESTIONTYPE[props.question[0].questionType]
+                }</div>:
+                <></>
+            }
             {/* 기본유형 1, 2, 3, 5, 6, 7, 9, 10, 15,  */}
             {(props.question[0].questionType == 'Q1'||
                 props.question[0].questionType == 'Q2'||
@@ -444,6 +478,10 @@ export const NormalType = (props:normalType) => {
 export const ComplexType = (props:complexType) => {
     return(
         <>
+            {props.type != 'bigBook'?
+                <div className='questionType'>종합문제</div>:
+                <></>
+            }
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
                 {props.seq-props.seqLength+'-'+(props.seq-1)+'. '}
                 {props.questionInfo.questionTitle}
