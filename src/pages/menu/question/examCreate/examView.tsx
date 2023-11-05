@@ -3,7 +3,8 @@ import * as React from "react";
 import Layout from "@components/layouts/layout";
 import '@css/pdf.scss'
 import {
-    Box, Button, Divider, FormControl, Grid, IconButton, List, ListItem, Paper, TextField,
+    Backdrop,
+    Box, Button, CircularProgress, Divider, FormControl, Grid, IconButton, List, ListItem, Paper, TextField,
 } from "@mui/material";
 import {EXAMTYPE} from "@common/const";
 import MenuIcon from '@mui/icons-material/Menu';
@@ -15,33 +16,41 @@ import BigBook from "@pages/menu/question/examCreate/bigBook";
 import {useLocation} from "react-router-dom";
 import {$GET, $POST} from "@utils/request";
 import ReactToPrint from "react-to-print";
+import {render} from "react-dom";
 
 const ExamView = () => {
     const props = useLocation().state;
     const [able, setAble] = useState('');
     const [rowData, setRowData] = useState<ExamBase>([])
     const ref = useRef<HTMLDivElement>(null)
+    const [open, setOpen] = React.useState(false);
     useEffect(()=>{
-        for(let i = 0; i<props.length; i++){
-            $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
-                console.log(props[i].questionIds.toString())
-                console.log(res)
-                // let cont = []
-                for(let j = 0; j<res.data.length;j++){
-                    props[i].questionInfo = res.data[j].questionInfo
-                }
-            })
+        setOpen(true)
+        const call = async ()=>{
+            for(let i = 0; i<props.length; i++){
+                await $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
+                    console.log(props[i].questionIds.toString())
+                    console.log(res)
+                    // let cont = []
+                    for(let j = 0; j<res.data.length;j++){
+                        props[i].questionInfo = res.data[j].questionInfo
+                    }
+                })
+            }
         }
+        call()
+        console.log(rowData)
         setTimeout(()=>{
             setRowData(props)
             setAble('시험지')
-        },1000)
+            setOpen(false)
+        },2000)
     },[])
     const [examTitle, setExamTitle] = useState('')
     const [header, setHeader] = useState('')
     const [leftBottom, setLeftBottom] = useState('')
     const [rightBottom, setRightBottom] = useState('')
-    
+
     //시험지종류 체크
     const handleClick = (type: string) => {
         switch (type) {
@@ -84,7 +93,7 @@ const ExamView = () => {
                 leftFooter:leftBottom,
                 rightFooter:rightBottom,
                 examFormat:able=='시험지'?'NORMAL':'BIGBOOK',
-                questionParam:param
+                questionParams:param
             },
             (res:any)=>{
                 console.log(res)
@@ -298,6 +307,13 @@ const ExamView = () => {
                     </div>
                 </div>
             </div>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={open}
+                // onClick={handleClose}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </Layout>
     )
 }
