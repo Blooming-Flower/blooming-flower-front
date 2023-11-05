@@ -13,7 +13,7 @@ import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import NormalBook from "@pages/menu/question/examCreate/normalBook";
 import BigBook from "@pages/menu/question/examCreate/bigBook";
 import {useLocation} from "react-router-dom";
-import {$GET} from "@utils/request";
+import {$GET, $POST} from "@utils/request";
 import ReactToPrint from "react-to-print";
 
 const ExamView = () => {
@@ -67,9 +67,26 @@ const ExamView = () => {
 
     //프린트 After 이벤트
     const onAfterPrint = () =>{
-        
+        console.log('저장후 이벤트')
+        $POST(
+            '/api/v1/exam/make',
+            {
+                title:examTitle,
+                subTitle:header,
+                leftFooter:leftBottom,
+                rightFooter:rightBottom,
+                examFormat:'BASIC',
+                questionParam:[]
+            },
+            (res:any)=>{
+
+            }
+            )
     }
 
+    const downloadTrigger = () => {
+        return <Button color="warning" variant="contained" size="large" className="examView_btn">다운로드</Button>
+    }
 
     return (
         <Layout>
@@ -256,7 +273,7 @@ const ExamView = () => {
                             </List>
                         </div>
                             <ReactToPrint
-                                trigger={() => <Button color="warning" variant="contained" size="large" className="examView_btn">다운로드</Button>}
+                                trigger={downloadTrigger}
                                 content={() => ref.current}
                                 documentTitle={examTitle}
                                 // onBeforeGetContent={()=>console.log('프린트대기중')}
