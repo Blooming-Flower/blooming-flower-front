@@ -67,6 +67,14 @@ const ExamView = () => {
 
     //프린트 After 이벤트
     const onAfterPrint = () =>{
+        let param:{questionId:number,groupSeq:number,groupName:string}[] = []
+        for (let i = 0; i < rowData.length; i++) {
+            console.log(rowData[i])
+            for (let j = 0; j < rowData[i].questionIds.length; j++) {
+                param.push({questionId:rowData[i].questionIds[j],groupSeq:i,groupName:rowData[i].passageName})
+            }
+        }
+        console.log(param)
         console.log('저장후 이벤트')
         $POST(
             '/api/v1/exam/make',
@@ -75,11 +83,11 @@ const ExamView = () => {
                 subTitle:header,
                 leftFooter:leftBottom,
                 rightFooter:rightBottom,
-                examFormat:'BASIC',
-                questionParam:[]
+                examFormat:able=='시험지'?'NORMAL':'BIGBOOK',
+                questionParam:param
             },
             (res:any)=>{
-
+                console.log(res)
             }
             )
     }
