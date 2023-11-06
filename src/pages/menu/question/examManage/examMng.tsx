@@ -171,7 +171,7 @@ const ExamMng = () => {
           className="menu-title"
           sx={{ color: "#ff8b2c", paddingBottom: "20px" }}
         >
-          시험지관리
+          시험지 관리
         </Typography>
         <div style={{ textAlign: "right", marginBottom: 20 }}>
           <TextField

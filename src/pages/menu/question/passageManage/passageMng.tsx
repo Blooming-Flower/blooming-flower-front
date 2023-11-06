@@ -209,7 +209,7 @@ const PassageMng = () => {
           className="menu-title"
           sx={{ color: "#ff8b2c", paddingBottom: "20px" }}
         >
-          지문관리
+          지문 관리
         </Typography>
         <Box sx={{ width: "100%" }}>
           <Box sx={{ width: "100%", paddingBottom: "20px" }}>
