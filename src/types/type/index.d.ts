@@ -60,7 +60,11 @@ type question = {
 	questionId:number,
 	questionSubTitle:string,
 	questionType:string,
-	subBox:string
+	subBox:string,
+	passageNumber?:string,
+	passageType?:string,
+	passageUnit?:string,
+	passageYear?:string
 }
 type chooseList = {
 	seq:number,
@@ -85,6 +89,7 @@ type ExamProps = {
 	header:string,
 	leftBottom:string,
 	rightBottom:string,
-	pdfRef:any
+	pdfRef:any,
+	page:string
 }
 type setPopupProps = Dispatch<SetStateAction<{ display: number; callPassage: boolean; check: boolean; open: boolean; type: string; subType: string; pastYn: boolean; subPastYn: boolean; title: string; subTitle: string; content: string; subContent: string; }>>

@@ -103,7 +103,7 @@ const ExamMng = () => {
     })
     alert.confirm({
       type: ALERT.CONFIRM,
-      text: title+"을 \n다운로드 하시겠습니까?\n\n",
+      text: title+" 을(를) \n다운로드 하시겠습니까?\n\n",
       confirmText: "확인",
       confirmCall: async () => {
         setOpen(true)
@@ -266,6 +266,7 @@ const ExamMng = () => {
                       header={header}
                       leftBottom={leftBottom}
                       rightBottom={rightBottom}
+                      page={'manage'}
                   />
                   :
                   <BigBook
@@ -275,6 +276,7 @@ const ExamMng = () => {
                       header={header}
                       leftBottom={leftBottom}
                       rightBottom={rightBottom}
+                      page={'manage'}
                   />
         }
         <ReactToPrint
