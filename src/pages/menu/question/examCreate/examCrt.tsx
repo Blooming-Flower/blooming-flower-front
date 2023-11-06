@@ -733,7 +733,7 @@ const ExamCrt = (params: any) => {
           className="menu-title"
           sx={{ color: "#ff8b2c", paddingBottom: "20px" }}
         >
-          시험지제작
+          시험지 제작
         </Typography>
         <div className="grid-flex">
           <div className="css-with80">
