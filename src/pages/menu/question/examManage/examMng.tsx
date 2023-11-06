@@ -1,33 +1,41 @@
 import Layout from "@components/layouts/layout";
 import CustomButton from "@components/ui/button/custeomButton";
 import pdgImg from "@images/common/pdficon.png";
-import { FormControl, TextField, Pagination, Button } from "@mui/material";
+import {FormControl, TextField, Pagination, Button, Backdrop, CircularProgress} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import CustomNoRowsOverlay from "@components/ui/grid/customNoGrid";
-import customPagination from "@components/ui/grid/customPage";
 import {
   DataGrid,
-  GridCallbackDetails,
   GridCellEditStopParams,
   GridCellEditStopReasons,
   GridColDef,
-  GridRowParams,
   MuiBaseEvent,
   MuiEvent,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { log } from "console";
 import * as React from "react";
-import { useEffect, useRef, useReducer } from "react";
+import {useEffect, useRef, useReducer, useState} from "react";
 import { $GET, $DELETE, $PUT } from "@utils/request";
-// import pdfSvg from "/src/assets/svg/pdfSvg.svg";
+import {alert} from "@utils/alert";
+import {ALERT} from "@common/const";
+import ExamView from "@pages/menu/question/examCreate/examView";
+import NormalBook from "@pages/menu/question/examCreate/normalBook";
+import BigBook from "@pages/menu/question/examCreate/bigBook";
+import ReactToPrint from "react-to-print";
 
 const ExamMng = () => {
   const apiRef = useGridApiRef();
   const [searcText, setSearchText] = React.useState("");
   const [page, setPage] = React.useState(0);
+  const ref = useRef<HTMLDivElement>(null)
   const [count, setCount] = React.useState(0);
+  const [rowData, setRowData] = useState<ExamBase>([])
   const [data, setData] = React.useState([] as any);
+  const [able, setAble] = React.useState('')
+  const [examTitle, setExamTitle] = useState('')
+  const [header, setHeader] = useState('')
+  const [leftBottom, setLeftBottom] = useState('')
+  const [rightBottom, setRightBottom] = useState('')
+  const [open, setOpen] = React.useState(false);
   const [any, forceUpdate] = useReducer((num) => num + 1, 0); // 컴포넌트 강제 랜더링을 위한 state
 
   useEffect(() => {
@@ -81,8 +89,32 @@ const ExamMng = () => {
     });
   };
 
-  const downPdf = () => {
-    console.log("pdf 다운도르");
+  const downPdf = (examId:number,title:string) => {
+    console.log(`${examId} api로 조회 요청`);
+    let data:any
+    $GET(`/api/v1/exam/load/${examId}`,(res:any)=>{
+      data=res.data
+      setAble(res.data.examFormat=='NORMAL'?'시험지':'BIGBOOK')
+      setRowData(data.examQuestions)
+      setExamTitle(data.title)
+      setHeader(data.subTitle)
+      setLeftBottom(data.leftFooter)
+      setRightBottom(data.rightFooter)
+    })
+    alert.confirm({
+      type: ALERT.CONFIRM,
+      text: title+"을 \n다운로드 하시겠습니까?\n\n",
+      confirmText: "확인",
+      confirmCall: async () => {
+        setOpen(true)
+        await setAble(data.examFormat=='NORMAL'?'시험지':'BIGBOOK')
+        await setTimeout(()=>{
+          document.getElementById('print')!.click()
+          setOpen(false)
+        },2000)
+      },
+    });
+    setOpen(false)
   };
 
   // 시험지 title 변경
@@ -114,6 +146,11 @@ const ExamMng = () => {
     }
   };
 
+
+  const downloadTrigger = () => {
+    return <Button color="warning" variant="contained" size="large" className="examView_btn" id='print'>다운로드</Button>
+  }
+
   const columns: GridColDef[] = [
     {
       field: "title",
@@ -139,8 +176,8 @@ const ExamMng = () => {
       align: "center",
       headerAlign: "center",
       sortable: false,
-      renderCell: () => (
-        <img src={pdgImg} width={30} height={30} onClick={downPdf} />
+      renderCell: (params) => (
+        <img src={pdgImg} width={30} height={30} onClick={()=>downPdf(params.row.examId,params.row.title)}/>
       ),
     },
     {
@@ -217,6 +254,43 @@ const ExamMng = () => {
           />
         </div>
       </div>
+      <div style={{right:'-1000px',position:'fixed',top:'100px'}}>
+        {
+          able == ''?
+              <></>
+              :able == '시험지'?
+                  <NormalBook
+                      pdfRef={ref}
+                      rowData={rowData}
+                      examTitle={examTitle}
+                      header={header}
+                      leftBottom={leftBottom}
+                      rightBottom={rightBottom}
+                  />
+                  :
+                  <BigBook
+                      pdfRef={ref}
+                      rowData={rowData}
+                      examTitle={examTitle}
+                      header={header}
+                      leftBottom={leftBottom}
+                      rightBottom={rightBottom}
+                  />
+        }
+        <ReactToPrint
+            trigger={downloadTrigger}
+            content={() => ref.current}
+            documentTitle={examTitle}
+            // onBeforeGetContent={()=>console.log('프린트대기중')}
+        />
+      </div>
+      <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+          // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Layout>
   );
 };
