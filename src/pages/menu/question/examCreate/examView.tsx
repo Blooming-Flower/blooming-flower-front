@@ -16,7 +16,7 @@ import BigBook from "@pages/menu/question/examCreate/bigBook";
 import {useLocation} from "react-router-dom";
 import {$GET, $POST} from "@utils/request";
 import ReactToPrint from "react-to-print";
-import {render} from "react-dom";
+import axios from "axios";
 
 const ExamView = () => {
     const props = useLocation().state;
@@ -24,27 +24,20 @@ const ExamView = () => {
     const [rowData, setRowData] = useState<ExamBase>([])
     const ref = useRef<HTMLDivElement>(null)
     const [open, setOpen] = React.useState(false);
-    useEffect(()=>{
-        setOpen(true)
-        const call = async ()=>{
-            for(let i = 0; i<props.length; i++){
-                await $GET('/api/v1/exam/search/questions/'+props[i].questionIds.toString(),(res:any)=>{
-                    console.log(props[i].questionIds.toString())
-                    console.log(res)
-                    // let cont = []
-                    for(let j = 0; j<res.data.length;j++){
-                        props[i].questionInfo = res.data[j].questionInfo
-                    }
-                })
+    const call = async () => {
+        for(let i = 0; i<props.length; i++){
+            const res = await axios.get('http://43.201.142.170:29091/api/v1/exam/search/questions/'+props[i].questionIds.toString())
+            for(let j = 0; j<res.data.length;j++){
+                props[i].questionInfo = res.data[j].questionInfo
             }
         }
+        await setRowData(props)
+        setAble('시험지')
+    }
+    useEffect(()=>{
+        setOpen(true)
         call()
-        console.log(rowData)
-        setTimeout(()=>{
-            setRowData(props)
-            setAble('시험지')
-            setOpen(false)
-        },2000)
+        setOpen(false)
     },[])
     const [examTitle, setExamTitle] = useState('')
     const [header, setHeader] = useState('')

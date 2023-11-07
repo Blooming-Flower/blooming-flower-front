@@ -141,7 +141,7 @@ const BigBook = (props:ExamProps) => {
                                                                         questionTitle={questionArr[num].questionTitle}
                                                                         questionContent={questionArr[num].questionContent}
                                                                         from={props.page == 'manage'?
-                                                                            questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
+                                                                            questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageName+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
                                                                             :questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
                                                                     />
                                                                 )
@@ -159,7 +159,7 @@ const BigBook = (props:ExamProps) => {
                                                                         type={'bigBook'}
                                                                         seq={seq=seq+complexLength}
                                                                         from={props.page == 'manage'?
-                                                                            questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
+                                                                            questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageName+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
                                                                             :questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
                                                                     />
                                                                 )
@@ -219,7 +219,7 @@ const BigBook = (props:ExamProps) => {
                                                                     questionTitle={questionTitle}
                                                                     questionContent={questionContent}
                                                                     from={props.page == 'manage'?
-                                                                        question[0].passageYear+' '+question[0].passageUnit+' '+passageNumber
+                                                                        question[0].passageYear+' '+question[0].passageName+' '+question[0].passageUnit+' '+question[0].passageNumber
                                                                         :passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
                                                                 />
                                                             )
@@ -232,7 +232,7 @@ const BigBook = (props:ExamProps) => {
                                                                     type={'bigBook'}
                                                                     seq={seq=seq+complexLength}
                                                                     from={props.page == 'manage'?
-                                                                        question[0].passageYear+' '+question[0].passageUnit+' '+passageNumber
+                                                                        question[0].passageYear+' '+question[0].passageName+' '+question[0].passageUnit+' '+question[0].passageNumber
                                                                         :passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
                                                                 />
                                                             )
