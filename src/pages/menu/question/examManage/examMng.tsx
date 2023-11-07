@@ -21,6 +21,7 @@ import ExamView from "@pages/menu/question/examCreate/examView";
 import NormalBook from "@pages/menu/question/examCreate/normalBook";
 import BigBook from "@pages/menu/question/examCreate/bigBook";
 import ReactToPrint from "react-to-print";
+import axios from "axios";
 
 const ExamMng = () => {
   const apiRef = useGridApiRef();
@@ -89,26 +90,26 @@ const ExamMng = () => {
     });
   };
 
-  const downPdf = (examId:number,title:string) => {
+  const downPdf = async (examId:number,title:string) => {
     console.log(`${examId} api로 조회 요청`);
     let data:any
-    $GET(`/api/v1/exam/load/${examId}`,(res:any)=>{
-      data=res.data
-      setAble(res.data.examFormat=='NORMAL'?'시험지':'BIGBOOK')
-      setRowData(data.examQuestions)
-      setExamTitle(data.title)
-      setHeader(data.subTitle)
-      setLeftBottom(data.leftFooter)
-      setRightBottom(data.rightFooter)
-    })
+    const res = await axios.get(`http://43.201.142.170:29091/api/v1/exam/load/${examId}`)
+    data=res.data
+    await setAble(res.data.examFormat=='NORMAL'?'시험지':'BIGBOOK')
+    await setRowData(data.examQuestions)
+    await setExamTitle(data.title)
+    await setHeader(data.subTitle)
+    await setLeftBottom(data.leftFooter)
+    await setRightBottom(data.rightFooter)
+
     alert.confirm({
       type: ALERT.CONFIRM,
       text: title+" 을(를) \n다운로드 하시겠습니까?\n\n",
       confirmText: "확인",
       confirmCall: async () => {
         setOpen(true)
-        await setAble(data.examFormat=='NORMAL'?'시험지':'BIGBOOK')
-        await setTimeout(()=>{
+        // setAble(data.examFormat=='NORMAL'?'시험지':'BIGBOOK')
+        setTimeout(async ()=>{
           document.getElementById('print')!.click()
           setOpen(false)
         },2000)

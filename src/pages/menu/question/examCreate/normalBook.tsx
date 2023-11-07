@@ -46,7 +46,6 @@ const NormalBook = (props: ExamProps) => {
   },[props.rowData])
 
   useEffect(()=>{
-    debugger
     setTimeout(()=>{
       const element = pageRef.current
       console.log(element.scrollWidth > element.clientWidth)
@@ -171,7 +170,7 @@ const NormalBook = (props: ExamProps) => {
                                                   questionContent={questionArr[num].questionContent}
                                                   type={'normal'}
                                                   from={props.page == 'manage'?
-                                                      questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
+                                                      questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageName+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
                                                       :questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
                                               />
                                           )
@@ -189,7 +188,7 @@ const NormalBook = (props: ExamProps) => {
                                                   seq={seq=seq+complexLength}
                                                   type={'normal'}
                                                   from={props.page == 'manage'?
-                                                      questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
+                                                      questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageName+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
                                                       :questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
                                               />
                                           )

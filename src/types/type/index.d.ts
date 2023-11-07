@@ -64,7 +64,8 @@ type question = {
 	passageNumber?:string,
 	passageType?:string,
 	passageUnit?:string,
-	passageYear?:string
+	passageYear?:string,
+	passageName?:string
 }
 type chooseList = {
 	seq:number,
