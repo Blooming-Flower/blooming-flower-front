@@ -170,7 +170,9 @@ const NormalBook = (props: ExamProps) => {
                                                   questionTitle={questionArr[num].questionTitle}
                                                   questionContent={questionArr[num].questionContent}
                                                   type={'normal'}
-                                                  from={questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
+                                                  from={props.page == 'manage'?
+                                                      questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
+                                                      :questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
                                               />
                                           )
                                         }else{
@@ -186,7 +188,9 @@ const NormalBook = (props: ExamProps) => {
                                                   seqLength={complexLength}
                                                   seq={seq=seq+complexLength}
                                                   type={'normal'}
-                                                  from={questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
+                                                  from={props.page == 'manage'?
+                                                      questionArr[num].question[0].passageYear+' '+questionArr[num].question[0].passageUnit+' '+questionArr[num].question[0].passageNumber
+                                                      :questionArr[num].passageYear+' '+questionArr[num].passageName+' '+questionArr[num].passageUnit+' '+questionArr[num].passageNumber}
                                               />
                                           )
                                         }
@@ -315,7 +319,9 @@ const NormalBook = (props: ExamProps) => {
                                               seq={seq++}
                                               questionTitle={questionTitle}
                                               questionContent={questionContent}
-                                              from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
+                                              from={props.page == 'manage'?
+                                                  question[0].passageYear+' '+question[0].passageUnit+' '+passageNumber
+                                                  :passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
                                               type={'normal'}
                                           />
                                       )
@@ -326,7 +332,9 @@ const NormalBook = (props: ExamProps) => {
                                               questionInfo={{question,questionCode,questionTitle,questionContent}}
                                               seqLength={complexLength}
                                               seq={seq=seq+complexLength}
-                                              from={passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
+                                              from={props.page == 'manage'?
+                                                  question[0].passageYear+' '+question[0].passageUnit+' '+passageNumber
+                                                  :passageYear+' '+passageName+' '+passageUnit+' '+passageNumber}
                                               type={'normal'}
                                           />
                                       )

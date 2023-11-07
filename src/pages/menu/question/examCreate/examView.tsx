@@ -209,6 +209,7 @@ const ExamView = () => {
                                                 header={header}
                                                 leftBottom={leftBottom}
                                                 rightBottom={rightBottom}
+                                                page={''}
                                             />
                                             :
                                             <BigBook
@@ -218,6 +219,7 @@ const ExamView = () => {
                                                 header={header}
                                                 leftBottom={leftBottom}
                                                 rightBottom={rightBottom}
+                                                page={''}
                                             />
                                     }
                             </Paper>
