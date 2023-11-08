@@ -9,6 +9,8 @@ import { PATH } from "@common/domain";
 import { $POST } from "@utils/request";
 import { QUESTIONTYPE } from "@common/const";
 import { useNavigate } from "react-router-dom";
+import { ALERT } from "@common/const";
+import { alert } from "@utils/alert";
 
 const TempSaveQuestionList = (props: any) => {
   //문제유형 :  searchlecture
@@ -169,6 +171,10 @@ const TempSaveQuestionList = (props: any) => {
               });
 
               $POST("/api/v1/question/save", params, () => {
+                alert.icon({
+                  type: ALERT.SUCCESS,
+                  text: "지문이 저장 되었습니다."
+                })
                 navigate(PATH.QUESTION2);
               });
             }}
