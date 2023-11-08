@@ -103,7 +103,10 @@ const PassageCrt = () => {
           passageContent: content,
         },
         (res: any) => {
-          console.log("지문 insert");
+          alert.icon({
+            type: ALERT.SUCCESS,
+            text: "지문이 저장 되었습니다."
+          })
         }
       );
     } else {
@@ -119,7 +122,10 @@ const PassageCrt = () => {
           passageContent: content,
         },
         (res: any) => {
-          console.log("지문 update");
+          alert.icon({
+            type: ALERT.SUCCESS,
+            text: "지문이 수정 되었습니다."
+          })
         }
       );
     }
@@ -129,15 +135,15 @@ const PassageCrt = () => {
     if (num != "")
       $GET(
         "/api/v1/passage/check/exist/passage?passageType=" +
-          passageType +
-          "&passageYear=" +
-          year +
-          "&passageName=" +
-          name +
-          "&passageUnit=" +
-          unit +
-          "&passageNumber=" +
-          num,
+        passageType +
+        "&passageYear=" +
+        year +
+        "&passageName=" +
+        name +
+        "&passageUnit=" +
+        unit +
+        "&passageNumber=" +
+        num,
         (res: any) => {
           console.log(res);
           if (res.data.passageContent != "" && res.data != "") {
@@ -159,9 +165,9 @@ const PassageCrt = () => {
     if (e.target.value != "")
       $GET(
         "/api/v1/passage/search/name?passageType=" +
-          passageType +
-          "&passageName=" +
-          e.target.value,
+        passageType +
+        "&passageName=" +
+        e.target.value,
         (res: any) => {
           setDataName(res.data);
         }

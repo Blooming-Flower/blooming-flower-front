@@ -19,6 +19,8 @@ import { useNavigate } from "react-router-dom";
 import { PATH } from "@common/domain";
 import { $GET } from "@utils/request";
 import { log } from "console";
+import { position } from "html2canvas/dist/types/css/property-descriptors/position";
+import { relative } from "path";
 
 const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
@@ -120,7 +122,7 @@ const QuestionList = (props: any) => {
               border: "0.5px solid lightgray",
             }}
           >
-            {totalCnt ? <span>Total. {totalCnt}</span> : <></>}
+            {totalCnt ? <span style={{position: "relative", top: "7px"}}>Total. {totalCnt}</span> : <></>}
             <CustomButton
               domain={isExam ? PATH.QUESTION4 : PATH.QUESTION6}
               label={buttonName ?? "GO!"}
