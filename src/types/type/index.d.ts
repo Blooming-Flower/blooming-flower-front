@@ -81,7 +81,8 @@ type ExamBase = {
 	passageUnit:string,
 	passageYear:string,
 	questionIds:[],
-	questionInfo:questionInfo[]
+	questionInfo:questionInfo[],
+	questionCnt?:number
 }[]
 
 type ExamProps = {
