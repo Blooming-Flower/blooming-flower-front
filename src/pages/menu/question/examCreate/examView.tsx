@@ -29,6 +29,11 @@ const ExamView = () => {
             const res = await axios.get('http://43.201.142.170:29091/api/v1/exam/search/questions/'+props[i].questionIds.toString())
             for(let j = 0; j<res.data.length;j++){
                 props[i].questionInfo = res.data[j].questionInfo
+                props[i].questionCnt = 0
+                debugger
+                for (let k = 0; k < res.data[j].questionInfo.length; k++) {
+                    props[i].questionCnt += res.data[j].questionInfo[k].question.length
+                }
             }
         }
         await setRowData(props)
@@ -239,7 +244,7 @@ const ExamView = () => {
                                         {...provided.droppableProps}
                                         ref={provided.innerRef}
                                     >
-                                        {rowData.map(({ passageId, passageYear,passageName,passageUnit,passageNumber }, index) => (
+                                        {rowData.map(({ passageId, passageYear,passageName,passageUnit,passageNumber,questionCnt }, index) => (
                                             <Draggable key={passageId} draggableId={passageId.toString()} index={index}>
                                                 {(provided) => (
                                                     <>
@@ -256,7 +261,7 @@ const ExamView = () => {
                                                             </IconButton>
                                                         }
                                                     >
-                                                        <div>{passageYear}</div>
+                                                        {/*<div>{passageYear}</div>*/}
                                                         <div
                                                             className="passageName"
                                                             style={{
@@ -270,7 +275,7 @@ const ExamView = () => {
                                                             {passageName}
                                                         </div>
                                                         <div>{passageUnit}</div>
-                                                        <div>{passageNumber}</div>
+                                                        <div>{questionCnt}</div>
                                                     </ListItem>
                                                     <Divider />
                                                     </>

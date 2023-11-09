@@ -164,6 +164,9 @@
     right: 50px;
     bottom:150px;
     width: 20%;
+    .MuiListItemSecondaryAction-root{
+      display: contents !important;
+    }
   }
   .examView_btn{
     height: 40px;
