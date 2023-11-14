@@ -208,13 +208,10 @@ footer {
 	}
 
 	.pc {
-		display: inline-flex;
+		display: flex;
 	}
 
 	.backupBtn {
-		position: relative;
-		left: 776px;
-		top: 4px;
 		background-color: gray;
 	}
 
@@ -227,6 +224,15 @@ footer {
 	.css-u2vvhx-MuiButtonBase-root-MuiButton-root-MuiLoadingButton-root:hover {
 		background-color: darkgray;
 		box-shadow: none;
+	}
+
+	.width_20{
+		width: 20%;
+	}
+
+
+	.width_60{
+		width: 60%;
 	}
 
 }
