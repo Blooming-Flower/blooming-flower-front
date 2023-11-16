@@ -73,10 +73,14 @@ const SubFooter = (props: { size: string }) => {
 
   return (
     <div className={props.size} >
+       <div className="width_20"></div>
+      <div className="width_60">
       <ul>
         <li>상호:YRF lab 주소:세종특별시 다정중앙로 45(다정프라자), 4층 대표자: 권나윤 사업자등록번호: 136-03-78185 대표전화: <span style={{ color: '#ff6c0f' }}>044) 862-6262</span></li>
         <li>Copyright <span style={{ color: '#ff6c0f' }}>YRF lab</span>. All Right Reserved.</li>
       </ul>
+      </div>
+      <div className="width_20">
       <Box sx={{ '& > button': { m: 1 } }}>
         <LoadingButton className="backupBtn"
           color="secondary"
@@ -89,6 +93,8 @@ const SubFooter = (props: { size: string }) => {
           <span>Save</span>
         </LoadingButton>
       </Box>
+      </div>
+     
     </div>
   );
 };
