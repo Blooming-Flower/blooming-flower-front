@@ -742,11 +742,11 @@ const ExamCrt = (params: any) => {
                 <Box>
                   <Grid container spacing={0} className="table-container">
                     <Grid xs={1.5} item={true}>
-                      <div className="table-title table-top">교재유형</div>
+                      <div className="table-title table-top ">교재유형</div>
                     </Grid>
                     <Grid xs={2.5} item={true}>
                       <div className="table-content table-top">
-                        <FormControl className="table-input-select">
+                        <FormControl className="table-select table-select-sub">
                           <InputLabel id="demo-simple-select-label">
                             지문유형
                           </InputLabel>
@@ -769,7 +769,7 @@ const ExamCrt = (params: any) => {
                     </Grid>
                     <Grid xs={2} item={true}>
                       <div className="table-content table-top">
-                        <FormControl className="table-input-select">
+                        <FormControl className="table-select table-select-sub">
                           <InputLabel id="demo-simple-select-label">
                             연도
                           </InputLabel>
@@ -792,7 +792,7 @@ const ExamCrt = (params: any) => {
                     </Grid>
                     <Grid xs={4} item={true}>
                       <div className="table-content table-top">
-                        <FormControl className="table-input-select">
+                        <FormControl className="table-select table-select-sub">
                           <InputLabel id="demo-simple-select-label">
                             교재명
                           </InputLabel>

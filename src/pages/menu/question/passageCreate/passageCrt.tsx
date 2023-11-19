@@ -207,7 +207,7 @@ const PassageCrt = () => {
             </Grid>
             <Grid xs={4} item={true}>
               <div className="table-content table-top">
-                <FormControl className="table-select">
+                <FormControl className="table-select table-select-sub">
                   <InputLabel id="demo-simple-select-label">연도</InputLabel>
                   <Select
                     value={year}
@@ -230,7 +230,7 @@ const PassageCrt = () => {
             </Grid>
             <Grid xs={4} item={true}>
               <div className="table-content table-top">
-                <FormControl className="table-input-select">
+                <FormControl className="table-input-select table-select-sub">
                   <ThemeProvider theme={customTheme(outerTheme)}>
                     <Autocomplete
                       onChange={(e, v: any) => setName(v)}
@@ -269,7 +269,7 @@ const PassageCrt = () => {
             </Grid>
             <Grid xs={4} item={true}>
               <div className="table-content">
-                <FormControl className="table-select">
+                <FormControl className="table-select table-select-sub">
                   <InputLabel id="demo-simple-select-label">강</InputLabel>
                   <Select
                     defaultValue={""}
@@ -292,7 +292,7 @@ const PassageCrt = () => {
             </Grid>
             <Grid xs={4} item={true}>
               <div className="table-content">
-                <FormControl className="table-select">
+                <FormControl className="table-select table-select-sub">
                   <InputLabel id="demo-simple-select-label">번호</InputLabel>
                   <Select
                     defaultValue={""}

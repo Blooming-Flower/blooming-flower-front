@@ -53,6 +53,7 @@
 	div{
 		text-align: center;
 	}
+
 }
 del{
 	text-decoration: underline !important;
@@ -129,14 +130,22 @@ del{
 	margin: 10px auto !important;
 	.MuiInputBase-input{
 		padding-bottom: 10px !important;
-		padding-top: 10px !important
+		padding-top: 10px !important;
+	}
+}
+.table-select-sub{
+	.MuiFormLabel-root{
+		top:-7px !important;
 	}
 }
 .table-input-select{
-	width: 95%;;
+	width: 95%;
 	display: flex !important;
 	margin-top:5px !important;
 	margin-left: 10px !important;
+	.MuiOutlinedInput-notchedOutline{
+		height: 50px !important;
+	}
 }
 
 .MuiPaper-root.MuiDialog-paper{

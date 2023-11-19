@@ -126,7 +126,15 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
         name: "custom13",
         tooltip: "alt+e",
         el: createCustomButton("ⓔ"),
-      },
+      },      {
+      name: "custom14",
+      tooltip: "alt+f",
+      el: createCustomButton("ⓕ"),
+    },      {
+      name: "custom15",
+      tooltip: "alt+g",
+      el: createCustomButton("ⓖ"),
+    }
     ],
   ];
   return (
@@ -143,7 +151,7 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
             initialEditType="wysiwyg" // 초기 입력모드 설정(디폴트 markdown)
             toolbarItems={toolbarItems}
             hideModeSwitch={true}
-            useCommandShortcut={true}
+            useCommandShortcut={false}
             customHTMLRenderer={{
               htmlBlock: {
                 div(node: any) {
@@ -173,56 +181,80 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
               },
             }}
             onKeydown={(editorType, ev) => {
-              // ev.preventDefault()
               if (ev.code == "KeyB" && ev.ctrlKey) {
+                ev.preventDefault();
                 console.log("Bold호출");
               } else if (ev.code == "KeyM" && ev.ctrlKey) {
+                ev.preventDefault();
                 console.log("밑줄호출");
                 editorRef.current.getInstance().exec("strike");
               } else if (ev.code == "Space" && ev.ctrlKey) {
+                ev.preventDefault();
                 editorRef.current.getInstance().insertText("    ");
               } else if (ev.key == "1" && ev.altKey) {
+                ev.preventDefault();
                 console.log("1번 호출");
                 editorRef.current.getInstance().insertText("①");
               } else if (ev.key == "2" && ev.altKey) {
+                ev.preventDefault();
                 console.log("2번호출");
                 editorRef.current.getInstance().insertText("②");
               } else if (ev.key == "3" && ev.altKey) {
+                ev.preventDefault();
                 console.log("3번호출");
                 editorRef.current.getInstance().insertText("③");
               } else if (ev.key == "4" && ev.altKey) {
+                ev.preventDefault();
                 console.log("4번호출");
                 editorRef.current.getInstance().insertText("④");
               } else if (ev.key == "5" && ev.altKey) {
+                ev.preventDefault();
                 console.log("5번호출");
                 editorRef.current.getInstance().insertText("⑤");
               } else if (ev.code == "KeyA" && ev.altKey && ev.shiftKey) {
+                ev.preventDefault();
                 console.log("(A)");
                 editorRef.current.getInstance().insertText("(A)");
               } else if (ev.code == "KeyB" && ev.altKey && ev.shiftKey) {
+                ev.preventDefault();
                 console.log("(B)");
                 editorRef.current.getInstance().insertText("(B)");
               } else if (ev.code == "KeyC" && ev.altKey && ev.shiftKey) {
+                ev.preventDefault();
                 console.log("(C)");
                 editorRef.current.getInstance().insertText("(C)");
               } else if (ev.code == "KeyA" && ev.altKey) {
+                ev.preventDefault();
                 console.log("a호출");
                 editorRef.current.getInstance().insertText("ⓐ");
               } else if (ev.code == "KeyB" && ev.altKey) {
+                ev.preventDefault();
                 console.log("b호출");
                 editorRef.current.getInstance().insertText("ⓑ");
               } else if (ev.code == "KeyC" && ev.altKey) {
+                ev.preventDefault();
                 console.log("c호출");
                 editorRef.current.getInstance().insertText("ⓒ");
               } else if (ev.code == "KeyD" && ev.altKey) {
+                ev.preventDefault();
                 console.log("d호출");
                 editorRef.current.getInstance().insertText("ⓓ");
               } else if (ev.code == "KeyE" && ev.altKey) {
+                ev.preventDefault();
                 console.log("e호출");
                 editorRef.current.getInstance().insertText("ⓔ");
+              } else if (ev.code == "KeyF" && ev.altKey) {
+                ev.preventDefault();
+                console.log("f호출");
+                editorRef.current.getInstance().insertText("ⓕ");
+              } else if (ev.code == "KeyG" && ev.altKey) {
+                ev.preventDefault();
+                console.log("g호출");
+                editorRef.current.getInstance().insertText("ⓖ");
               } else if (ev.code == "Tab") {
                 editorRef.current.getInstance().insertText(`\t`);
                 ev.preventDefault();
+                console.log(ev)
               }
             }}
           ></Editor>
