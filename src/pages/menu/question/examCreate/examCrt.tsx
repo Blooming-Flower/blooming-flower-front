@@ -880,7 +880,7 @@ const ExamCrt = (params: any) => {
                     : {
                         fontWeight: "500",
                         fontSize: "15px",
-                        height: "400px",
+                        height: "500px",
                         display: "block",
                       }
                 }

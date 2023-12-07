@@ -4,6 +4,7 @@ import {
   Box,
   Checkbox,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Pagination,
@@ -570,7 +571,7 @@ const QuestionCrt = (params: any) => {
       editable: false,
       headerAlign: "center",
       getActions: (params) => [
-        <>
+        <Grid container>
           {params.row.passageInfo
             .sort((q1: any, q2: any) =>
               q1.passageNumber > q2.passageNumber ? 1 : -1
@@ -594,11 +595,17 @@ const QuestionCrt = (params: any) => {
                 </div>
               );
             })}
-        </>,
+        </Grid>,
       ],
       align: "center",
     },
   ];
+
+  function getRowHeight() {
+    return rowData[0] != null ?
+      parseInt(rowData[0].passageInfo.length / 10 + "") * 40 + 40
+      : 0
+  }
 
   return (
     <Layout>
@@ -670,10 +677,15 @@ const QuestionCrt = (params: any) => {
                 columns={columns}
                 hideFooter={true}
                 hideFooterPagination={true}
+                // rowHeight={rowData[0] != null ? 
+                //   parseInt(rowData[0].passageInfo.length / 10 + "") * 40 + 40 
+                //   : 0}
+                rowHeight={getRowHeight()}
                 sx={
                   rowData.length > 0
-                    ? { fontWeight: "500", fontSize: "15px", height: "100%" }
-                    : { fontWeight: "500", fontSize: "15px", height: "400px" }
+                    ? { fontWeight: "500", fontSize: "15px", height: "100%"}
+                    : { fontWeight: "500", fontSize: "15px", height: "400px"}
+                   
                 }
               />
             </Box>
