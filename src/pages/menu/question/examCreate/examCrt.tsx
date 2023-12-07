@@ -754,6 +754,7 @@ const ExamCrt = (params: any) => {
                             value={searchPassage}
                             onChange={handlePassage}
                             labelId="demo-simple-select-label"
+                            label="지문유형"
                           >
                             {PASSAGETYPE.map((text, id) => (
                               <MenuItem key={id} value={text}>
@@ -765,18 +766,19 @@ const ExamCrt = (params: any) => {
                       </div>
                     </Grid>
                     <Grid xs={1} item={true}>
-                      <div className="table-title table-top">연도</div>
+                      <div className="table-title table-top">년도</div>
                     </Grid>
                     <Grid xs={2} item={true}>
                       <div className="table-content table-top">
                         <FormControl className="table-select table-select-sub">
                           <InputLabel id="demo-simple-select-label">
-                            연도
+                            년도
                           </InputLabel>
                           <Select
                             value={searchYear}
                             onChange={handleYear}
                             labelId="demo-simple-select-label"
+                            label="년도"
                           >
                             {YEAR.map((text, id) => (
                               <MenuItem key={id} value={text}>
@@ -800,6 +802,7 @@ const ExamCrt = (params: any) => {
                             value={passageName}
                             onChange={handlePassageName}
                             labelId="demo-simple-select-label"
+                            label="교재명"
                           >
                             {searchTextBook.map((text, id) => (
                               <MenuItem key={id} value={text}>
@@ -877,7 +880,7 @@ const ExamCrt = (params: any) => {
                     : {
                         fontWeight: "500",
                         fontSize: "15px",
-                        height: "400px",
+                        height: "500px",
                         display: "block",
                       }
                 }
