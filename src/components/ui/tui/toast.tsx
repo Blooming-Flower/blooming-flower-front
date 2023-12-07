@@ -1,5 +1,6 @@
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
+import { verify } from "crypto";
 import * as React from "react";
 import { useEffect } from "react";
 
@@ -126,15 +127,17 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
         name: "custom13",
         tooltip: "alt+e",
         el: createCustomButton("ⓔ"),
-      },      {
-      name: "custom14",
-      tooltip: "alt+f",
-      el: createCustomButton("ⓕ"),
-    },      {
-      name: "custom15",
-      tooltip: "alt+g",
-      el: createCustomButton("ⓖ"),
-    }
+      },
+      {
+        name: "custom14",
+        tooltip: "alt+f",
+        el: createCustomButton("ⓕ"),
+      },
+      {
+        name: "custom15",
+        tooltip: "alt+g",
+        el: createCustomButton("ⓖ"),
+      },
     ],
   ];
   return (
@@ -184,7 +187,12 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
               if (ev.code == "KeyB" && ev.ctrlKey) {
                 ev.preventDefault();
                 console.log("Bold호출");
+                editorRef.current.getInstance().exec("bold");
               } else if (ev.code == "KeyM" && ev.ctrlKey) {
+                ev.preventDefault();
+                console.log("밑줄호출");
+                editorRef.current.getInstance().exec("strike");
+              } else if (ev.code == "KeyU" && ev.ctrlKey) {
                 ev.preventDefault();
                 console.log("밑줄호출");
                 editorRef.current.getInstance().exec("strike");
@@ -252,9 +260,11 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
                 console.log("g호출");
                 editorRef.current.getInstance().insertText("ⓖ");
               } else if (ev.code == "Tab") {
-                editorRef.current.getInstance().insertText(`\t`);
                 ev.preventDefault();
-                console.log(ev)
+                ev.stopPropagation();
+                ev.stopImmediatePropagation();
+                editorRef.current.getInstance().insertText(`\t`);
+                console.log(ev.currentTarget);
               }
             }}
           ></Editor>

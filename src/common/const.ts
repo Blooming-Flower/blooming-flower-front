@@ -208,6 +208,7 @@ export const TXTNUM = {
     "22",
     "23",
     "24",
+    "25",
     "26",
     "27",
     "28",
@@ -309,6 +310,7 @@ export const TXTNUM = {
     "22",
     "23",
     "24",
+    "25",
     "26",
     "27",
     "28",
@@ -429,7 +431,7 @@ export const DEFAULT_QUESTION: any = {
 };
 
 export const ARROW_TYPES = ["Q4"];
-export const ABC_TYPES = ["Q12", "Q14", "Q16"];
+export const ABC_TYPES = ["Q12", "Q14"];
 export const AB_TYPES = ["Q18", "Q19"];
 export const WRITE_TYPES = ["Q20", "Q21", "Q22", "Q23", "Q24"];
 export const DEFAULTANSWERROWS = [

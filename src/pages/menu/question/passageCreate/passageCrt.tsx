@@ -105,8 +105,8 @@ const PassageCrt = () => {
         (res: any) => {
           alert.icon({
             type: ALERT.SUCCESS,
-            text: "지문이 저장 되었습니다."
-          })
+            text: "지문이 저장 되었습니다.",
+          });
         }
       );
     } else {
@@ -124,8 +124,8 @@ const PassageCrt = () => {
         (res: any) => {
           alert.icon({
             type: ALERT.SUCCESS,
-            text: "지문이 수정 되었습니다."
-          })
+            text: "지문이 수정 되었습니다.",
+          });
         }
       );
     }
@@ -135,15 +135,15 @@ const PassageCrt = () => {
     if (num != "")
       $GET(
         "/api/v1/passage/check/exist/passage?passageType=" +
-        passageType +
-        "&passageYear=" +
-        year +
-        "&passageName=" +
-        name +
-        "&passageUnit=" +
-        unit +
-        "&passageNumber=" +
-        num,
+          passageType +
+          "&passageYear=" +
+          year +
+          "&passageName=" +
+          name +
+          "&passageUnit=" +
+          unit +
+          "&passageNumber=" +
+          num,
         (res: any) => {
           console.log(res);
           if (res.data.passageContent != "" && res.data != "") {
@@ -165,9 +165,9 @@ const PassageCrt = () => {
     if (e.target.value != "")
       $GET(
         "/api/v1/passage/search/name?passageType=" +
-        passageType +
-        "&passageName=" +
-        e.target.value,
+          passageType +
+          "&passageName=" +
+          e.target.value,
         (res: any) => {
           setDataName(res.data);
         }
@@ -334,9 +334,18 @@ const PassageCrt = () => {
           minRows={10}
           maxRows={20}
           aria-label="maximum height"
+          style={{ resize: "none", height: 236 }}
           placeholder="지문"
           className="passage-text"
           onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Tab") {
+              e.preventDefault();
+              e.currentTarget.setRangeText("\t");
+              const point = e.currentTarget.selectionStart + 1;
+              e.currentTarget.setSelectionRange(point, point);
+            }
+          }}
         />
         <div onClick={save}>
           <CustomButton label={"저장"} type={"true"} />
