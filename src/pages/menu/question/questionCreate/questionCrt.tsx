@@ -201,7 +201,7 @@ const QuestionCrt = (params: any) => {
     }
   };
 
-  //연도 이벤트
+  // 년도 이벤트
   const handleYear = async (event: SelectChangeEvent) => {
     try {
       setSearchTextBook([]); // 교재명 리스트부터 초기화
@@ -621,6 +621,7 @@ const QuestionCrt = (params: any) => {
                   <Select
                     value={searchPassage}
                     onChange={handlePassage}
+                    label="지문유형"
                     labelId="demo-simple-select-label"
                   >
                     {PASSAGETYPE.map((text, id) => (
@@ -632,11 +633,12 @@ const QuestionCrt = (params: any) => {
                 </FormControl>
 
                 <FormControl sx={{ width: "180px", marginLeft: "20px" }}>
-                  <InputLabel id="demo-simple-select-label">연도</InputLabel>
+                  <InputLabel id="demo-simple-select-label">년도</InputLabel>
                   <Select
                     value={searchYear}
                     onChange={handleYear}
                     labelId="demo-simple-select-label"
+                    label="년도"
                   >
                     {YEAR.map((text, id) => (
                       <MenuItem key={id} value={text}>
@@ -652,6 +654,7 @@ const QuestionCrt = (params: any) => {
                     value={passageName}
                     onChange={handlePassageName}
                     labelId="demo-simple-select-label"
+                    label="교재명"
                   >
                     {searchTextBook.map((text, id) => (
                       <MenuItem key={id} value={text}>
