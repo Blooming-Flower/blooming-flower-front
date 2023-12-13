@@ -136,7 +136,7 @@ export const QuestionType3 = (props:questionType) => {
             }
             <div className={props.type == 'bigBook'?'bigCont_questionContent':'bigCont_questionContent_normal'} dangerouslySetInnerHTML={{__html:props.questionContent!}}>
             </div>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex",marginTop:"20px",marginBottom:"30px" }}>
                 <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>①</div>
                 <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>②</div>
                 <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>③</div>
@@ -310,6 +310,10 @@ export const QuestionType6 = (props:questionType) => {
 
 //서술형 영작 유형 20, 21, 22
 export const QuestionType7 = (props:questionType) => {
+    let subBoxArr:String[] = []
+    if(props.subBox.includes("|")){
+        subBoxArr = props.subBox.split("|")
+    }
     return(
         <>
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
@@ -328,6 +332,12 @@ export const QuestionType7 = (props:questionType) => {
             </div>
             {/* 서브박스 있는것도 있고 없는것도 있어서 없을때는 안보이게 하면 될듯 */}
             {props.subBox != '' ?
+                props.subBox.includes("|")?
+                    <>
+                    <div className={props.type == 'bigBook'?'subBox':'subBox_normal'} dangerouslySetInnerHTML={{__html:subBoxArr[0]}}></div>
+                    <div className={props.type == 'bigBook'?'subBox':'subBox_normal'} dangerouslySetInnerHTML={{__html:subBoxArr[1]}}></div>
+                    </>
+                    :
                 <div className={props.type == 'bigBook'?'subBox':'subBox_normal'} dangerouslySetInnerHTML={{__html:props.subBox}}></div>
                 :
                 <></>
@@ -356,7 +366,7 @@ export const QuestionType7 = (props:questionType) => {
 export const NormalType = (props:normalType) => {
     return(
         <>
-            {props.type != 'bigBook'?
+{/*            {props.type != 'bigBook'?
                 <div className='questionType'>{
                     props.question[0].questionType == 'Q20'||
                     props.question[0].questionType == 'Q21'||
@@ -367,7 +377,7 @@ export const NormalType = (props:normalType) => {
                     QUESTIONTYPE[props.question[0].questionType]
                 }</div>:
                 <></>
-            }
+            }*/}
             {/* 기본유형 1, 2, 3, 5, 6, 7, 9, 10, 15,  */}
             {(props.question[0].questionType == 'Q1'||
                 props.question[0].questionType == 'Q2'||
@@ -478,10 +488,10 @@ export const NormalType = (props:normalType) => {
 export const ComplexType = (props:complexType) => {
     return(
         <>
-            {props.type != 'bigBook'?
+{/*            {props.type != 'bigBook'?
                 <div className='questionType'>종합문제</div>:
                 <></>
-            }
+            }*/}
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
                 {props.seq-props.seqLength+'-'+(props.seq-1)+'. '}
                 {props.questionInfo.questionTitle}
