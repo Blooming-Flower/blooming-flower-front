@@ -272,7 +272,7 @@ const BigBook = (props:ExamProps) => {
                             {questionArr.map(({question},index)=>(
                                 <div key={index}>
                                     {question.map(({answer},index1)=>(
-                                        <div key={index1}>
+                                        <div key={index1} style={{margin:'3pt'}}>
                                             {(answerSeq++)+') '}
                                             {answer.map(({content},index2)=>(
                                                 <span key={index2}>
