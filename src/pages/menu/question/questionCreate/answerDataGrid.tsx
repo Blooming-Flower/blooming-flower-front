@@ -17,6 +17,7 @@ const AnswerDataGrid = React.forwardRef(
       questionType: string;
       answerList?: any;
       id: any;
+      chooseSeqMax?: number;
     },
     ref
   ) => {

@@ -273,104 +273,15 @@ const ChooseDataGrid = React.forwardRef(
       chooseRef: React.MutableRefObject<GridApiCommunity>;
       questionType: string;
       chooseList?: any[];
+      chooseSeqMax: number;
     },
     ref
   ) => {
     const { chooseRef, questionType, chooseList } = props;
     const [rowData, setRowData] = React.useState(
-      chooseList?.map((item, idx) => {
-        item.id = idx + 1;
-        item.chooseSeq = chooseSeqs[idx];
-
-        if (!("content" in item)) {
-          if ("chooseContent" in item && item.chooseContent) {
-            item.content = item.chooseContent;
-          } else if ("chooseContentA" in item) {
-            item.content = Object.entries(item)
-              .reduce((arr, [key, value]) => {
-                if (
-                  [
-                    "chooseContentA",
-                    "chooseContentB",
-                    "chooseContentC",
-                  ].includes(key)
-                ) {
-                  arr.push(value);
-                  return arr;
-                }
-                return arr;
-              }, [] as any)
-              .join("|");
-          }
-        }
-        const arr = item.content?.split("|");
-        if (
-          !ARROW_TYPES.includes(questionType) &&
-          !ABC_TYPES.includes(questionType) &&
-          !AB_TYPES.includes(questionType) &&
-          (!arr || arr.length > 1)
-        ) {
-          item.chooseContent = arr?.join("") ?? "";
-        } else if (ARROW_TYPES.includes(questionType)) {
-          item.arrow = "→";
-          item.chooseContentA = arr[0];
-          item.chooseContentB = arr[1];
-        } else if (ABC_TYPES.includes(questionType)) {
-          item.chooseContentA = arr[0];
-          item.chooseContentB = arr[1];
-          item.chooseContentC = arr[2];
-        } else if (AB_TYPES.includes(questionType)) {
-          item.chooseContentA = arr[0];
-          item.chooseContentB = arr[1];
-        }
-        return item;
-      })
-    );
-
-    React.useImperativeHandle(ref, () => ({
-      getChooseList() {
-        if (WRITE_TYPES.includes(questionType)) {
-          return [];
-        } else if (
-          ARROW_TYPES.includes(questionType) ||
-          ABC_TYPES.includes(questionType) ||
-          AB_TYPES.includes(questionType)
-        ) {
-          return chooseRef.current.getAllRowIds().map((id) => {
-            const row = chooseRef.current.getRow(id);
-            const chooseContent = Object.entries(row)
-              .reduce((acc, [key, value]) => {
-                if (
-                  [
-                    "chooseContentA",
-                    "chooseContentB",
-                    "chooseContentC",
-                  ].includes(key)
-                ) {
-                  acc.push(value);
-                }
-                return acc;
-              }, [] as any)
-              .join("|");
-            return {
-              ...row,
-              chooseSeq: id,
-              chooseContent,
-            };
-          });
-        }
-        return chooseRef.current
-          .getAllRowIds()
-          .map((id) => chooseRef.current.getRow(id))
-          .map(({ id: chooseSeq, chooseContent }) => {
-            return { chooseSeq, chooseContent };
-          });
-      },
-    }));
-
-    React.useEffect(() => {
-      setRowData(
-        chooseList?.map((item, idx) => {
+      chooseList
+        ?.filter((item, idx) => idx < props.chooseSeqMax)
+        .map((item, idx) => {
           item.id = idx + 1;
           item.chooseSeq = chooseSeqs[idx];
 
@@ -417,6 +328,100 @@ const ChooseDataGrid = React.forwardRef(
           }
           return item;
         })
+    );
+
+    React.useImperativeHandle(ref, () => ({
+      getChooseList() {
+        if (WRITE_TYPES.includes(questionType)) {
+          return [];
+        } else if (
+          ARROW_TYPES.includes(questionType) ||
+          ABC_TYPES.includes(questionType) ||
+          AB_TYPES.includes(questionType)
+        ) {
+          return chooseRef.current.getAllRowIds().map((id) => {
+            const row = chooseRef.current.getRow(id);
+            const chooseContent = Object.entries(row)
+              .reduce((acc, [key, value]) => {
+                if (
+                  [
+                    "chooseContentA",
+                    "chooseContentB",
+                    "chooseContentC",
+                  ].includes(key)
+                ) {
+                  acc.push(value);
+                }
+                return acc;
+              }, [] as any)
+              .join("|");
+            return {
+              ...row,
+              chooseSeq: id,
+              chooseContent,
+            };
+          });
+        }
+        return chooseRef.current
+          .getAllRowIds()
+          .map((id) => chooseRef.current.getRow(id))
+          .map(({ id: chooseSeq, chooseContent }) => {
+            return { chooseSeq, chooseContent };
+          });
+      },
+    }));
+
+    React.useEffect(() => {
+      setRowData(
+        chooseList
+          ?.filter((item, idx) => idx < props.chooseSeqMax)
+          .map((item, idx) => {
+            item.id = idx + 1;
+            item.chooseSeq = chooseSeqs[idx];
+
+            if (!("content" in item)) {
+              if ("chooseContent" in item && item.chooseContent) {
+                item.content = item.chooseContent;
+              } else if ("chooseContentA" in item) {
+                item.content = Object.entries(item)
+                  .reduce((arr, [key, value]) => {
+                    if (
+                      [
+                        "chooseContentA",
+                        "chooseContentB",
+                        "chooseContentC",
+                      ].includes(key)
+                    ) {
+                      arr.push(value);
+                      return arr;
+                    }
+                    return arr;
+                  }, [] as any)
+                  .join("|");
+              }
+            }
+            const arr = item.content?.split("|");
+            if (
+              !ARROW_TYPES.includes(questionType) &&
+              !ABC_TYPES.includes(questionType) &&
+              !AB_TYPES.includes(questionType) &&
+              (!arr || arr.length > 1)
+            ) {
+              item.chooseContent = arr?.join("") ?? "";
+            } else if (ARROW_TYPES.includes(questionType)) {
+              item.arrow = "→";
+              item.chooseContentA = arr[0];
+              item.chooseContentB = arr[1];
+            } else if (ABC_TYPES.includes(questionType)) {
+              item.chooseContentA = arr[0];
+              item.chooseContentB = arr[1];
+              item.chooseContentC = arr[2];
+            } else if (AB_TYPES.includes(questionType)) {
+              item.chooseContentA = arr[0];
+              item.chooseContentB = arr[1];
+            }
+            return item;
+          })
       );
     }, [props.chooseList, props.questionType]);
 
@@ -434,7 +439,7 @@ const ChooseDataGrid = React.forwardRef(
             ? abcChooseRows
             : AB_TYPES.includes(questionType)
             ? abChooseRows
-            : defaultChooseRows
+            : defaultChooseRows.filter((item, idx) => idx < props.chooseSeqMax)
         }
         columns={
           ARROW_TYPES.includes(questionType)

@@ -32,6 +32,10 @@ const Question = React.forwardRef(
       answerList: propsAnswerList,
     } = props.questionParam ?? "";
 
+    const [chooseSeqMax, setChooseSeqMax] = React.useState(
+      propsChoosList?.length ?? 5
+    );
+
     const subBoxs = propsSubBox?.split("|") ?? "";
 
     const [questionType, setQuestionType] = React.useState(
@@ -125,6 +129,8 @@ const Question = React.forwardRef(
       setQuestionTitle(DEFAULT_QUESTION[value]);
     };
 
+    const changeChooseSeqMax = () =>
+      setChooseSeqMax(chooseSeqMax === 5 ? 4 : 5);
     return !questionType ? (
       <></>
     ) : (
@@ -223,6 +229,18 @@ const Question = React.forwardRef(
             <></>
           )}
         </div>
+        <div style={{ padding: 7, letterSpacing: 1, userSelect: "none" }}>
+          <span
+            style={{
+              border: "0.5px solid lightgray",
+              padding: 2,
+              borderRadius: 5,
+            }}
+            onClick={changeChooseSeqMax}
+          >
+            {chooseSeqMax}지선다
+          </span>
+        </div>
         <div style={{ display: "flex", gap: 30 }}>
           {questionType && !WRITE_TYPES.includes(questionType) ? (
             <div
@@ -241,6 +259,7 @@ const Question = React.forwardRef(
                 questionType={questionType}
                 ref={chooseRef2}
                 chooseList={chooseList}
+                chooseSeqMax={chooseSeqMax}
               />
             </div>
           ) : (
@@ -270,6 +289,7 @@ const Question = React.forwardRef(
                   ref={answerRef2}
                   id={props.id}
                   answerList={answerList}
+                  chooseSeqMax={chooseSeqMax}
                 />
               </div>
             ) : (
@@ -286,6 +306,7 @@ const Question = React.forwardRef(
                   ref={answerRef2}
                   id={props.id}
                   answerList={answerList}
+                  chooseSeqMax={chooseSeqMax}
                 />
               </div>
             )}
