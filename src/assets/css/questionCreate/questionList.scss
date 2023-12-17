@@ -83,4 +83,9 @@
   .passageName:hover::before {
     opacity: 1;
   }
+
+  .Mui-selected{
+    background-color: #ffdca6 !important;
+    color: black !important;
+  }
 }
