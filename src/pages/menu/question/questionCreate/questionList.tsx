@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
+
 //css
 import "@css/questionCreate/questionList.scss";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
@@ -49,6 +50,8 @@ const QuestionList = (props: any) => {
     removeRow(row);
   };
 
+  const [checkSelect, setCheckSelect] = useState(0);
+
   return (
     <div className="questionList-item">
       <List
@@ -61,6 +64,13 @@ const QuestionList = (props: any) => {
           // maxHeight: height,
           height: height,
           "& ul": { padding: 0 },
+            // selected and (selected + hover) states
+            '&& .Mui-selected, && .Mui-selected:hover': {
+                bgcolor: 'red',
+                '&, & .MuiListItemIcon-root': {
+                    color: 'pink',
+                },
+            },
         }}
       >
         {rowData.length === 0 ? (
@@ -70,9 +80,11 @@ const QuestionList = (props: any) => {
             return (
               <div key={row.passageId}>
                 <ListItem
+                    selected={checkSelect == row}
                   className="checkbox-list"
                   value={row}
                   onClick={(e) => {
+                      setCheckSelect(row);
                     if (onClickListItem) {
                       onClickListItem(row);
                     }
