@@ -9,6 +9,11 @@
   overflow: auto;
   word-break: keep-all; //줄바꿈시 단어기준
   //break-after: page;  //페이지 초과시 다음 페이지(작업해야함)
+  img{
+    width: 305px;
+    justify-items: center;
+    display: block;
+  }
 }
 
 .div_paper {
@@ -18,12 +23,27 @@
   margin-top: 40px; //화면표출 마진은 40px
   break-after: page;
   padding:10px 30px 50px 30px;
+  img{
+    width: 305px;
+    justify-items: center;
+    display: block;
+  }
   @page {
     size: A4;
     margin: 0;
+    img{
+      width: 305px;
+      justify-items: center;
+      display: block;
+    }
   }
   @media print {
       margin-top: 0; //다운로드시 마진은 0px
+    img{
+      width: 305px;
+      justify-items: center;
+      display: block;
+    }
   }
   background-color: white;
   text-align: justify;

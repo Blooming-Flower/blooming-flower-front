@@ -84,7 +84,6 @@ const QuestionCrt = (params: any) => {
 
           if (curIdx === -1) {
             newChecked.push(parseInt(nodes[j].id));
-            console.log("row::", row);
             newDataList.push({
               searchPassage: searchPassage,
               passageYear: searchYear,
@@ -134,7 +133,6 @@ const QuestionCrt = (params: any) => {
         }
       }
     }
-    // console.log("newChecked::", newChecked);
     prevRowId[getUniqueKey()] = unitNum;
     setChecked(() => newChecked);
     setRowDataList(() => newDataList);
@@ -149,6 +147,13 @@ const QuestionCrt = (params: any) => {
       $GET(
         `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
+
+          res.data.list.sort((p1: any, p2: any)=>{
+            if(p1.passageUnit < p2.passageUnit) return 1;
+            if(p1.passageUnit > p2.passageUnit) return -1;
+            return 0;
+        });
+
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
 
@@ -180,6 +185,13 @@ const QuestionCrt = (params: any) => {
       $GET(
         `${_url}/api/v1/question/search/passage-numbers?page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
+
+          res.data.list.sort((p1: any, p2: any)=>{
+            if(p1.passageUnit < p2.passageUnit) return 1;
+            if(p1.passageUnit > p2.passageUnit) return -1;
+            return 0;
+        });
+
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
 
@@ -386,9 +398,6 @@ const QuestionCrt = (params: any) => {
     setRowDataList((rowDataList: any) => {
       return rowDataList;
     });
-
-    console.log(prevRowId);
-    console.log(row);
 
     let uniqueKey =
       row.searchPassage + row.passageYear + row.passageName + row.page;
@@ -677,9 +686,6 @@ const QuestionCrt = (params: any) => {
                 columns={columns}
                 hideFooter={true}
                 hideFooterPagination={true}
-                // rowHeight={rowData[0] != null ? 
-                //   parseInt(rowData[0].passageInfo.length / 10 + "") * 40 + 40 
-                //   : 0}
                 rowHeight={getRowHeight()}
                 sx={
                   rowData.length > 0
