@@ -163,6 +163,11 @@ const ExamCrt = (params: any) => {
       $GET(
         `${_url}/api/v1/exam/search/passage-numbers?page=${page}&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
+          res.data.list.sort((p1: any, p2: any) => {
+            if (p1.passageUnit < p2.passageUnit) return 1;
+            if (p1.passageUnit > p2.passageUnit) return -1;
+            return 0;
+          });
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
             res.data.list[i].questionCount = 0;
@@ -200,6 +205,11 @@ const ExamCrt = (params: any) => {
       $GET(
         `${_url}/api/v1/exam/search/passage-numbers?page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
+          res.data.list.sort((p1: any, p2: any) => {
+            if (p1.passageUnit < p2.passageUnit) return 1;
+            if (p1.passageUnit > p2.passageUnit) return -1;
+            return 0;
+          });
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
             res.data.list[i].questionCount = 0;
@@ -696,25 +706,25 @@ const ExamCrt = (params: any) => {
             .sort((q1: any, q2: any) =>
               q1.passageNumber > q2.passageNumber ? 1 : -1
             ).map((row: any) => {
-            row.rowNum = params.id;
-            return (
-              <div key={row.passageNumber} id="checkbox-list">
-                <Checkbox
-                  id={row.passageId.toString()}
-                  value={params.id}
-                  inputProps={
-                    {
-                      "data-passage": `${JSON.stringify(row)}`,
-                    } as any
-                  }
-                  onChange={(event) => handleCheckBox(event)}
-                  checked={checked.indexOf(row.passageId) !== -1} // 다른 화면 갓다와도 체크되게 함
-                />
-                {row.passageNumber}
-              </div>
-            );
-          })}
-         </Grid>,
+              row.rowNum = params.id;
+              return (
+                <div key={row.passageNumber} id="checkbox-list">
+                  <Checkbox
+                    id={row.passageId.toString()}
+                    value={params.id}
+                    inputProps={
+                      {
+                        "data-passage": `${JSON.stringify(row)}`,
+                      } as any
+                    }
+                    onChange={(event) => handleCheckBox(event)}
+                    checked={checked.indexOf(row.passageId) !== -1} // 다른 화면 갓다와도 체크되게 함
+                  />
+                  {row.passageNumber}
+                </div>
+              );
+            })}
+        </Grid>,
       ],
       align: "center",
     },
@@ -878,9 +888,9 @@ const ExamCrt = (params: any) => {
                 rowHeight={getRowHeight()}
                 sx={
                   rowData.length > 0
-                    ? { fontWeight: "500", fontSize: "15px", height: "100%"}
-                    : { fontWeight: "500", fontSize: "15px", height: "400px"}
-                   
+                    ? { fontWeight: "500", fontSize: "15px", height: "100%" }
+                    : { fontWeight: "500", fontSize: "15px", height: "400px" }
+
                 }
               />
             </Box>
