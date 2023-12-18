@@ -23,14 +23,19 @@
   margin-top: 40px; //화면표출 마진은 40px
   break-after: page;
   padding:10px 30px 50px 30px;
+  img{
+    width: 305px;
+    justify-items: center;
+    display: block;
+  }
   @page {
+    size: A4;
+    margin: 0;
     img{
       width: 305px;
       justify-items: center;
       display: block;
     }
-    size: A4;
-    margin: 0;
   }
   @media print {
       margin-top: 0; //다운로드시 마진은 0px
