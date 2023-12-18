@@ -8,7 +8,7 @@ import {
   ListSubheader,
   Alert,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 //css
@@ -25,6 +25,7 @@ import { relative } from "path";
 
 const QuestionList = (props: any) => {
   const [open, setOpen] = React.useState(false);
+  const [rowDataList, setRowDataList]  = React.useState([]);
   const navigate = useNavigate();
   const handleClick = () => {
     setOpen(!open);
@@ -52,6 +53,16 @@ const QuestionList = (props: any) => {
 
   const [checkSelect, setCheckSelect] = useState(0);
 
+  useEffect(() => {
+    console.log(rowData.map((p: any)=> p.passageUnit))
+    // debugger;
+    // rowData.sort((p1: any, p2: any) => {
+    //   if (p1.passageUnit < p2.passageUnit) return 1;
+    //   if (p1.passageUnit > p2.passageUnit) return -1;
+    //   return 0;
+    // });
+  });
+
   return (
     <div className="questionList-item">
       <List
@@ -76,7 +87,13 @@ const QuestionList = (props: any) => {
         {rowData.length === 0 ? (
           <Alert>{"지문을 선택해 주세요."}</Alert>
         ) : (
-          rowData.map((row: any) => {
+          rowData
+          // .sort((p1: any, p2: any) => {
+          //       if (p1.passageUnit < p2.passageUnit) return 1;
+          //       if (p1.passageUnit > p2.passageUnit) return -1;
+          //       return 0;
+          //     })
+          .map((row: any) => {
             return (
               <div key={row.passageId}>
                 <ListItem

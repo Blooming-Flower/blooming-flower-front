@@ -163,6 +163,11 @@ const ExamCrt = (params: any) => {
       $GET(
         `${_url}/api/v1/exam/search/passage-numbers?page=${page}&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
+          res.data.list.sort((p1: any, p2: any) => {
+            if (p1.passageUnit < p2.passageUnit) return 1;
+            if (p1.passageUnit > p2.passageUnit) return -1;
+            return 0;
+          });
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
             res.data.list[i].questionCount = 0;
@@ -200,6 +205,11 @@ const ExamCrt = (params: any) => {
       $GET(
         `${_url}/api/v1/exam/search/passage-numbers?page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
+          res.data.list.sort((p1: any, p2: any) => {
+            if (p1.passageUnit < p2.passageUnit) return 1;
+            if (p1.passageUnit > p2.passageUnit) return -1;
+            return 0;
+          });
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
             res.data.list[i].questionCount = 0;
@@ -222,6 +232,7 @@ const ExamCrt = (params: any) => {
           setPassageName(passageName);
           setRowData(res.data.list);
           setTotalPageSize(res.data.pageSize);
+          defaultQuestionType();
         }
       );
     } catch (error) {
@@ -565,7 +576,6 @@ const ExamCrt = (params: any) => {
 
     // 이미 오른쪽 사이드 박스에 있는 id 제거
     let examPassageIdList = examRowDataList.map((item: any) => item.passageId);
-    // debugger;
     for (let i = 0; i < tempPassageIds.length; i++) {
       if (examPassageIdList.indexOf(tempPassageIds[i]) === -1) {
         passageIds.push(tempPassageIds[i]);
@@ -578,9 +588,6 @@ const ExamCrt = (params: any) => {
     };
 
     $POST("api/v1/exam/find/question-info", param, (res: any) => {
-      console.log(`question info res ::`, res);
-      // debugger;
-
       res.data.forEach((questionInfo: any) => {
         for (let i = 0; i < rowDataList.length; i++) {
           if (
@@ -629,6 +636,12 @@ const ExamCrt = (params: any) => {
       }
     });
     return QUESTIONTYPE;
+  }
+
+  function getRowHeight() {
+    return rowData[0] != null ?
+      parseInt(rowData[0].passageInfo.length / 10 + "") * 40 + 40
+      : 0
   }
 
   // selectbox 선택시 출력되는 그리드
@@ -683,32 +696,35 @@ const ExamCrt = (params: any) => {
     {
       field: "passageInfo",
       headerName: "지문",
-      width: 400,
+      width: 700,
       type: "actions",
       editable: false,
       headerAlign: "center",
       getActions: (params) => [
-        <>
-          {params.row.passageInfo.map((row: any) => {
-            row.rowNum = params.id;
-            return (
-              <div key={row.passageNumber} id="checkbox-list">
-                <Checkbox
-                  id={row.passageId.toString()}
-                  value={params.id}
-                  inputProps={
-                    {
-                      "data-passage": `${JSON.stringify(row)}`,
-                    } as any
-                  }
-                  onChange={(event) => handleCheckBox(event)}
-                  checked={checked.indexOf(row.passageId) !== -1} // 다른 화면 갓다와도 체크되게 함
-                />
-                {row.passageNumber}
-              </div>
-            );
-          })}
-        </>,
+        <Grid container>
+          {params.row.passageInfo
+            .sort((q1: any, q2: any) =>
+              q1.passageNumber > q2.passageNumber ? 1 : -1
+            ).map((row: any) => {
+              row.rowNum = params.id;
+              return (
+                <div key={row.passageNumber} id="checkbox-list">
+                  <Checkbox
+                    id={row.passageId.toString()}
+                    value={params.id}
+                    inputProps={
+                      {
+                        "data-passage": `${JSON.stringify(row)}`,
+                      } as any
+                    }
+                    onChange={(event) => handleCheckBox(event)}
+                    checked={checked.indexOf(row.passageId) !== -1} // 다른 화면 갓다와도 체크되게 함
+                  />
+                  {row.passageNumber}
+                </div>
+              );
+            })}
+        </Grid>,
       ],
       align: "center",
     },
@@ -869,20 +885,12 @@ const ExamCrt = (params: any) => {
                 columns={columns}
                 hideFooter={true}
                 hideFooterPagination={true}
+                rowHeight={getRowHeight()}
                 sx={
                   rowData.length > 0
-                    ? {
-                        fontWeight: "500",
-                        fontSize: "15px",
-                        height: "100%",
-                        display: "block",
-                      }
-                    : {
-                        fontWeight: "500",
-                        fontSize: "15px",
-                        height: "500px",
-                        display: "block",
-                      }
+                    ? { fontWeight: "500", fontSize: "15px", height: "100%" }
+                    : { fontWeight: "500", fontSize: "15px", height: "400px" }
+
                 }
               />
             </Box>
