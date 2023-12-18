@@ -677,9 +677,6 @@ const QuestionCrt = (params: any) => {
                 columns={columns}
                 hideFooter={true}
                 hideFooterPagination={true}
-                // rowHeight={rowData[0] != null ? 
-                //   parseInt(rowData[0].passageInfo.length / 10 + "") * 40 + 40 
-                //   : 0}
                 rowHeight={getRowHeight()}
                 sx={
                   rowData.length > 0
