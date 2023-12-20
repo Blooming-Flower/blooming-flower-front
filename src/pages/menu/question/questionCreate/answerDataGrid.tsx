@@ -17,7 +17,7 @@ const AnswerDataGrid = React.forwardRef(
       questionType: string;
       answerList?: any;
       id: any;
-      chooseSeqMax?: number;
+      chooseSeqMax: number;
     },
     ref
   ) => {
@@ -160,10 +160,14 @@ const AnswerDataGrid = React.forwardRef(
                   .filter((row: any) => row.id !== id)
                   .map(({ id }: any) => answerRef.current.getRow(id));
                 if (newRows.length === 0) {
-                  newRows = getWriteTypeRows();
+                  newRows =
+                    props.questionType === "Q23"
+                      ? writeTypeQ23Rows
+                      : writeTypeDefaultRows;
                 }
-                let idx = 0;
-                newRows.forEach((row: any) => (row.chooseSeq = seq[idx++]));
+                newRows.forEach(
+                  (row: any, idx: number) => (row.chooseSeq = seq[idx])
+                );
                 setWriteTypeRows(newRows);
               }}
             />,
@@ -174,16 +178,19 @@ const AnswerDataGrid = React.forwardRef(
     const seq = [..."ABCDEFG"];
     const { answerRef, questionType } = props;
 
-    const getWriteTypeRows = () =>
-      props.answerList && isNaN(props.answerList[0]?.chooseSeq)
-        ? props.answerList?.map((cur: any, idx: number) => {
-            cur.id = idx + 1;
-            cur.chooseSeq = seq[idx];
-            return cur;
-          })
-        : props.questionType === "Q23"
-        ? writeTypeQ23Rows
-        : writeTypeDefaultRows;
+    const getWriteTypeRows = () => {
+      if (!props.answerList || !isNaN(props.answerList[0]?.chooseSeq)) {
+        return props.questionType === "Q23"
+          ? writeTypeQ23Rows
+          : writeTypeDefaultRows;
+      }
+
+      return props.answerList.map((cur: any, idx: number) => {
+        cur.id = idx + 1;
+        cur.chooseSeq = seq[idx];
+        return cur;
+      });
+    };
 
     const [writeTypeRows, setWriteTypeRows] = React.useState(
       getWriteTypeRows()
@@ -235,7 +242,7 @@ const AnswerDataGrid = React.forwardRef(
 
     React.useEffect(() => {
       setWriteTypeRows(getWriteTypeRows());
-    }, [props.answerList, props.questionType]);
+    }, [props.answerList, props.questionType, props.chooseSeqMax]);
     return !questionType ? (
       <></>
     ) : WRITE_TYPES.includes(questionType) ? (
@@ -253,7 +260,9 @@ const AnswerDataGrid = React.forwardRef(
     ) : (
       <DataGrid
         apiRef={answerRef}
-        rows={defaultAnswerRows}
+        rows={defaultAnswerRows.filter(
+          (cur: any, idx: number) => idx < props.chooseSeqMax
+        )}
         columns={answerColunms}
         slots={{ columnHeaders: () => null }}
         hideFooter={true}

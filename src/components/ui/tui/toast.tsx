@@ -27,13 +27,22 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
       if (param == "U") {
         editorRef.current.getInstance().exec("strike");
       } else if (param == "빈칸") {
-        const start = window.getSelection()!.anchorOffset;
-        console.log(start);
-        console.log(window.getSelection());
-        editorRef.current.getInstance().insertText("    ");
-        // editorRef.current.getInstance().setSelection(start+1,start+5)
-        // editorRef.current.getInstance().exec('strike')
-        // start!.removeAllRanges()
+        const [start, end] = editorRef.current
+          .getInstance()
+          .wwEditor.getSelection();
+        const text = `<del>${"&nbsp;".repeat(
+          editorRef.current.getInstance().wwEditor.getSelectedText().length * 2
+        )}</del>`;
+        editorRef.current
+          .getInstance()
+          .wwEditor.replaceSelection(text, start, end);
+        const html = editorRef.current
+          .getInstance()
+          .getHTML()
+          .replaceAll("&lt;", "<")
+          .replaceAll("&gt;", ">")
+          .replaceAll("&amp;", "&");
+        editorRef.current.getInstance().setHTML(html);
       } else {
         editorRef.current.getInstance().insertText(param);
       }
@@ -54,7 +63,7 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
       },
       {
         name: "customBox",
-        tooltip: "Box",
+        tooltip: "Box(ctr + space)",
         el: createCustomButton("빈칸"),
       },
     ],
@@ -188,6 +197,9 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
                 ev.preventDefault();
                 console.log("Bold호출");
                 editorRef.current.getInstance().exec("bold");
+              } else if (ev.code == "KeyI" && ev.ctrlKey) {
+                console.log("기울기호출");
+                editorRef.current.getInstance().exec("italic");
               } else if (ev.code == "KeyM" && ev.ctrlKey) {
                 ev.preventDefault();
                 console.log("밑줄호출");
@@ -198,7 +210,23 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
                 editorRef.current.getInstance().exec("strike");
               } else if (ev.code == "Space" && ev.ctrlKey) {
                 ev.preventDefault();
-                editorRef.current.getInstance().insertText("    ");
+                const [start, end] = editorRef.current
+                  .getInstance()
+                  .wwEditor.getSelection();
+                const text = `<del>${"&nbsp;".repeat(
+                  editorRef.current.getInstance().wwEditor.getSelectedText()
+                    .length * 2
+                )}</del>`;
+                editorRef.current
+                  .getInstance()
+                  .wwEditor.replaceSelection(text, start, end);
+                const html = editorRef.current
+                  .getInstance()
+                  .getHTML()
+                  .replaceAll("&lt;", "<")
+                  .replaceAll("&gt;", ">")
+                  .replaceAll("&amp;", "&");
+                editorRef.current.getInstance().setHTML(html);
               } else if (ev.key == "1" && ev.altKey) {
                 ev.preventDefault();
                 console.log("1번 호출");

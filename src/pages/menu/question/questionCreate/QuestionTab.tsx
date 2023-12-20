@@ -84,9 +84,14 @@ const QuestionTab = () => {
     for (const { answerList, chooseList } of newQuestion.questionParams) {
       if (
         !WRITE_TYPES.includes(questionType) &&
-        chooseList.some(
-          (el: any) => el.chooseContent.replace(/[\s|\|]/g, "") === ""
-        )
+        chooseList.some((el: any) => {
+          for (const key in el) {
+            if (el[key] === "") {
+              return true;
+            }
+          }
+          return false;
+        })
       ) {
         alert("비어있는 보기란이 있습니다.");
         return;

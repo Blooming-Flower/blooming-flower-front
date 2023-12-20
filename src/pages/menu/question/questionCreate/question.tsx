@@ -230,16 +230,20 @@ const Question = React.forwardRef(
           )}
         </div>
         <div style={{ padding: 7, letterSpacing: 1, userSelect: "none" }}>
-          <span
-            style={{
-              border: "0.5px solid lightgray",
-              padding: 2,
-              borderRadius: 5,
-            }}
-            onClick={changeChooseSeqMax}
-          >
-            {chooseSeqMax}지선다
-          </span>
+          {WRITE_TYPES.includes(questionType) ? (
+            <></>
+          ) : (
+            <span
+              style={{
+                border: "0.5px solid lightgray",
+                padding: 2,
+                borderRadius: 5,
+              }}
+              onClick={changeChooseSeqMax}
+            >
+              {chooseSeqMax}지선다
+            </span>
+          )}
         </div>
         <div style={{ display: "flex", gap: 30 }}>
           {questionType && !WRITE_TYPES.includes(questionType) ? (

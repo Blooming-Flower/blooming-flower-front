@@ -316,15 +316,15 @@ const ChooseDataGrid = React.forwardRef(
             item.chooseContent = arr?.join("") ?? "";
           } else if (ARROW_TYPES.includes(questionType)) {
             item.arrow = "→";
-            item.chooseContentA = arr[0];
-            item.chooseContentB = arr[1];
+            item.chooseContentA = arr ? arr[0] : "";
+            item.chooseContentB = arr ? arr[1] : "";
           } else if (ABC_TYPES.includes(questionType)) {
-            item.chooseContentA = arr[0];
-            item.chooseContentB = arr[1];
-            item.chooseContentC = arr[2];
+            item.chooseContentA = arr ? arr[0] : "";
+            item.chooseContentB = arr ? arr[1] : "";
+            item.chooseContentC = arr ? arr[2] : "";
           } else if (AB_TYPES.includes(questionType)) {
-            item.chooseContentA = arr[0];
-            item.chooseContentB = arr[1];
+            item.chooseContentA = arr ? arr[0] : "";
+            item.chooseContentB = arr ? arr[1] : "";
           }
           return item;
         })
@@ -359,6 +359,7 @@ const ChooseDataGrid = React.forwardRef(
               ...row,
               chooseSeq: id,
               chooseContent,
+              content: chooseContent,
             };
           });
         }
@@ -366,12 +367,13 @@ const ChooseDataGrid = React.forwardRef(
           .getAllRowIds()
           .map((id) => chooseRef.current.getRow(id))
           .map(({ id: chooseSeq, chooseContent }) => {
-            return { chooseSeq, chooseContent };
+            return { chooseSeq, chooseContent, content: chooseContent };
           });
       },
     }));
 
     React.useEffect(() => {
+      chooseList?.push([]);
       setRowData(
         chooseList
           ?.filter((item, idx) => idx < props.chooseSeqMax)
@@ -410,20 +412,20 @@ const ChooseDataGrid = React.forwardRef(
               item.chooseContent = arr?.join("") ?? "";
             } else if (ARROW_TYPES.includes(questionType)) {
               item.arrow = "→";
-              item.chooseContentA = arr[0];
-              item.chooseContentB = arr[1];
+              item.chooseContentA = arr ? arr[0] : "";
+              item.chooseContentB = arr ? arr[1] : "";
             } else if (ABC_TYPES.includes(questionType)) {
-              item.chooseContentA = arr[0];
-              item.chooseContentB = arr[1];
-              item.chooseContentC = arr[2];
+              item.chooseContentA = arr ? arr[0] : "";
+              item.chooseContentB = arr ? arr[1] : "";
+              item.chooseContentC = arr ? arr[2] : "";
             } else if (AB_TYPES.includes(questionType)) {
-              item.chooseContentA = arr[0];
-              item.chooseContentB = arr[1];
+              item.chooseContentA = arr ? arr[0] : "";
+              item.chooseContentB = arr ? arr[1] : "";
             }
             return item;
           })
       );
-    }, [props.chooseList, props.questionType]);
+    }, [props.chooseList, props.questionType, props.chooseSeqMax]);
 
     return !questionType || WRITE_TYPES.includes(questionType) ? (
       <></>
@@ -434,11 +436,11 @@ const ChooseDataGrid = React.forwardRef(
           rowData?.length
             ? rowData
             : ARROW_TYPES.includes(questionType)
-            ? arrowChooseRows
+            ? arrowChooseRows.filter((item, idx) => idx < props.chooseSeqMax)
             : ABC_TYPES.includes(questionType)
-            ? abcChooseRows
+            ? abcChooseRows.filter((item, idx) => idx < props.chooseSeqMax)
             : AB_TYPES.includes(questionType)
-            ? abChooseRows
+            ? abChooseRows.filter((item, idx) => idx < props.chooseSeqMax)
             : defaultChooseRows.filter((item, idx) => idx < props.chooseSeqMax)
         }
         columns={

@@ -269,3 +269,10 @@ footer {
 		justify-content: space-around;
 	}
 }
+div:where(.swal2-container){
+	z-index: 1300;
+}
+.toastui-editor-contents img{
+	width: 285px;
+	display: block;
+}
