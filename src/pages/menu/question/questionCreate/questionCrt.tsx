@@ -84,16 +84,19 @@ const QuestionCrt = (params: any) => {
 
           if (curIdx === -1) {
             newChecked.push(parseInt(nodes[j].id));
-            newDataList.push({
-              searchPassage: searchPassage,
-              passageYear: searchYear,
-              passageName: row.passageName,
-              passageNumber: row.passageNumber,
-              passageId: row.passageId,
-              passageUnit: row.passageUnit,
-              page: page,
-              rowNum: row.rowNum,
-            });
+
+            if (rowDataList.map((item: any) => item.passageId).indexOf(row.passageId) === -1) {
+              newDataList.push({
+                searchPassage: searchPassage,
+                passageYear: searchYear,
+                passageName: row.passageName,
+                passageNumber: row.passageNumber,
+                passageId: row.passageId,
+                passageUnit: row.passageUnit,
+                page: page,
+                rowNum: row.rowNum,
+              });
+            }
           }
 
           const multiCheckedIdx = newMultiChecked.indexOf(
@@ -120,7 +123,7 @@ const QuestionCrt = (params: any) => {
 
             if (curIdx !== -1) {
               newChecked.splice(curIdx, 1);
-              newDataList.splice(curIdx, 1);
+              // newDataList.splice(curIdx, 1);
             }
 
             let multiCheckIdx = newMultiChecked.indexOf(
@@ -147,12 +150,11 @@ const QuestionCrt = (params: any) => {
       $GET(
         `${_url}/api/v1/question/search/passage-numbers?page=${page}&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
-
-          res.data.list.sort((p1: any, p2: any)=>{
-            if(p1.passageUnit < p2.passageUnit) return 1;
-            if(p1.passageUnit > p2.passageUnit) return -1;
+          res.data.list.sort((p1: any, p2: any) => {
+            if (p1.passageUnit < p2.passageUnit) return 1;
+            if (p1.passageUnit > p2.passageUnit) return -1;
             return 0;
-        });
+          });
 
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
@@ -186,11 +188,11 @@ const QuestionCrt = (params: any) => {
         `${_url}/api/v1/question/search/passage-numbers?page=0&size=10&passageType=${passageType}&passageYear=${searchYear}&&passageName=${passageName}`,
         (res: any) => {
 
-          res.data.list.sort((p1: any, p2: any)=>{
-            if(p1.passageUnit < p2.passageUnit) return 1;
-            if(p1.passageUnit > p2.passageUnit) return -1;
+          res.data.list.sort((p1: any, p2: any) => {
+            if (p1.passageUnit < p2.passageUnit) return 1;
+            if (p1.passageUnit > p2.passageUnit) return -1;
             return 0;
-        });
+          });
 
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
@@ -302,14 +304,15 @@ const QuestionCrt = (params: any) => {
           if (multiCheckedIdx === -1) {
             multiChecked.push(multiNodes[rowId].id);
           }
+        }
 
-          if (!prevRowId[getUniqueKey()]) {
-            prevRowId[getUniqueKey()] = [];
-          }
-          let prevRowIdx = prevRowId[getUniqueKey()].indexOf(rowId);
-          if (prevRowIdx === -1) {
-            prevRowId[getUniqueKey()].push(rowId);
-          }
+          
+        if (!prevRowId[getUniqueKey()]) {
+          prevRowId[getUniqueKey()] = [];
+        }
+        let prevRowIdx = prevRowId[getUniqueKey()].indexOf(rowId);
+        if (prevRowIdx === -1) {
+          prevRowId[getUniqueKey()].push(rowId);
         }
       }
     } else {
@@ -323,6 +326,7 @@ const QuestionCrt = (params: any) => {
           multiChecked.splice(multiCheckedIdx, 1);
         }
 
+  
         if (!prevRowId[getUniqueKey()]) {
           prevRowId[getUniqueKey()] = [];
         }
@@ -346,38 +350,39 @@ const QuestionCrt = (params: any) => {
     let checkFlag = true; // 체크 여부
 
     const currentIndex = newChecked.indexOf(row.passageId);
-    if (currentIndex === -1) {
+    const rowListIndex = rowDataList.map((item: any) => item.passageId).indexOf(row.passageId);
+
+    if (currentIndex === -1) { // 체크되는 상태
       newChecked.push(row.passageId);
       checked.push(row.passageId);
       setChecked((checked: any) => {
         return checked;
       });
 
-      setRowDataList((rowDataList: any) => {
-        rowDataList.push({
-          searchPassage: searchPassage,
-          passageYear: searchYear,
-          passageName: row.passageName,
-          passageNumber: row.passageNumber,
-          passageId: row.passageId,
-          passageUnit: row.passageUnit,
-          page: page,
-          rowNum: row.rowNum,
+
+      if (rowListIndex === -1) {
+        setRowDataList((rowDataList: any) => {
+          rowDataList.push({
+            searchPassage: searchPassage,
+            passageYear: searchYear,
+            passageName: row.passageName,
+            passageNumber: row.passageNumber,
+            passageId: row.passageId,
+            passageUnit: row.passageUnit,
+            page: page,
+            rowNum: row.rowNum,
+          });
+          return rowDataList;
         });
-        return rowDataList;
-      });
+      }
     } else {
+      // 체크 해제
       checkFlag = false;
 
       newChecked.splice(currentIndex, 1);
       checked.splice(currentIndex, 1);
       setChecked((checked: any) => {
         return checked;
-      });
-
-      rowDataList.splice(currentIndex, 1);
-      setRowDataList((rowDataList: any) => {
-        return rowDataList;
       });
     }
 
@@ -394,7 +399,8 @@ const QuestionCrt = (params: any) => {
     newChecked.splice(curIdx, 1);
     setChecked(newChecked);
 
-    rowDataList.splice(curIdx, 1);
+    let rowListIdx = rowDataList.map((item: any) => item.passageId).indexOf(row.passageId);
+    rowDataList.splice(rowListIdx, 1);
     setRowDataList((rowDataList: any) => {
       return rowDataList;
     });
@@ -689,9 +695,9 @@ const QuestionCrt = (params: any) => {
                 rowHeight={getRowHeight()}
                 sx={
                   rowData.length > 0
-                    ? { fontWeight: "500", fontSize: "15px", height: "100%"}
-                    : { fontWeight: "500", fontSize: "15px", height: "400px"}
-                   
+                    ? { fontWeight: "500", fontSize: "15px", height: "100%" }
+                    : { fontWeight: "500", fontSize: "15px", height: "400px" }
+
                 }
               />
             </Box>

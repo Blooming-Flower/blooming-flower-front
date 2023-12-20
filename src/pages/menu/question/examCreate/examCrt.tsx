@@ -98,17 +98,20 @@ const ExamCrt = (params: any) => {
 
           if (curIdx === -1) {
             newChecked.push(parseInt(nodes[j].id));
-            console.log("row::", row);
-            newDataList.push({
-              searchPassage: searchPassage,
-              passageYear: searchYear,
-              passageName: row.passageName,
-              passageNumber: row.passageNumber,
-              passageId: row.passageId,
-              passageUnit: row.passageUnit,
-              page: page,
-              rowNum: row.rowNum,
-            });
+
+
+            if (rowDataList.map((item: any) => item.passageId).indexOf(row.passageId) === -1) {
+              newDataList.push({
+                searchPassage: searchPassage,
+                passageYear: searchYear,
+                passageName: row.passageName,
+                passageNumber: row.passageNumber,
+                passageId: row.passageId,
+                passageUnit: row.passageUnit,
+                page: page,
+                rowNum: row.rowNum,
+              });
+            }
           }
 
           const multiCheckedIdx = newMultiChecked.indexOf(
@@ -135,7 +138,7 @@ const ExamCrt = (params: any) => {
 
             if (curIdx !== -1) {
               newChecked.splice(curIdx, 1);
-              newDataList.splice(curIdx, 1);
+              // newDataList.splice(curIdx, 1);
             }
 
             let multiCheckIdx = newMultiChecked.indexOf(
@@ -148,7 +151,7 @@ const ExamCrt = (params: any) => {
         }
       }
     }
-    // console.log("newChecked::", newChecked);
+
     prevRowId[getUniqueKey()] = unitNum;
     setChecked(() => newChecked);
     setRowDataList(() => newDataList);
@@ -168,6 +171,7 @@ const ExamCrt = (params: any) => {
             if (p1.passageUnit > p2.passageUnit) return -1;
             return 0;
           });
+
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
             res.data.list[i].questionCount = 0;
@@ -184,8 +188,8 @@ const ExamCrt = (params: any) => {
                 res.data.list[i].passageInfo[j].passageUnit = "-";
               }
             }
-            console.log(res.data.list[i].questionCount);
           }
+
           setRowData(res.data.list);
           setPage(page);
         }
@@ -210,6 +214,7 @@ const ExamCrt = (params: any) => {
             if (p1.passageUnit > p2.passageUnit) return -1;
             return 0;
           });
+
           for (let i = 0; i < res.data.list.length; i++) {
             res.data.list[i].id = i;
             res.data.list[i].questionCount = 0;
@@ -226,7 +231,6 @@ const ExamCrt = (params: any) => {
                 res.data.list[i].passageInfo[j].passageUnit = "-";
               }
             }
-            console.log(res.data.list[i].questionCount);
           }
 
           setPassageName(passageName);
@@ -328,14 +332,14 @@ const ExamCrt = (params: any) => {
           if (multiCheckedIdx === -1) {
             multiChecked.push(multiNodes[rowId].id);
           }
+        }
 
-          if (!prevRowId[getUniqueKey()]) {
-            prevRowId[getUniqueKey()] = [];
-          }
-          let prevRowIdx = prevRowId[getUniqueKey()].indexOf(rowId);
-          if (prevRowIdx === -1) {
-            prevRowId[getUniqueKey()].push(rowId);
-          }
+        if (!prevRowId[getUniqueKey()]) {
+          prevRowId[getUniqueKey()] = [];
+        }
+        let prevRowIdx = prevRowId[getUniqueKey()].indexOf(rowId);
+        if (prevRowIdx === -1) {
+          prevRowId[getUniqueKey()].push(rowId);
         }
       }
     } else {
@@ -372,6 +376,8 @@ const ExamCrt = (params: any) => {
     let checkFlag = true; // 체크 여부
 
     const currentIndex = newChecked.indexOf(row.passageId);
+    const rowListIndex = rowDataList.map((item: any) => item.passageId).indexOf(row.passageId);
+
     if (currentIndex === -1) {
       newChecked.push(row.passageId);
       checked.push(row.passageId);
@@ -379,19 +385,21 @@ const ExamCrt = (params: any) => {
         return checked;
       });
 
-      setRowDataList((rowDataList: any) => {
-        rowDataList.push({
-          searchPassage: searchPassage,
-          passageYear: searchYear,
-          passageName: row.passageName,
-          passageNumber: row.passageNumber,
-          passageId: row.passageId,
-          passageUnit: row.passageUnit,
-          page: page,
-          rowNum: row.rowNum,
+      if (rowListIndex === -1) {
+        setRowDataList((rowDataList: any) => {
+          rowDataList.push({
+            searchPassage: searchPassage,
+            passageYear: searchYear,
+            passageName: row.passageName,
+            passageNumber: row.passageNumber,
+            passageId: row.passageId,
+            passageUnit: row.passageUnit,
+            page: page,
+            rowNum: row.rowNum,
+          });
+          return rowDataList;
         });
-        return rowDataList;
-      });
+      }
     } else {
       checkFlag = false;
 
@@ -399,11 +407,6 @@ const ExamCrt = (params: any) => {
       checked.splice(currentIndex, 1);
       setChecked((checked: any) => {
         return checked;
-      });
-
-      rowDataList.splice(currentIndex, 1);
-      setRowDataList((rowDataList: any) => {
-        return rowDataList;
       });
     }
 
@@ -416,6 +419,7 @@ const ExamCrt = (params: any) => {
     let newChecked = [...checked];
     let newMultiChecked = [...multiChecked];
     let curIdx = newChecked.indexOf(row.passageId);
+    let rowListIdx = rowDataList.map((item: any) => item.passageId).indexOf(row.passageId);
 
     let examIdx = examRowDataList
       .map((item: any) => item.passageId)
@@ -430,13 +434,10 @@ const ExamCrt = (params: any) => {
     newChecked.splice(curIdx, 1);
     setChecked(newChecked);
 
-    rowDataList.splice(curIdx, 1);
+    rowDataList.splice(rowListIdx, 1);
     setRowDataList((rowDataList: any) => {
       return rowDataList;
     });
-
-    console.log(prevRowId);
-    console.log(row);
 
     let uniqueKey =
       row.passageType + row.passageYear + row.passageName + row.page;
