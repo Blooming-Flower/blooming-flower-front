@@ -97,7 +97,9 @@ const PassagePopup = forwardRef(
         res.data.questionInfo.forEach((Q: any) => {
           Q.question.forEach((q: any) => {
             q.answer.forEach((A: any) => (A.answerContent = A.content));
-            q.choose.forEach((C: any) => (C.chooseContent = C.content));
+            q.choose
+              .sort((el1: any, el2: any) => el1.seq - el2.seq)
+              .forEach((C: any) => (C.chooseContent = C.content));
           });
         });
         setListData(res.data.questionInfo);
@@ -159,26 +161,41 @@ const PassagePopup = forwardRef(
     };
 
     const getUpdateParam = () => {
+      const questionContent = editorRef.current.getInstance().getHTML();
+      if (questionContent.replace(/[<p>|<br>|</p>|\s]/g, "") === "") {
+        alert.open("지문은 비워둘 수 없습니다.");
+        return false;
+      }
+      const questionTitle = parent.title;
+      if (questionTitle === "") {
+        alert.open("발문이 비어있습니다.");
+        return false;
+      }
+      const chooseList =
+        chooseRef2.current?.getChooseList().map((choose: any) => ({
+          chooseSeq: choose.chooseSeq,
+          chooseContent: choose.chooseContent,
+        })) ?? [];
+      const questionType = parent.type;
+
+      const answerList =
+        answerRef2.current
+          ?.getAnswerList()
+          .map((answer: any) => ({ answerContent: answer.answerContent })) ??
+        [];
+
       return {
         questionCode: parent.questionCode,
         questionId: parent.questionId,
         passageId: props.passageId,
-        questionContent: editorRef.current.getInstance().getHTML(),
-        questionTitle: parent.title,
+        questionContent,
+        questionTitle,
         questionSubTitle: parent.subTitle,
         pastYn: parent.pastYn,
-        questionType: parent.type,
-        subBox: getSubBoxContent(parent.type),
-        chooseList:
-          chooseRef2.current?.getChooseList().map((choose: any) => ({
-            chooseSeq: choose.id,
-            chooseContent: choose.chooseContent,
-          })) ?? [],
-        answerList:
-          answerRef2.current
-            ?.getAnswerList()
-            .map((answer: any) => ({ answerContent: answer.answerContent })) ??
-          [],
+        questionType,
+        subBox: getSubBoxContent(questionType),
+        chooseList,
+        answerList,
       } as any;
     };
     const updateFuntions = [
@@ -201,6 +218,9 @@ const PassagePopup = forwardRef(
       // 복합문제 수정
       (callBack?: Function) => {
         const param = getUpdateParam();
+        if (!param) {
+          return;
+        }
         param.questionId = 0;
 
         $PUT(`/api/v1/question/update`, param, () => {
@@ -217,9 +237,32 @@ const PassagePopup = forwardRef(
       (callBack?: Function) => {
         updateFuntions[1]();
         const param = getUpdateParam();
+        if (!param) {
+          return;
+        }
         param.questionType = parent.subType;
         param.pastYn = parent.subPastYn;
         param.subBox = getSubBoxContent(parent.subType);
+
+        if (
+          !WRITE_TYPES.includes(param.questionType) &&
+          param.chooseList.some((el: any) => {
+            return el.chooseContent
+              .split("|")
+              .some((str: string) => str === "");
+          })
+        ) {
+          alert.open("비어있는 보기란이 있습니다.");
+          return;
+        }
+        if (!param.answerList.length) {
+          alert.open("정답을 골라주세요.");
+          return;
+        }
+        if (param.answerList.some((el: any) => el.answerContent === "")) {
+          alert.open("비어있는 정답란이 있습니다.");
+          return;
+        }
         $PUT(`/api/v1/question/update`, param, () => {
           setParent({
             ...parent,
@@ -233,7 +276,28 @@ const PassagePopup = forwardRef(
       // 단일문제 수정
       (callBack?: Function) => {
         const param = getUpdateParam();
-
+        if (!param) {
+          return;
+        }
+        if (
+          !WRITE_TYPES.includes(param.questionType) &&
+          param.chooseList.some((el: any) => {
+            return el.chooseContent
+              .split("|")
+              .some((str: string) => str === "");
+          })
+        ) {
+          alert.open("비어있는 보기란이 있습니다.");
+          return;
+        }
+        if (!param.answerList.length) {
+          alert.open("정답을 골라주세요.");
+          return;
+        }
+        if (param.answerList.some((el: any) => el.answerContent === "")) {
+          alert.open("비어있는 정답란이 있습니다.");
+          return;
+        }
         $PUT(`/api/v1/question/update`, param, () => {
           setParent({
             ...parent,
@@ -262,6 +326,12 @@ const PassagePopup = forwardRef(
     useImperativeHandle(ref, () => ({
       handleOpen,
     }));
+
+    const [chooseSeqMax, setChooseSeqMax] = React.useState(
+      parent.chooseList.length ?? 5
+    );
+    const changeChooseSeqMax = () =>
+      setChooseSeqMax(chooseSeqMax === 5 ? 4 : 5);
 
     return (
       <BootstrapDialog
@@ -563,6 +633,7 @@ const PassagePopup = forwardRef(
                           ref={chooseRef2}
                           chooseList={parent.chooseList}
                           questionType={parent.subType}
+                          chooseSeqMax={chooseSeqMax}
                         />
                       </Grid>
                       <Grid
@@ -576,6 +647,7 @@ const PassagePopup = forwardRef(
                             questionType={parent.subType}
                             answerList={parent.answerList}
                             id={parent.questionId}
+                            chooseSeqMax={chooseSeqMax}
                           />
                         </div>
                       </Grid>
@@ -687,6 +759,30 @@ const PassagePopup = forwardRef(
                         <></>
                       )}
                     </div>
+                    <div
+                      style={{
+                        padding: 7,
+                        letterSpacing: 1,
+                        userSelect: "none",
+                        height: 50,
+                        textAlign: "left",
+                      }}
+                    >
+                      {WRITE_TYPES.includes(parent.type) ? (
+                        <></>
+                      ) : (
+                        <span
+                          style={{
+                            border: "0.5px solid lightgray",
+                            padding: 2,
+                            borderRadius: 5,
+                          }}
+                          onClick={changeChooseSeqMax}
+                        >
+                          {chooseSeqMax}지선다
+                        </span>
+                      )}
+                    </div>
                     <Grid container>
                       <Grid
                         item
@@ -697,6 +793,7 @@ const PassagePopup = forwardRef(
                           ref={chooseRef2}
                           chooseList={parent.chooseList}
                           questionType={parent.type}
+                          chooseSeqMax={chooseSeqMax}
                         />
                       </Grid>
                       <Grid
@@ -710,6 +807,7 @@ const PassagePopup = forwardRef(
                             questionType={parent.type}
                             answerList={parent.answerList}
                             id={parent.questionId}
+                            chooseSeqMax={chooseSeqMax}
                           />
                         </div>
                       </Grid>
