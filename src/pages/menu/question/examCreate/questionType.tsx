@@ -53,7 +53,7 @@ export const QuestionType1 = (props:questionType) => {
             </div>
             <div className={props.type == 'bigBook'?'choose':'choose_normal'}>
                 {props.choose.map(({seq,content},num)=>(
-                    <div style={{ display: "flex", gap: 5 }} key={num}>
+                    <div style={{ display: "flex", gap: 5, wordBreak:"normal" }} key={num}>
                         <div className={props.type == 'bigBook'?'':'choose_text'}>{num == 0? '①' : num == 1? '②': num==2? '③':num==3? '④':'⑤'}</div>
                         <div className={props.type == 'bigBook'?'':'choose_text'}>{content}</div>
                     </div>
@@ -65,19 +65,6 @@ export const QuestionType1 = (props:questionType) => {
 
 // 화살표 유형 4
 export const QuestionType2 = (props:questionType) => {
-    const [chooseCont, setChooseCont] = useState<chooseList[]>([]);
-    //seq배열 재정리
-    useEffect(()=>{
-        let chooseCont:any = []
-        for (let i = 0; i < props.choose.length; i++){
-            chooseCont[i] = props.choose.find((chooseList)=>{
-                if(chooseList.seq === i+1){
-                    return true
-                }
-            })
-        }
-        setChooseCont(chooseCont)
-    },[])
     return(
         <>
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
@@ -97,8 +84,8 @@ export const QuestionType2 = (props:questionType) => {
             <div className={props.type == 'bigBook'?'bigCont_questionContent':'bigCont_questionContent_normal'} dangerouslySetInnerHTML={{__html:props.questionContent!}}>
             </div>
             <div className={props.type == 'bigBook'?'choose':'choose_normal'}>
-                {chooseCont.map(({seq,content},index)=>(
-                    <div style={{ display: "flex", gap: 5 }} key={index}>
+                {props.choose.map(({seq,content},index)=>(
+                    <div style={{ display: "flex", gap: 5, wordBreak:"normal" }} key={index}>
                         <div style={{ flex: 1 }}>{seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}</div>
                         <div style={{ flex: 5, textAlign: "center" }}>{content.split('|')[0]}</div>
                         <div style={{ flex: 1 }}>→</div>
@@ -137,11 +124,17 @@ export const QuestionType3 = (props:questionType) => {
             <div className={props.type == 'bigBook'?'bigCont_questionContent':'bigCont_questionContent_normal'} dangerouslySetInnerHTML={{__html:props.questionContent!}}>
             </div>
             <div style={{ display: "flex",marginTop:"20px",marginBottom:"30px" }}>
-                <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>①</div>
+                {props.choose.map(({seq,content},index)=>(
+                    <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1, wordBreak:"normal" }} key={index}>
+                        {seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}
+                        <span>{content == '-'? '':content}</span>
+                    </div>
+                ))}
+{/*                <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>①</div>
                 <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>②</div>
                 <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>③</div>
                 <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>④</div>
-                <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>⑤</div>
+                <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>⑤</div>*/}
             </div>
         </>
     )
@@ -149,19 +142,6 @@ export const QuestionType3 = (props:questionType) => {
 
 //ABC유형 12, 14
 export const QuestionType4 = (props:questionType) => {
-    const [chooseCont, setChooseCont] = useState<chooseList[]>([]);
-    //seq배열 재정리
-    useEffect(()=>{
-        let chooseCont:any = []
-        for (let i = 0; i < props.choose.length; i++){
-            chooseCont[i] = props.choose.find((chooseList)=>{
-                if(chooseList.seq === i+1){
-                    return true
-                }
-            })
-        }
-        setChooseCont(chooseCont)
-    },[])
     return(
         <>
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
@@ -187,7 +167,7 @@ export const QuestionType4 = (props:questionType) => {
                     <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 3, textAlign: "center" }}>(B)</div>
                     <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 3, textAlign: "center" }}>(C)</div>
                 </div>
-                {chooseCont.map(({seq,content},index)=>(
+                {props.choose.map(({seq,content},index)=>(
                     <div style={{ display: "flex", gap: 5 }} key={index}>
                         <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>{seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}</div>
                         <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 3, textAlign: "center" }}>{content.split('|')[0]}</div>
@@ -202,19 +182,6 @@ export const QuestionType4 = (props:questionType) => {
 
 //2단 보기 유형 16
 export const QuestionType5 = (props:questionType) => {
-    const [chooseCont, setChooseCont] = useState<chooseList[]>([]);
-    //seq배열 재정리
-    useEffect(()=>{
-        let chooseCont:any = []
-        for (let i = 0; i < props.choose.length; i++){
-            chooseCont[i] = props.choose.find((chooseList)=>{
-                if(chooseList.seq === i+1){
-                    return true
-                }
-            })
-        }
-        setChooseCont(chooseCont)
-    },[])
     return(
         <>
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
@@ -240,8 +207,8 @@ export const QuestionType5 = (props:questionType) => {
             <div className={props.type == 'bigBook'?'bigCont_questionContent':'bigCont_questionContent_normal'} dangerouslySetInnerHTML={{__html:props.questionContent!}}>
             </div>
             <div className={props.type == 'bigBook'?'choose':'choose_normal'} style={{columnCount:2}}>
-                {chooseCont.map(({seq,content},index)=>(
-                    <div style={{ display: "flex", gap: 5 }} key={index}>
+                {props.choose.map(({seq,content},index)=>(
+                    <div style={{ display: "flex", gap: 5, wordBreak:"normal" }} key={index}>
                         <div className={props.type == 'bigBook'?'':'choose_text'}>{seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}</div>
                         <div className={props.type == 'bigBook'?'':'choose_text'}>{content.split('|')[0]+'-'+content.split('|')[1]+'-'+content.split('|')[2]}</div>
                     </div>
@@ -253,19 +220,6 @@ export const QuestionType5 = (props:questionType) => {
 
 //AB유형 18, 19
 export const QuestionType6 = (props:questionType) => {
-    const [chooseCont, setChooseCont] = useState<chooseList[]>([]);
-    //seq배열 재정리
-    useEffect(()=>{
-        let chooseCont:any = []
-        for (let i = 0; i < props.choose.length; i++){
-            chooseCont[i] = props.choose.find((chooseList)=>{
-                if(chooseList.seq === i+1){
-                    return true
-                }
-            })
-        }
-        setChooseCont(chooseCont)
-    },[])
     return(
         <>
             <div className={props.type == 'bigBook'?'bigCont_questionTitle':'bigCont_questionTitle_normal'}>
@@ -296,8 +250,8 @@ export const QuestionType6 = (props:questionType) => {
                     <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 3, textAlign: "center" }}>(A)</div>
                     <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 3, textAlign: "center" }}>(B)</div>
                 </div>
-                {chooseCont.map(({seq,content},index)=>(
-                    <div style={{ display: "flex", gap: 5 }} key={index}>
+                {props.choose.map(({seq,content},index)=>(
+                    <div style={{ display: "flex", gap: 5, wordBreak:"normal" }} key={index}>
                         <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>{seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}</div>
                         <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 3, textAlign: "center" }}>{content.split('|')[0]}</div>
                         <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 3, textAlign: "center" }}>{content.split('|')[1]}</div>

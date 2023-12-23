@@ -160,6 +160,7 @@ const NormalBook = (props: ExamProps) => {
                             {questionIds.map((num,index1)=>(
                                     <div className='bigCont_questionBox' key={index1}>
                                       {(()=>{
+                                        debugger
                                         if(questionArr[num].question.length == 1){
                                           complexLength = 1
                                           return(
@@ -235,8 +236,8 @@ const NormalBook = (props: ExamProps) => {
                             className="warning"
                             style={{ fontSize: 9.4, border: "1px solid" }}
                         >
-                          이 시험문자의 저작긛은 00고등학교에 있습니다. 저작긛법에 의해
-                          보호받는 저작물이므로 전재와 복지는 금지되여. 이를 어길시 저작긛법에
+                          이 시험문제의 저작권은 00고등학교에 있습니다. 저작권법에 의해
+                          보호받는 저작물이므로 판매와 복제는 금지되여. 이를 어길시 저작권법에
                           의거 처벌될 수 있습니다.
                         </div>
                       </div>
@@ -310,6 +311,7 @@ const NormalBook = (props: ExamProps) => {
                         {questionArr.slice(temp1,temp2).map(({questionTitle,questionCode,question,questionContent,passageUnit,passageNumber,passageName,passageYear},index1)=>(
                                 <div className='bigCont_questionBox' key={index1}>
                                   {(()=>{
+                                    debugger
                                     if(question.length == 1){
                                       complexLength = 1
                                       return(
@@ -389,8 +391,8 @@ const NormalBook = (props: ExamProps) => {
                         className="warning"
                         style={{ fontSize: 9.4, border: "1px solid" }}
                     >
-                      이 시험문자의 저작긛은 00고등학교에 있습니다. 저작긛법에 의해
-                      보호받는 저작물이므로 전재와 복지는 금지되여. 이를 어길시 저작긛법에
+                      이 시험문제의 저작권은 00고등학교에 있습니다. 저작권법에 의해
+                      보호받는 저작물이므로 판매와 복제는 금지되여. 이를 어길시 저작권법에
                       의거 처벌될 수 있습니다.
                     </div>
                   </div>
