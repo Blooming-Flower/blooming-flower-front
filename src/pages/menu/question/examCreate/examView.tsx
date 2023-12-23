@@ -30,7 +30,7 @@ const ExamView = () => {
             for(let j = 0; j<res.data.length;j++){
                 props[i].questionInfo = res.data[j].questionInfo
                 props[i].questionCnt = 0
-                debugger
+
                 for (let k = 0; k < res.data[j].questionInfo.length; k++) {
                     props[i].questionCnt += res.data[j].questionInfo[k].question.length
                 }

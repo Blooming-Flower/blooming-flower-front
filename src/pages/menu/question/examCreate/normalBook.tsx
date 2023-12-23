@@ -160,7 +160,7 @@ const NormalBook = (props: ExamProps) => {
                             {questionIds.map((num,index1)=>(
                                     <div className='bigCont_questionBox' key={index1}>
                                       {(()=>{
-                                        debugger
+
                                         if(questionArr[num].question.length == 1){
                                           complexLength = 1
                                           return(
@@ -311,7 +311,7 @@ const NormalBook = (props: ExamProps) => {
                         {questionArr.slice(temp1,temp2).map(({questionTitle,questionCode,question,questionContent,passageUnit,passageNumber,passageName,passageYear},index1)=>(
                                 <div className='bigCont_questionBox' key={index1}>
                                   {(()=>{
-                                    debugger
+
                                     if(question.length == 1){
                                       complexLength = 1
                                       return(

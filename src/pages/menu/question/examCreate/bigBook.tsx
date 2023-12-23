@@ -54,7 +54,7 @@ const BigBook = (props:ExamProps) => {
     },[props.rowData])
 
     useEffect(()=>{
-        debugger
+
         setTimeout(()=>{
             const element = pageRef.current
             console.log(element.scrollWidth > element.clientWidth)
