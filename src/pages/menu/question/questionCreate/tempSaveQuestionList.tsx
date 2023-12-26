@@ -148,11 +148,7 @@ const TempSaveQuestionList = (props: any) => {
                     answerContent: answer.answerContent,
                   }));
 
-                  const chooseList = el.chooseList.map((choose: any) => ({
-                    chooseSeq: choose.id,
-                    chooseContent: choose.chooseContent,
-                  }));
-
+                  const chooseList = el.chooseList;
                   return {
                     questionSubTitle: el.questionSubTitle,
                     pastYn: el.pastYn,
@@ -173,8 +169,8 @@ const TempSaveQuestionList = (props: any) => {
               $POST("/api/v1/question/save", params, () => {
                 alert.icon({
                   type: ALERT.SUCCESS,
-                  text: "지문이 저장 되었습니다."
-                })
+                  text: "지문이 저장 되었습니다.",
+                });
                 navigate(PATH.QUESTION2);
               });
             }}
