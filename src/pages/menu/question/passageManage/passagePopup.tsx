@@ -328,10 +328,17 @@ const PassagePopup = forwardRef(
     }));
 
     const [chooseSeqMax, setChooseSeqMax] = React.useState(
-      parent.chooseList.length ?? 5
+      parent?.chooseList.filter((el) => JSON.stringify(el) !== "[]").length ?? 5
     );
     const changeChooseSeqMax = () =>
       setChooseSeqMax(chooseSeqMax === 5 ? 4 : 5);
+
+    React.useEffect(() => {
+      setChooseSeqMax(
+        parent?.chooseList.filter((el) => JSON.stringify(el) !== "[]").length ??
+          5
+      );
+    }, [parent]);
 
     return (
       <BootstrapDialog
