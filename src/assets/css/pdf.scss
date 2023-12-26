@@ -7,7 +7,7 @@
   width: 100%;
   background-color: grey;
   overflow: auto;
-  word-break: keep-all; //줄바꿈시 단어기준
+  word-break: normal; //줄바꿈시 단어기준
   //break-after: page;  //페이지 초과시 다음 페이지(작업해야함)
   img{
     width: 305px;
