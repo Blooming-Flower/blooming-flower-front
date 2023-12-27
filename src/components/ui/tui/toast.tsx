@@ -208,6 +208,9 @@ const TuiEditor = ({ content = "", editorRef, height, placeholder }: Props) => {
                 ev.preventDefault();
                 console.log("밑줄호출");
                 editorRef.current.getInstance().exec("strike");
+              } else if (ev.code == "KeyZ" && ev.ctrlKey) {
+                ev.preventDefault();
+                editorRef.current.getInstance().exec("undo");
               } else if (ev.code == "Space" && ev.ctrlKey) {
                 ev.preventDefault();
                 const [start, end] = editorRef.current
