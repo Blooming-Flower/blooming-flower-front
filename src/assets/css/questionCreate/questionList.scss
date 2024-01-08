@@ -27,6 +27,7 @@
     .MuiListItem-root{
       justify-content: space-between;
       cursor: pointer;
+      gap: 5px;
     }
   }
   .MuiList-root:hover::-webkit-scrollbar{
@@ -38,6 +39,7 @@
 
   .MuiListItemSecondaryAction-root {
     top: 18px !important;
+    right: 5px;
   }
 
   .MuiList-root::-webkit-scrollbar{
