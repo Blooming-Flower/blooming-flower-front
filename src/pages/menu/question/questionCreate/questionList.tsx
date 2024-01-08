@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-
 //css
 import "@css/questionCreate/questionList.scss";
 import { ExpandMore, ExpandLess } from "@mui/icons-material";
@@ -64,73 +63,81 @@ const QuestionList = (props: any) => {
           // maxHeight: height,
           height: height,
           "& ul": { padding: 0 },
-            // selected and (selected + hover) states
-            '&& .Mui-selected, && .Mui-selected:hover': {
-                bgcolor: 'red',
-                '&, & .MuiListItemIcon-root': {
-                    color: 'pink',
-                },
+          // selected and (selected + hover) states
+          "&& .Mui-selected, && .Mui-selected:hover": {
+            bgcolor: "red",
+            "&, & .MuiListItemIcon-root": {
+              color: "pink",
             },
+          },
         }}
       >
         {rowData.length === 0 ? (
           <Alert>{"지문을 선택해 주세요."}</Alert>
         ) : (
           rowData
-          .sort((p1: any, p2: any) => {
-                if (p1.passageUnit < p2.passageUnit) return 1;
-                if (p1.passageUnit > p2.passageUnit) return -1;
-                if (p1.passageNumber < p2.passageNumber) return -1;
-                if (p1.passageNumber > p2.passageNumber) return 1;
-                return 0;
-              })
-          .map((row: any) => {
-            return (
-              <div key={row.passageId}>
-                <ListItem
+            .sort((p1: any, p2: any) => {
+              if (p1.passageYear > p2.passageYear) return 1;
+              if (p1.passageYear < p2.passageYear) return -1;
+              if (p1.passageName > p2.passageName) return 1;
+              if (p1.passageName < p2.passageName) return -1;
+              if (p1.passageUnit.padStart(10) < p2.passageUnit.padStart(10))
+                return 1;
+              if (p1.passageUnit.padStart(10) > p2.passageUnit.padStart(10))
+                return -1;
+              if (p1.passageNumber.padStart(10) < p2.passageNumber.padStart(10))
+                return -1;
+              if (p1.passageNumber.padStart(10) > p2.passageNumber.padStart(10))
+                return 1;
+              return 0;
+            })
+            .map((row: any) => {
+              return (
+                <div key={row.passageId}>
+                  <ListItem
                     selected={checkSelect == row}
-                  className="checkbox-list"
-                  value={row}
-                  onClick={(e) => {
+                    className="checkbox-list"
+                    value={row}
+                    onClick={(e) => {
                       setCheckSelect(row);
-                    if (onClickListItem) {
-                      onClickListItem(row);
-                    }
-                  }}
-                  secondaryAction={
-                    noDelete ? (
-                      <></>
-                    ) : (
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => onRemove(row)}
-                      >
-                        <HighlightOffIcon />
-                      </IconButton>
-                    )
-                  }
-                >
-                  <div style={{ flex: 1 }}>{row.passageYear}</div>
-                  <div
-                    className="passageName"
-                    style={{
-                      // maxWidth: 65,
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      flex: 6,
+                      if (onClickListItem) {
+                        onClickListItem(row);
+                      }
                     }}
-                    data-tooltip={row.passageName}
+                    secondaryAction={
+                      noDelete ? (
+                        <></>
+                      ) : (
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => onRemove(row)}
+                        >
+                          <HighlightOffIcon />
+                        </IconButton>
+                      )
+                    }
                   >
-                    {row.passageName}
-                  </div>
-                  <div style={{ flex: 1.5 }}>{row.passageUnit}</div>
-                  <div style={{ flex: 1.5 }}>{row.passageNumber}</div>
-                </ListItem>
-              </div>
-            );
-          })
+                    <div style={{ flex: 1 }}>{row.passageYear}</div>
+                    <div
+                      className="passageName"
+                      style={{
+                        // maxWidth: 65,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        flex: 6,
+                      }}
+                      data-tooltip={row.passageName}
+                    >
+                      {row.passageName}
+                    </div>
+                    <div style={{ flex: 1.5 }}>{row.passageUnit}</div>
+                    <div style={{ flex: 1.5 }}>{row.passageNumber}</div>
+                  </ListItem>
+                </div>
+              );
+            })
         )}
       </List>
       <div>
@@ -142,7 +149,13 @@ const QuestionList = (props: any) => {
               border: "0.5px solid lightgray",
             }}
           >
-            {totalCnt ? <span style={{position: "relative", top: "7px"}}>Total. {totalCnt}</span> : <></>}
+            {totalCnt ? (
+              <span style={{ position: "relative", top: "7px" }}>
+                Total. {totalCnt}
+              </span>
+            ) : (
+              <></>
+            )}
             <CustomButton
               domain={isExam ? PATH.QUESTION4 : PATH.QUESTION6}
               label={buttonName ?? "GO!"}
