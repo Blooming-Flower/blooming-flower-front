@@ -58,6 +58,7 @@ const NormalBook = (props: ExamProps) => {
   }, [props.rowData]);
 
   useEffect(() => {
+    debugger;
     setTimeout(() => {
       const element = pageRef.current;
       console.log(element.scrollWidth > element.clientWidth);
@@ -295,7 +296,7 @@ const NormalBook = (props: ExamProps) => {
                   className="warning"
                   style={{ fontSize: 9.4, border: "1px solid" }}
                 >
-                  이 시험문제의 저작권은 00고등학교에 있습니다. 저작권법에 의해
+                  이 시험문제의 저작권은 너희가꽃이다 학원에 있습니다. 저작권법에 의해
                   보호받는 저작물이므로 판매와 복제는 금지되여. 이를 어길시
                   저작권법에 의거 처벌될 수 있습니다.
                 </div>
@@ -362,7 +363,7 @@ const NormalBook = (props: ExamProps) => {
                     </li>
                     <li style={{ listStyle: "circle" }}>
                       선택형은 물음에 알맞은 답의 번호를 답안카드에 컴퓨터용
-                      사인첸으로 정확히 마킹하고, 서답형은 물음에 맞는 답과
+                      사인펜으로 정확히 마킹하고, 서답형은 물음에 맞는 답과
                       풀이과정을 답안지에 바르게 적으시오.
                     </li>
                     <li style={{ listStyle: "circle" }}>
