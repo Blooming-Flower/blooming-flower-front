@@ -86,10 +86,10 @@ export const QuestionType2 = (props:questionType) => {
             <div className={props.type == 'bigBook'?'choose':'choose_normal'}>
                 {props.choose.map(({seq,content},index)=>(
                     <div style={{ display: "flex", gap: 5, wordBreak:"normal" }} key={index}>
-                        <div style={{ flex: 1 }}>{seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}</div>
-                        <div style={{ flex: 5, textAlign: "center" }}>{content.split('|')[0]}</div>
-                        <div style={{ flex: 1 }}>→</div>
-                        <div style={{ flex: 5, textAlign: "center" }}>{content.split('|')[1]}</div>
+                        <div style={{ flex: 1 }} className={props.type == 'bigBook'?'':'choose_text'}>{seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}</div>
+                        <div style={{ flex: 5, textAlign: "center" }} className={props.type == 'bigBook'?'':'choose_text'}>{content.split('|')[0]}</div>
+                        <div style={{ flex: 1 }} className={props.type == 'bigBook'?'':'choose_text'}>→</div>
+                        <div style={{ flex: 5, textAlign: "center" }} className={props.type == 'bigBook'?'':'choose_text'}>{content.split('|')[1]}</div>
                     </div>
                 ))}
             </div>
@@ -127,7 +127,7 @@ export const QuestionType3 = (props:questionType) => {
                 {props.choose.map(({seq,content},index)=>(
                     <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1, wordBreak:"normal" }} key={index}>
                         {seq == 1?'①':seq==2?'②':seq==3?'③':seq==4?'④':'⑤'}
-                        <span>{content == '-'? '':content}</span>
+                        <span className={props.type == 'bigBook'?'':'choose_text'} style={{marginLeft:"8px"}}>{content == '-'? '':content}</span>
                     </div>
                 ))}
 {/*                <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>①</div>

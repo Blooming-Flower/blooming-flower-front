@@ -174,11 +174,13 @@ const BigBook = (props:ExamProps) => {
                                 <div className='bigBook_bottom'>
                                     {pageCount % 2  == 0?
                                         <div className='right-bottom'>
-                                            {props.rightBottom}{pageCount}
+                                            {props.rightBottom}
+                                            <span className='right_bottom_sub'>{pageCount}</span>
                                         </div>
                                         :
                                         <div className='left-bottom'>
-                                            {pageCount}{props.leftBottom}
+                                            <span className='left_bottom_sub'>{pageCount}</span>
+                                            {props.leftBottom}
                                         </div>
                                     }
                                 </div>
@@ -247,11 +249,13 @@ const BigBook = (props:ExamProps) => {
                             <div className='bigBook_bottom'>
                                 {pageSeq % 2  == 0?
                                     <div className='right-bottom'>
-                                        {props.rightBottom}{pageSeq}
+                                        {props.rightBottom}
+                                        <span className='right_bottom_sub'>{pageSeq}</span>
                                     </div>
                                     :
                                     <div className='left-bottom'>
-                                        {pageSeq}{props.leftBottom}
+                                        <span className='left_bottom_sub'>{pageSeq}</span>
+                                        {props.leftBottom}
                                     </div>
                                 }
                             </div>
@@ -292,11 +296,13 @@ const BigBook = (props:ExamProps) => {
                     <div className='bigBook_bottom'>
                         {pageSeq+1 % 2  == 0?
                             <div className='right-bottom'>
-                                {props.rightBottom}{pageSeq+1}
+                                {props.rightBottom}
+                                <span className='right_bottom_sub'>{pageSeq+1}</span>
                             </div>
                             :
                             <div className='left-bottom'>
-                                {pageSeq+1}{props.leftBottom}
+                                <span className='left_bottom_sub'>{pageSeq+1}</span>
+                                {props.leftBottom}
                             </div>
                         }
                     </div>

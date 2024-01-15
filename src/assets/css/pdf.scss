@@ -28,6 +28,10 @@
     justify-items: center;
     display: block;
   }
+  del{
+    text-decoration : underline;
+    text-underline-position : under;
+  }
   @page {
     size: A4;
     margin: 0;
@@ -122,6 +126,9 @@
         p{
           font-family: 'KoPubBatang Medium', sans-serif !important;
         }
+        del{
+          font-family: 'KoPubBatang Medium', sans-serif !important;
+        }
       }
       .bigCont_questionContent_normal{
         margin-top: 15px;
@@ -129,6 +136,9 @@
         font-size: 8*0.5+8px !important;
         line-height: 155%;
         p{
+          font-family: 'Times New Roman', sans-serif !important;
+        }
+        del{
           font-family: 'Times New Roman', sans-serif !important;
         }
       }
@@ -217,10 +227,16 @@
   bottom:10px;
   left:10px;
   float: left;
+  .left_bottom_sub{
+    margin-right: 10px;
+  }
 }
 .right-bottom{
   bottom:10px;
   float: right;
+  .right_bottom_sub{
+    margin-left: 10px;
+  }
 }
 .choose{
   display: flex;
@@ -232,6 +248,7 @@
   border-radius: 4px;
   padding: 0px 6px 0 4px;
   font-size: 10px;
+  margin: 7px;
 }
 .subBox{
   border-bottom: 0.3px solid black;
