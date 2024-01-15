@@ -129,6 +129,10 @@ const QuestionTab = () => {
 
   const onClinkPassageListItem = (_passageData: any) => {
     $GET(`/api/v1/passage/search/${_passageData.passageId}`, (result: any) => {
+      result.data.passageContent = result.data.passageContent.replaceAll(
+        "\n",
+        "<br>"
+      );
       editorRef.current.getInstance().setHTML(result.data.passageContent);
       setPassageData({ ..._passageData });
       if (isModifyTempSave) {
