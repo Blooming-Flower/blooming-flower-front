@@ -95,6 +95,9 @@ const NormalBook = (props: ExamProps) => {
           console.log("마지막", pagePerQuestion);
           seqTemp = 1;
           setIsDone(!isDone);
+          if (isDone) {
+            console.log(pagePerQuestion);
+          }
           return;
         }
       }

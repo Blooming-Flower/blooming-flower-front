@@ -129,9 +129,15 @@ export const QuestionType2 = (props: questionType) => {
             >
               {content.split("|")[0]}
             </div>
-            <div style={{ flex: 1 }}>→</div>
             <div
-              style={{ flex: 5, textAlign: "center", wordBreak: "break-word" }}
+              style={{ flex: 1, textAlign: "center" }}
+              className={props.type == "bigBook" ? "" : "choose_text"}
+            >
+              →
+            </div>
+            <div
+              style={{ flex: 5, textAlign: "center" }}
+              className={props.type == "bigBook" ? "choose" : ""}
             >
               {content.split("|")[1]}
             </div>
@@ -173,7 +179,7 @@ export const QuestionType3 = (props: questionType) => {
             ? "bigCont_questionContent"
             : "bigCont_questionContent_normal"
         }
-        dangerouslySetInnerHTML={{ __html: props.questionContent ?? "" }}
+        dangerouslySetInnerHTML={{ __html: props.questionContent! }}
       ></div>
       <div style={{ display: "flex", marginTop: "20px", marginBottom: "30px" }}>
         {props.choose.map(({ seq, content }, index) => (
@@ -191,7 +197,12 @@ export const QuestionType3 = (props: questionType) => {
               : seq == 4
               ? "④"
               : "⑤"}
-            <span>{content == "-" ? "" : content}</span>
+            <span
+              className={props.type == "bigBook" ? "" : "choose_text"}
+              style={{ marginLeft: "8px" }}
+            >
+              {content == "-" ? "" : content}
+            </span>
           </div>
         ))}
         {/*                <div className={props.type == 'bigBook'?'':'choose_text'} style={{ flex: 1 }}>①</div>
@@ -696,7 +707,7 @@ export const ComplexType = (props: complexType) => {
           <div key={index}>
             {questionType == "Q1" ||
             questionType == "Q2" ||
-            questionType == "Q4" ||
+            questionType == "Q3" ||
             questionType == "Q5" ||
             questionType == "Q6" ||
             questionType == "Q7" ||
