@@ -49,7 +49,16 @@ const ExamView = () => {
         }
       }
     }
-    await setRowData(props);
+
+    const set = new Set();
+    const arr = [];
+    while (set.size != props.length) {
+      const idx = Math.floor(Math.random() * props.length);
+      if (set.has(idx)) continue;
+      set.add(idx);
+      arr.push(props[idx]);
+    }
+    await setRowData(arr);
     setAble("시험지");
   };
   useEffect(() => {
@@ -343,6 +352,7 @@ const ExamView = () => {
                                     {passageName}
                                   </div>
                                   <div>{passageUnit}</div>
+                                  <div>{passageNumber}</div>
                                   <div>{questionCnt}</div>
                                 </ListItem>
                                 <Divider />
