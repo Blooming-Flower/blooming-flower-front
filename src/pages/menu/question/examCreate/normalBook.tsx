@@ -187,6 +187,9 @@ const NormalBook = (props: ExamProps) => {
                     {questionIds.map((num, index1) => (
                       <div className="bigCont_questionBox" key={index1}>
                         {(() => {
+                          if (!questionArr[num]) {
+                            return <></>;
+                          }
                           if (questionArr[num].question.length == 1) {
                             complexLength = 1;
                             return (
