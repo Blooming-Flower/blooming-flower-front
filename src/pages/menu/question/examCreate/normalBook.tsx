@@ -221,6 +221,9 @@ const NormalBook = (props: ExamProps) => {
                               />
                             );
                           } else {
+                            if (!questionArr[num]) {
+                              return <></>;
+                            }
                             complexLength = questionArr[num].question.length;
                             const question = questionArr[num].question;
                             const questionCode = questionArr[num].questionCode;
