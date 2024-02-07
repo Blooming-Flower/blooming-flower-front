@@ -50,13 +50,34 @@ const ExamView = () => {
       }
     }
 
+    // 지문으로 묶여 있는 것을 문제별로 쪼개기
     const set = new Set();
+    const tempArr = props.reduce((acc: any[], cur: any) => {
+      cur.questionInfo.forEach((Q: any) => {
+        const temp = {
+          ...cur,
+          count: 0,
+          questionCnt: 0,
+          questionIds: [],
+          questionInfo: [],
+        };
+        temp.questionInfo.push({ ...Q });
+        Q.question.forEach((q: any) => temp.questionIds.push(q.questionId));
+        temp.count = temp.questionIds.length;
+        temp.questionCnt = temp.questionIds.length;
+
+        acc.push(temp);
+      });
+      return acc;
+    }, []);
+
+    // 랜덤으로 섞기
     const arr = [];
-    while (set.size != props.length) {
-      const idx = Math.floor(Math.random() * props.length);
+    while (set.size != tempArr.length) {
+      const idx = Math.floor(Math.random() * tempArr.length);
       if (set.has(idx)) continue;
       set.add(idx);
-      arr.push(props[idx]);
+      arr.push(tempArr[idx]);
     }
     await setRowData(arr);
     setAble("시험지");

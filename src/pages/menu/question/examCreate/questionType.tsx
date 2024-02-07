@@ -568,15 +568,9 @@ export const NormalType = (props: normalType) => {
                 <></>
             }*/}
       {/* 기본유형 1, 2, 3, 5, 6, 7, 9, 10, 15,  */}
-      {props.question[0].questionType == "Q1" ||
-      props.question[0].questionType == "Q2" ||
-      props.question[0].questionType == "Q3" ||
-      props.question[0].questionType == "Q5" ||
-      props.question[0].questionType == "Q6" ||
-      props.question[0].questionType == "Q7" ||
-      props.question[0].questionType == "Q9" ||
-      props.question[0].questionType == "Q10" ||
-      props.question[0].questionType == "Q15" ? (
+      {["Q1", "Q2", "Q3", "Q5", "Q6", "Q7", "Q9", "Q10", "Q15"].includes(
+        props.question[0].questionType
+      ) ? (
         <QuestionType1
           pastYn={props.question[0].pastYn}
           choose={props.question[0].choose}
@@ -600,10 +594,7 @@ export const NormalType = (props: normalType) => {
           type={props.type}
         />
       ) : //보기만 있는 유형 8, 11, 13, 17
-      props.question[0].questionType == "Q8" ||
-        props.question[0].questionType == "Q11" ||
-        props.question[0].questionType == "Q13" ||
-        props.question[0].questionType == "Q17" ? (
+      ["Q8", "Q11", "Q13", "Q17"].includes(props.question[0].questionType) ? (
         <QuestionType3
           pastYn={props.question[0].pastYn}
           choose={props.question[0].choose}
@@ -615,8 +606,7 @@ export const NormalType = (props: normalType) => {
           type={props.type}
         />
       ) : // ABC 유형: 12, 14,
-      props.question[0].questionType == "Q12" ||
-        props.question[0].questionType == "Q14" ? (
+      ["Q12", "Q14"].includes(props.question[0].questionType) ? (
         <QuestionType4
           pastYn={props.question[0].pastYn}
           choose={props.question[0].choose}

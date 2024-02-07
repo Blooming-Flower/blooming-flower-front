@@ -79,15 +79,15 @@ const NormalBook = (props: ExamProps) => {
           let questionIds = [];
           console.log("temp", temp1);
           console.log("temp2", temp2);
-          if (questionSize <= 2) {
-            for (let i = temp1; i < temp2; i++) {
-              questionIds.push(i);
-            }
-          } else {
-            for (let i = temp1; i < temp2 - 1; i++) {
-              questionIds.push(i);
-            }
+          // if (questionSize <= 2) {
+          for (let i = temp1; i < temp2; i++) {
+            questionIds.push(i);
           }
+          // } else {
+          //   for (let i = temp1; i < temp2 - 1; i++) {
+          //     questionIds.push(i);
+          //   }
+          // }
           pagePerQuestion.push({
             pageCount: pageSeq,
             questionIds: questionIds,
