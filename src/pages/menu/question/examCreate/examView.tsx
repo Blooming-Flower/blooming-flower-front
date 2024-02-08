@@ -16,7 +16,7 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
-import { EXAMTYPE } from "@common/const";
+import { EXAMTYPE, URL } from "@common/const";
 import MenuIcon from "@mui/icons-material/Menu";
 import CustomButton from "@components/ui/button/custeomButton";
 import { useEffect, useRef, useState } from "react";
@@ -37,7 +37,7 @@ const ExamView = () => {
   const call = async () => {
     for (let i = 0; i < props.length; i++) {
       const res = await axios.get(
-        "http://43.201.142.170:29091/api/v1/exam/search/questions/" +
+        `${URL.SERVER_URL}/api/v1/exam/search/questions/` +
           props[i].questionIds.toString()
       );
       for (let j = 0; j < res.data.length; j++) {

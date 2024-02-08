@@ -525,15 +525,7 @@ export const QuestionType7 = (props: questionType) => {
                 className={props.type == "bigBook" ? "" : "choose_text"}
                 style={{ display: "flex", float: "left" }}
               >
-                {index == 0
-                  ? "(A)"
-                  : index == 1
-                  ? "(B)"
-                  : index == 2
-                  ? "(C)"
-                  : index == 3
-                  ? "(D)"
-                  : "(E)"}
+                {`(${"ABCDEFGHIJKLMN"[index]})`}
               </div>
               <div
                 className={props.type == "bigBook" ? "" : "choose_text"}

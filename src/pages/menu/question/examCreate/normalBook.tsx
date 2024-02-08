@@ -136,7 +136,7 @@ const NormalBook = (props: ExamProps) => {
                     ? {
                         padding: "0 0 20px 0",
                         columnFill: "auto",
-                        height: "258mm",
+                        height: "252mm",
                         columnGap: 30,
                         columnRule: "1px solid black",
                       }
