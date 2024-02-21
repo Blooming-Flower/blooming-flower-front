@@ -29,6 +29,7 @@ import NormalBook from "@pages/menu/question/examCreate/normalBook";
 import BigBook from "@pages/menu/question/examCreate/bigBook";
 import ReactToPrint from "react-to-print";
 import axios from "axios";
+import "@css/pdf.scss";
 
 const ExamMng = () => {
   const apiRef = useGridApiRef();

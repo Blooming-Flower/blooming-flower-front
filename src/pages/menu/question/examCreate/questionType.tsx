@@ -341,11 +341,16 @@ export const QuestionType5 = (props: questionType) => {
       ></div>
       <div
         className={props.type == "bigBook" ? "choose" : "choose_normal"}
-        style={{ columnCount: 2 }}
+        style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
       >
         {props.choose.map(({ seq, content }, index) => (
           <div
-            style={{ display: "flex", gap: 5, wordBreak: "normal" }}
+            style={{
+              display: "flex",
+              gap: 5,
+              wordBreak: "normal",
+              flex: "0 0 50%",
+            }}
             key={index}
           >
             <div className={props.type == "bigBook" ? "" : "choose_text"}>
@@ -520,19 +525,24 @@ export const QuestionType7 = (props: questionType) => {
         </div>
         <div style={{ flex: 8 }}>
           {props.answer!.map(({}, index) => (
-            <div key={index}>
+            <div key={index} style={{ display: "flex" }}>
               <div
                 className={props.type == "bigBook" ? "" : "choose_text"}
-                style={{ display: "flex", float: "left" }}
+                // style={{
+                //   display: "flex",
+                //   float: "left",
+                // }}
               >
                 {`(${"ABCDEFGHIJKLMN"[index]})`}
               </div>
               <div
                 className={props.type == "bigBook" ? "" : "choose_text"}
                 style={{
-                  display: "flex",
-                  height: 23,
+                  // display: "flex",
+                  height: 21,
+                  marginBottom: 5,
                   borderBottom: "0.5px solid black",
+                  width: "-webkit-fill-available",
                 }}
               ></div>
             </div>

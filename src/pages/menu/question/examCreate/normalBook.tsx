@@ -136,7 +136,7 @@ const NormalBook = (props: ExamProps) => {
                     ? {
                         padding: "0 0 20px 0",
                         columnFill: "auto",
-                        height: "252mm",
+                        height: "258mm",
                         columnGap: 30,
                         columnRule: "1px solid black",
                       }
@@ -529,7 +529,7 @@ const NormalBook = (props: ExamProps) => {
               padding: "20px 0",
               columnFill: "auto",
               height: "220mm",
-              columnCount: 3,
+              columnCount: 2,
               columnGap: 30,
               columnRule: "1px solid black",
             }}
