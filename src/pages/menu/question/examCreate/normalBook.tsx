@@ -114,7 +114,7 @@ const NormalBook = (props: ExamProps) => {
               className="div_paper big_first"
               ref={pageRef}
               key={index0}
-              style={{ padding: "7.7% 9.5% 2.3% 9.5%" }}
+              style={{ padding: "7.7% 9.5% 2.3% 9.5%", position: "relative" }}
             >
               {pageCount == 1 ? (
                 <div
@@ -143,7 +143,7 @@ const NormalBook = (props: ExamProps) => {
                     : {
                         padding: "0 0 20px 0",
                         columnFill: "auto",
-                        height: "210mm",
+                        height: "215mm",
                         columnGap: 30,
                         columnRule: "1px solid black",
                       }
@@ -273,6 +273,8 @@ const NormalBook = (props: ExamProps) => {
                 className="footer"
                 style={{
                   textAlign: "center",
+                  position: "absolute",
+                  bottom: 55,
                 }}
               >
                 <div
@@ -315,7 +317,7 @@ const NormalBook = (props: ExamProps) => {
           <div
             className="div_paper big_first"
             ref={pageRef}
-            style={{ padding: "7.7% 9.5% 2.3% 9.5%" }}
+            style={{ padding: "7.7% 9.5% 2.3% 9.5%", position: "relative" }}
           >
             {pageSeq == 1 ? (
               <div
@@ -344,7 +346,7 @@ const NormalBook = (props: ExamProps) => {
                   : {
                       padding: "0 0 20px 0",
                       columnFill: "auto",
-                      height: "210mm",
+                      height: "215mm",
                       columnGap: 30,
                       columnRule: "1px solid black",
                     }
@@ -480,6 +482,8 @@ const NormalBook = (props: ExamProps) => {
               className="footer"
               style={{
                 textAlign: "center",
+                position: "absolute",
+                bottom: 55,
               }}
             >
               <div
