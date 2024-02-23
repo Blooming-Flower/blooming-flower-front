@@ -136,14 +136,14 @@ const NormalBook = (props: ExamProps) => {
                     ? {
                         padding: "0 0 20px 0",
                         columnFill: "auto",
-                        height: "258mm",
+                        height: "248mm",
                         columnGap: 30,
                         columnRule: "1px solid black",
                       }
                     : {
                         padding: "0 0 20px 0",
                         columnFill: "auto",
-                        height: "220mm",
+                        height: "210mm",
                         columnGap: 30,
                         columnRule: "1px solid black",
                       }
@@ -337,14 +337,14 @@ const NormalBook = (props: ExamProps) => {
                   ? {
                       padding: "0 0 20px 0",
                       columnFill: "auto",
-                      height: "258mm",
+                      height: "248mm",
                       columnGap: 30,
                       columnRule: "1px solid black",
                     }
                   : {
                       padding: "0 0 20px 0",
                       columnFill: "auto",
-                      height: "220mm",
+                      height: "210mm",
                       columnGap: 30,
                       columnRule: "1px solid black",
                     }
